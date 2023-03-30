@@ -1,22 +1,1218 @@
-// server.js
-// where your node app starts
-
-// init project
-const express = require("express");
+//Glitch Project
+const express = require('express');
+const https = require('https');
 const app = express();
+const fetch = require('node-fetch');
+const mongoose = require('mongoose');
+const moment = require('moment') //./node_modules/moment/moment
+//
+//Discord
+const Discord = require('discord.js');
+const {WebhookClient, Permissions, Client, Intents, MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} = Discord; 
+//const moment = require('moment');
+const myIntents = new Intents();
+myIntents.add(Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES);
+const client = new Client({ intents: myIntents , partials: ["CHANNEL"] });
 
-// we've started you off with Express,
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
+//Env
+const token = process.env.SECRET;
+const open_ai = process.env.OPEN_AI
+const mongooseToken = process.env.MONGOOSE;
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
+async function startApp() {
+    let promise = client.login(token)
+    console.log("Starting...");
+    promise.catch(function(error) {
+      console.error("Discord bot login | " + error);
+      process.exit(1);
+    });
+}
+startApp();
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function(request, response) {
-  response.sendFile(__dirname + "/views/index.html");
+//When bot is ready
+client.on("ready", async () => {
+  console.log('Successfully logged in to discord bot.')
+  client.user.setPresence({ status: 'online', activities: [{ name: 'Sloopies', type: 'WATCHING' }] });
+ // await mongoose.connect(mongooseToken,{keepAlive: true});
+})
+
+module.exports = {
+  client: client,
+  getPerms,
+  noPerms,
+};
+
+let listener = app.listen(process.env.PORT, function() {
+   console.log('Not that it matters but your app is listening on port ' + listener.address().port);
+});
+/*
+░██████╗███████╗████████╗████████╗██╗███╗░░██╗░██████╗░░██████╗
+██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██║████╗░██║██╔════╝░██╔════╝
+╚█████╗░█████╗░░░░░██║░░░░░░██║░░░██║██╔██╗██║██║░░██╗░╚█████╗░
+░╚═══██╗██╔══╝░░░░░██║░░░░░░██║░░░██║██║╚████║██║░░╚██╗░╚═══██╗
+██████╔╝███████╗░░░██║░░░░░░██║░░░██║██║░╚███║╚██████╔╝██████╔╝
+╚═════╝░╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝╚═╝░░╚══╝░╚═════╝░╚═════╝░*/
+//LOG VARIABLES
+var output = "901759430457167872";
+const settings = require('./storage/settings_.js')
+const {filteredWords, AI, shop, notices, auth, prefix, colors, status, theme, commands, permissions, emojis, timeout, rateLimit, assets, townhallData, leagueData} = settings
+/*
+██████╗░███████╗██████╗░███╗░░░███╗░██████╗
+██╔══██╗██╔════╝██╔══██╗████╗░████║██╔════╝
+██████╔╝█████╗░░██████╔╝██╔████╔██║╚█████╗░
+██╔═══╝░██╔══╝░░██╔══██╗██║╚██╔╝██║░╚═══██╗
+██║░░░░░███████╗██║░░██║██║░╚═╝░██║██████╔╝
+╚═╝░░░░░╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝╚═════╝░*/
+async function getPerms(member, level) {
+  let highestPerms = null
+  let highestLevel = 0
+  let sortedPerms = await permissions.sort((a,b) => b.level-a.level)
+  for (let i in sortedPerms) {
+    if (permissions[i].id === member.id && permissions[i].level >= level) {
+      highestLevel < permissions[i].level ? (highestPerms = permissions[i], highestLevel = permissions[i].level) : null
+    } else if (member.user && member.roles.cache.some(role => role.id === permissions[i].id) && permissions[i].level >= level) {
+      highestLevel < permissions[i].level ? (highestPerms = permissions[i], highestLevel = permissions[i].level) : null
+    }
+  }
+  
+  if (highestPerms) return highestPerms;
+}
+async function guildPerms(message, perms) {
+  //console.log(Permissions.FLAGS)
+  if (message.member.permissions.has(perms)) {
+	return true;
+} else {
+  let embed = new MessageEmbed()
+  .addField('Insufficient Permissions',emojis.x+" You don't have the required server permissions to use this command.\n\n`"+perms.toString().toUpperCase()+"`")
+  .setColor(colors.red)
+  message.channel.send({embeds: [embed]})
+}
+}
+function noPerms(message) {
+  let Embed = new MessageEmbed()
+  .setColor(colors.red)
+  .setDescription("You lack special permissions to use this command.")
+  return Embed;
+}
+/*
+███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
+██╔════╝██║░░░██║████╗░██║██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║██╔════╝
+█████╗░░██║░░░██║██╔██╗██║██║░░╚═╝░░░██║░░░██║██║░░██║██╔██╗██║╚█████╗░
+██╔══╝░░██║░░░██║██║╚████║██║░░██╗░░░██║░░░██║██║░░██║██║╚████║░╚═══██╗
+██║░░░░░╚██████╔╝██║░╚███║╚█████╔╝░░░██║░░░██║╚█████╔╝██║░╚███║██████╔╝
+╚═╝░░░░░░╚═════╝░╚═╝░░╚══╝░╚════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝╚═════╝░*/
+//Send Messages
+const sendMsg = require('./functions/sendMessage.js')
+const {sendChannel, sendUser} = sendMsg
+//Functions
+const get = require('./functions/get.js')
+const {chatAI, getNth, getChannel, getGuild, getUser, getMember, getRandom, getColor} = get
+//Command Handler
+const cmdHandler = require('./functions/commands.js')
+const {checkCommand, isCommand, isMessage, getTemplate} = cmdHandler
+//Others
+const others = require('./functions/others.js')
+const {stringJSON, fetchMany, ghostPing, sleep, moderate, getPercentage, getPercentageEmoji, randomTable, scanString, requireArgs, getArgs, makeButton, makeRow} = others
+//Roles Handler
+const roles = require('./functions/roles.js')
+const {getRole, addRole, removeRole, hasRole} = roles
+/*
+░█████╗░██╗░░░░░██╗███████╗███╗░░██╗████████╗  ███╗░░░███╗███████╗░██████╗░██████╗░█████╗░░██████╗░███████╗
+██╔══██╗██║░░░░░██║██╔════╝████╗░██║╚══██╔══╝  ████╗░████║██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝░██╔════╝
+██║░░╚═╝██║░░░░░██║█████╗░░██╔██╗██║░░░██║░░░  ██╔████╔██║█████╗░░╚█████╗░╚█████╗░███████║██║░░██╗░█████╗░░
+██║░░██╗██║░░░░░██║██╔══╝░░██║╚████║░░░██║░░░  ██║╚██╔╝██║██╔══╝░░░╚═══██╗░╚═══██╗██╔══██║██║░░╚██╗██╔══╝░░
+╚█████╔╝███████╗██║███████╗██║░╚███║░░░██║░░░  ██║░╚═╝░██║███████╗██████╔╝██████╔╝██║░░██║╚██████╔╝███████╗
+░╚════╝░╚══════╝╚═╝╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚═╝░░░░░╚═╝╚══════╝╚═════╝░╚═════╝░╚═╝░░╚═╝░╚═════╝░╚══════╝*/
+//ON CLIENT MESSAGE
+let errors = 0
+let expCodes = []
+let vrChannel = '1066945318060556378'
+async function setVouchers() {
+  let channel = await getChannel(vrChannel)
+  shop.vouchers = []
+  const options = { limit: 100 };
+  
+  let messages = await channel.messages.fetch(options).then(async messages => {
+      await messages.forEach(async (gotMsg) => {
+        let args = await getArgs(gotMsg.content)
+        let id = args[0]
+        let perks = args.slice(1).join(" ").replace('- ','');
+        let fromNow = moment(gotMsg.createdAt).fromNow()
+        //
+        if (fromNow == '5 days ago') {
+          sendChannel('Expired Voucher: '+gotMsg.content,'1047454193755107337',colors.none)
+          gotMsg.delete();
+        } 
+        else {
+         let found = shop.vouchers.find(b => b.code === id)
+        !found ? shop.vouchers.push({code: id, perks: perks}) : null 
+        }
+      })
+    })
+}
+async function useVoucher(code) {
+  let channel = await getChannel(vrChannel)
+  const options = { limit: 100 };
+  
+  let messages = await channel.messages.fetch(options).then(async messages => {
+      await messages.forEach(async (gotMsg) => {
+        let args = await getArgs(gotMsg.content)
+        let id = args[0]
+        let perks = args.slice(1).join(" ").replace(' - ','');
+        if (id === code) {
+          gotMsg.delete()
+          await setVouchers()
+          return true;
+        }
+      })
+    })
+}
+function getVoucher(code) {
+  let found = shop.vouchers.find(v => v.code === code)
+  if (found) return found;
+}
+async function dropVoucher(code,ch,title) {
+  await setVouchers()
+  let channel = await getChannel(ch)
+  let voucher = await getVoucher(code)
+  let row = new MessageActionRow().addComponents(
+    new MessageButton().setCustomId('voucher-'+voucher.code).setStyle('SECONDARY').setLabel('Claim Voucher').setEmoji('<:08:1069200741807435866>'),
+  );
+  //
+  let quote = "Oop, I can't think of a quote right now."
+  let context = ['cats','life','dogs','panko','love','baguette','stupidity']
+  let chosenContext = context[getRandom(0,context.length)]
+  let data = await chatAI("write a random quote about "+chosenContext)
+    if (data.response.error) console.log('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
+    else if (data.chosenAPI === AI.chatAPI) {
+      let msg = data.response.choices[0].message.content
+      let filtered = AI.filter(msg)
+      if (filtered.length > 500) {
+        console.log("⚠️ The message generated was longer than 500 characters. Unable to send due to discord's limitations.")
+      } else {
+        quote = filtered
+      }
+    }  
+  let embed = new MessageEmbed()
+  .addField(title,'<:09:1069200736631656518> Click the button to claim')
+  .addField("Random Quote",quote)
+  .setColor(colors.none)
+  .setThumbnail('https://media.discordapp.net/attachments/917249743690805249/1067060198327472128/Logopit_1674477351350.png')
+  channel.send({embeds: [embed], components: [row]})
+}
+function makeCode(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+client.on("messageCreate", async (message) => {
+  //Ping
+  if (message.channel.id === '1047454193595732055' && message.author.id === '968378766260846713') {
+    let user = message.mentions.members.first()
+    let id = user.id
+    
+    let webhook = new WebhookClient({ url: 'https://discord.com/api/webhooks/1067065095613583380/J0y0QwCDld-1e1nHDvh6nkjh6QYOVIzdRXYvz5Gg18T6aYV8FUpV5g4s-vePqi_qWp2_'})
+    let zarche = await getUser('900011518714847282')
+    webhook.send({
+      content: 'welcome po <:gude_heart:1056580152852762694>',
+      username: zarche.username,
+      avatarURL: zarche.avatarURL()
+    })
+    let ji = await getUser('699388207539945532')
+    webhook.send({
+      content: 'welcome to sloopies, im a jicken',
+      username: ji.username,
+      avatarURL: ji.avatarURL()
+    })
+  } 
+  else if (message.channel.parent?.name.toLowerCase().includes('orders')) {
+    if (message.author.id === "557628352828014614") {
+    let member = message.mentions.members.first()
+    let shopStatus = await getChannel(shop.channels.status);
+      if (shopStatus.name === 'shop : CLOSED') {
+        message.channel.send("<@"+member.id+"> The shop is currently **CLOSED**, please come back at <t:1677542400:t> to proceed with your order.")
+      }
+    else if (!await hasRole(member,['1077462108381388873'],message.guild)) {
+      let embed = new MessageEmbed()
+      .addField('Terms and Conditions','Before proceeding, you must read and accept our terms and conditions.\n\nBy clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail. You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.')
+      .setColor(colors.red)
+      
+      let row = await makeRow('terms','Agree and continue','SECONDARY','📌')
+      
+      message.channel.send({content: "<@"+member.id+">", embeds: [embed], components: [row]})
+    } else if (await hasRole(member,['1077462108381388873'],message.guild)) {
+      message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
+    }
+    } else if (!message.author.bot) {
+      if (!await hasRole(message.member,['1077462108381388873'])) {
+        message.reply('Please make sure that you have accepted the terms above before proceeding with your order.')
+      }
+    }
+  } 
+  else if (message.channel.parent?.name.toLowerCase() === 'reports') {
+   if (message.author.id === "557628352828014614") {
+     let vc = await getChannel("1079713500731015209")
+     let member = message.mentions.members.first()
+     let state = await hasRole(member,["Accepted TOS"]) ? "You have accepted our terms.\n→ Therefore, we shall not be liable for any mistakes or excuses made once you've violated our rules." : "We shall not be liable for any mistakes or excuses made once you've violated our rules."
+     if (vc.name === 'reports : CLOSED') {
+     message.channel.send(emojis.warning+" **Void Warranty**\nReport was submitted outside reporting hours.\n\n<:07:1069200743959109712> Remarks\n→ Void warranty means no replacement nor refund.\n→ "+state)
+     }
+   } 
+  }
+  //
+  if (message.author.bot) return;
+  if (isCommand('find',message)) { 
+    if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
+    let args = await requireArgs(message,1)
+    if (!args) return;
+    console.log(args[1])
+    
+    await fetchMany(message.channel,args[1])
+  }
+  if (isCommand('apply',message)) { 
+    if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
+    
+    let embed = new MessageEmbed()
+    .setTitle('Reseller Application')
+    .setDescription('**Please provide the following information by sending it here**\n\n<:s_hearty:1078837619053576212> Shop Link:\n<:s_hearty:1078837619053576212> Age:\n<:s_hearty:1078837619053576212> Verified GCash number:\n<:s_hearty:1078837619053576212> Joined sloopies since:')
+    .addField('Remarks','– You should be aware that you can still be removed as a reseller, for any reason, with or without notice.\n– Any false information submitted will result in immediate decline of your application.\n– Resellers have a quota of 1 order per week before being removed.\n– You can still re-apply if you were removed as a reseller before. However, your application will not be easily regarded unlike other applicants.')
+    .setColor(colors.white)
+    .setThumbnail(message.author.avatarURL())
+    
+    let botMsg = null
+    await message.channel.send({embeds: [embed]}).then(msg => botMsg = msg)
+    const filter = m => m.author.id === message.author.id;
+    botMsg.channel.awaitMessages({filter,max: 1,time: 900000 ,errors: ['time']})
+          
+    .then(async responseMsg => {
+    responseMsg = responseMsg.first()
+    
+    let attachments = Array.from(responseMsg.attachments.values())
+    if (responseMsg.content.toLowerCase().startsWith('cancel')) {
+      sendUser(emojis.check+" Verification cancelled! Please rerun the command if you wish to retry.",responseMsg.author.id,colors.lime,true)
+    }
+    else if (responseMsg.content.length > 0) {
+    let log = await getChannel('1085504963955916810')
+    let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId('approve-'+responseMsg.author.id).setStyle('SUCCESS').setLabel('Approve').setEmoji(emojis.check),
+      new MessageButton().setCustomId('decline-'+responseMsg.author.id).setStyle('DANGER').setLabel('Decline').setEmoji(emojis.x),
+    );
+      let embed = new MessageEmbed()
+      .setTitle(responseMsg.author.tag)
+      .setThumbnail(responseMsg.author.avatarURL())
+      .setColor(colors.white)
+      .addField("Application",responseMsg.content)
+      .addField("Ping","<@"+responseMsg.author.id+">")
+      .setFooter({text: responseMsg.author.id})
+      
+      log.send({embeds: [embed], components: [row]})
+      sendUser(emojis.loading+" Your application was submmited | Waiting for response",responseMsg.author.id,colors.white)
+    }
+    })
+    .catch(collected => {
+    
+    console.log("Msg Collection Error: "+collected)
+    sendUser("**[Timed-out]** No response collected. Please rerun the command if you wish to retry.\n",message.author.id,colors.red)
+  });
+  }
+  //Nitro checker
+  if (message.channel.name?.includes('cc-checker') && !message.author.bot) {
+    let args = getArgs(message.content)
+    let text = ""
+    let errorText = ""
+    let error = 0
+    let failed = 0
+    let success = 0
+    let botMsg = null
+    let stopper = null
+    let breakLoop = false
+    let scanned = 0
+     async function readAttachments() {
+      const file = message.attachments.first()?.url;
+      if (!file) console.log('No attached file found')
+      else {
+        let response = await fetch(file);
+        if (response.ok) {
+          let text = await response.text();
+          let textArgs = getArgs(text)
+          for (let i in textArgs) {
+            if (textArgs[i].includes('|')) data.cc.push(textArgs[i])
+          }
+        }
+      }
+    }
+    //Data
+    let data = shop.scanner.find(s => s.id === message.author.id)
+    if (data) {
+      for (let i in args) {
+        if (args[i].includes('|')) data.cc.push(args[i])
+      }
+      await readAttachments()
+      return;
+    } else {
+      await shop.scanner.push({id: message.author.id, cc: [], live: "", breakLoop: false})
+      data = shop.scanner.find(s => s.id === message.author.id)
+      
+      for (let i in args) {
+        if (args[i].includes('|')) data.cc.push(args[i])
+      }
+      await readAttachments()
+    }
+    
+    if (data.cc.length === 0) {
+      for (let i in shop.scanner) {
+        if (shop.scanner[i].id === message.author.id) {
+          shop.scanner.splice(i,1)
+        }
+      }
+      return;
+    }
+    let row = new MessageActionRow()//await makeRow('endLoop',"Stop","SECONDARY","🛑")
+    .addComponents(
+      new MessageButton().setLabel("Show Live").setEmoji("💳").setCustomId("live-"+message.author.id).setStyle("SECONDARY"),
+      new MessageButton().setLabel("Stop").setEmoji("🛑").setCustomId("stop-"+message.author.id).setStyle("SECONDARY")
+    );
+    await message.channel.send({content: "Scanning "+data.cc.length+" cards "+emojis.loading, components: [row]}).then(msg => botMsg = msg)
+    let live = false
+    let index = 0
+    for (let i = 0; i < data.cc.length; i++) {
+      if (data.breakLoop) break;
+      index++
+      let cc = data.cc[i]
+      let url = "https://www.xchecker.cc/api.php?cc="+cc
+      let response = await fetch(url)
+      response = await response.json()
+      console.log(cc+": "+response.status)
+      console.log(response)
+      scanned++
+      let embed = new MessageEmbed()
+      .addField('CC','```'+cc+'```')
+      .addField('Bank Name','```yaml\n'+response.bankName+'```')
+      let left = data.cc.length-scanned
+      if (response.status === "Live" && !response.error) {
+        success++
+        live = true
+        embed = new MessageEmbed(embed)
+        .setTitle('Live Bin')
+        .setColor(colors.green)
+        .addField('Status','```diff\n+ '+response.status+'```')
+      }
+      else if (response.status !== "Dead" && !response.error) {
+        error++
+        embed = new MessageEmbed(embed)
+        .setTitle('Unknown Status')
+        .setColor(colors.orange)
+        .addField('Status','```diff\n- '+response.status+'```')
+        .addField('Error Code','```diff\n- '+response.details+'```')
+      }
+      else if (!response.error) {
+        failed++
+        embed = new MessageEmbed(embed)
+        .setTitle('Dead')
+        .setColor(colors.red)
+        .addField('Card Declined','```diff\n- '+response.details+'```')
+        
+      } else {
+        error++
+        embed = new MessageEmbed(embed)
+        .setTitle('Error')
+        .setColor(colors.orange)
+        .addField('Error Code','```diff\n- '+response.error+'```')
+        
+        errorText += !errorText.includes(response.error) ? "\n"+response.error : ""
+      }
+      await message.channel.send({embeds: [embed], content: live ? index+'. <@'+message.author.id+'>' : index+'.', components: [row]})
+      //botMsg.edit("Scanning "+left+" cards "+emojis.loading+'\n'+emojis.check+" Live: "+success.toString()+'\n'+emojis.x+" Dead: "+failed.toString())
+    }
+    let embed = new MessageEmbed()
+      .addField("Live",emojis.check+" "+success.toString()+"\n"+data.live)
+      .addField("Dead",emojis.x+" "+failed.toString())
+      .addField("Error",emojis.warning+" "+error.toString()+"\n"+errorText)
+      .setColor(colors.none)
+    
+    botMsg.delete();
+    message.channel.send({embeds: [embed]})
+    
+    for (let i in shop.scanner) {
+      if (shop.scanner[i].id === message.author.id) {
+        shop.scanner.splice(i,1)
+      }
+    }
+  }
+  else if ((message.channel.name?.includes('nitro-checker') || message.channel.type === 'DM') && !message.author.bot) {
+    let args = getArgs(message.content)
+    if (args.length === 0) return;
+    let codes = []
+    let text = ''
+    let ind = emojis.check+' = Claimable\n'+emojis.x+' = Claimed/Invalid'
+    let msg = null
+    for (let i in args) {
+      if (args[i].toLowerCase().includes('discord.gift')) {
+      let code = args[i].replace(/https:|discord.gift|\/|/g,'').replace(/ /g,'')
+      let found = codes.find(c => c.code === code)
+      !found ? codes.push({code: code, expire: null, emoji: null, user: null, state: null}) : null
+    }
+    }
+    if (codes.length === 0) return;
+    if (codes.length > 100) return message.reply('You can only request a maximum of 100 giftcodes per message')
+    await message.channel.send('Fetching nitro codes (0/'+codes.length+') '+emojis.loading).then(botMsg => msg = botMsg)
+
+    let embed = new MessageEmbed()
+    let num = 0
+      //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
+    //
+    for (let i in codes) {
+      let fetched = false
+      let waitingTime = 1000
+      while (!fetched) {
+        sleep(waitingTime)
+        let eCode = expCodes.find(e => e.code === codes[i].code)
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v8/entitlements/gift-codes/'+codes[i].code)
+        res = eCode ? eCode : await res.json()
+        if (res.message && res.retry_after) {
+          let ret = Math.ceil(res.retry_after)
+          ret = ret.toString()+"000"
+          waitingTime = Number(ret) < 300000 ? Number(ret) : 60000
+        if (res.retry_after >= 600000) {
+          fetched = true
+          text = '⚠️ The resource is currently being rate limited. Please try again in '+res.retry_after+' seconds'
+          break;
+        }
+          }
+        if (!res.retry_after) {
+          fetched = true
+          msg.edit('Fetching nitro codes ('+(i)+'/'+codes.length+') '+emojis.loading)
+          let e = res.expires_at ? moment(res.expires_at).unix() : null
+          codes[i].expire = !isNaN(e) ? Number(e) : 'Expired'
+          let expire = res.expires_at ? 'Expires in <t:'+e+':f>' : '`Expired`'
+          codes[i].emoji = res.uses === 0 ? emojis.check : emojis.x
+          codes[i].state = res.expires_at && res.uses === 0 ? 'Claimable' : res.expires_at ? 'Claimed' : 'Invalid'
+          codes[i].user = res.user ? '`'+res.user.username+'#'+res.user.discriminator+'`' : "`Unknown User`"
+          if ((!res.expires_at || res.uses >= 1) && !eCode) {
+            let data = {
+              code: codes[i].code,
+              expires_at: res.expires_at,
+              uses: res.uses,
+            }
+            expCodes.push(data)
+          }
+          break;
+        }
+      }
+    }
+    codes.sort((a, b) => (b.expire - a.expire));
+    for (let i in codes) {
+      num++
+      let data = codes[i]
+      let emoji = data.emoji
+      let state = data.state
+      let user = data.user
+      let expire = data.expire
+      embed = new MessageEmbed(embed)
+      .addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\nExpires in <t:'+(!expire ? 'Expired' : expire)+':f>\n\u200b')
+      
+    if (message.content.toLowerCase().includes("stocks")) {
+      let stocks = await getChannel('1054929031881035789')
+      await stocks.send("https://discord.gift/"+codes[i].code)
+    }
+    }
+    embed = new MessageEmbed(embed)
+    //.setDescription(text)
+    .addField('\u200b',ind)
+    .setColor(colors.none)
+    .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
+    .setTimestamp()
+    
+    msg.delete();
+    let logs = await getChannel('1060786672201105419')
+    logs.send({embeds: [embed]})
+    message.channel.send({embeds: [embed]})
+  }
+  //
+  if (message.channel.type === 'DM') return;
+  //Sticky
+  let filter = filteredWords.find(w => message.content?.toLowerCase().includes(w))
+  if (filter) {
+    message.delete();
+  }
+  for (let i in shop.stickyChannels) {
+  let sticky = shop.stickyChannels[i]
+  if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
+    const options = { limit: 10 };
+    //
+    if (message.channel.id === '1054731027240726528' || message.channel.id === '1055030500508569620') {
+      let member = message.mentions.members.first()
+      await addRole(member,['pending','buyer'],message.guild)
+      message.react('<:gude1:1056579657828417596>')
+    }
+    let messages = await message.channel.messages.fetch(options).then(messages => {
+      messages.forEach(async (gotMsg) => {
+        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message) {
+          gotMsg.delete();
+        }
+      })
+    });
+    //
+
+    if ((sticky.condition && sticky.condition(message)) || !sticky.condition) {
+    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : []});
+    }
+  }
+}
+  
+  //Commands
+  if (isCommand('forceall',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let cc = 0
+    let f = '〔,〕'.replace(/ /,'').split(/,/)
+    let f2 = '・❥,・'.replace(/ /,'').split(/,/)
+    console.log(f,f2)
+    message.guild.channels.cache.forEach( ch => {
+      if (ch.type !== 'GUILD_CATEGORY' && ch.type !== 'GUILD_VOICE') {
+      cc++;
+      let name = ch.name.replace(f[0],f2[0]).replace(f[1],f2[1])
+      console.log(name)
+      ch.setName(name)
+      }
+    })
+    message.reply('Renamed '+cc+' channels with the border '+f2)
+      }
+  else if (isCommand('shutdown',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let botMsg = null
+    await message.reply("Shutting down... "+emojis.loading).then(msg => botMsg = msg)
+    sleep(4000)
+    await botMsg.delete()
+    await message.channel.send(emojis.check+" Bot has been shutdown.")
+    //process.exit()
+    client.destroy()
+  }
+  else if (isCommand('use',message)) {
+    console.log(message.channel.parent.name)
+    if (!message.channel.parent.name.toLowerCase().includes('orders')) return message.reply('This command can only be used in a ticket! You must purchase a product, If you wish to use your voucher.\n\n<#1054711675045036033>')
+    await setVouchers()
+    let args = await requireArgs(message,1)
+    if (!args) return;
+    let code = args[1]
+    let voucher = getVoucher(code)
+    if (!voucher) return message.reply(emojis.x+' The voucher: `'+code+'`  is already claimed or expired!')
+    sendChannel(emojis.check+' <@'+message.author.id+'> used a **'+voucher.perks+'**!\nCode: `'+code+'`',message.channel.id,colors.none)
+    let use = await useVoucher(voucher.code)
+  }
+  else if (isCommand('nitro',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let stocks = await getChannel("1054929031881035789")
+    let args = await requireArgs(message,2)
+    if (!args) return;
+    let user = await getUser(args[1])
+    let quan = Number(args[2])
+    let method = args[3]
+    
+    let links = ""
+    let index = ""
+    let msgs = []
+    let messages = await stocks.messages.fetch({limit: quan}).then(async messages => {
+      messages.forEach(async (gotMsg) => {
+        index++
+        links += "\n"+index+". "+gotMsg.content
+        msgs.push(gotMsg)
+      })
+    })
+    await addRole(await getMember(user.id,message.guild),["Buyer","Pending"],message.guild)
+    if (links === "") return message.reply(emojis.x+" No stocks left.")
+    if (quan > index) return message.reply(emojis.warning+" Insufficient stocks. **"+index+"** nitro boost(s) remaining.")
+    stocks.bulkDelete(quan)
+    let button = await makeRow("nitro-"+user.id,"Send to "+user.tag,"SECONDARY","📤")
+    message.channel.send("<:07:1069200743959109712> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:circley:1072388650337308742> Make sure to open your DMs.\n<:circley:1072388650337308742> The message may appear as **direct or request** message.")
+    message.author.send({content: links, components: [button]})
+    let orders = await getChannel("1054731027240726528")
+    orders.send("<@"+user.id+">\n ("+quan+") nitro boost\n"+(method ? method : "gcash")).then(async msg => {
+      await msg.react("<:g1:1056579657828417596>")
+      await msg.react("<:g2:1056579660353372160>")
+      await msg.react("<:g3:1056579662572179586>")
+    })
+  }
+  else if (isCommand('stocks',message)) {
+    let stocks = await getChannel("1054929031881035789")
+    let quan = 0;
+    let messages = await stocks.messages.fetch({limit: 100}).then(async messages => {
+      messages.forEach(async (gotMsg) => {
+        quan++
+      })
+    })
+    let arrays = [
+    [
+      {name: 'Nitro Basic',id:"1080097861460578334", type: 'SECONDARY'},
+      {name: 'Developer Badge',id:"1080097846453350460", type: 'SECONDARY'},
+      {name: 'Server Boost',id:"1080097887041638460", type: 'SECONDARY'},
+      {name: 'Robux',id:"1080097878564937728", type: 'SECONDARY'},
+    ],
+    [
+      //{name: 'Paypal to GCash',id:"1080097803612725248"},
+    ],
+      
+    ]
+    let stockHolder = [
+      [],[]
+    ]
+    let template = await getChannel("1075782410509226095")
+    stockHolder[0].push(new MessageButton().setCustomId('title-Nitro Boost').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
+    for (let i in arrays) {
+      let array = arrays[i]
+      if (array.length > 0) {
+      for (let e in array) {
+      let msg = await template.messages.fetch(array[e].id)
+      let args = await getArgs(msg.content)
+      let text = args.slice(1).join(" ")
+      stockHolder[i].push(new MessageButton().setCustomId('title-'+array[e].name).setStyle(array[e].type).setLabel(text).setEmoji(args[0]))
+      }
+      }
+    }
+    
+    let row = new MessageActionRow()
+    row.components = stockHolder[0]
+    //let row2 = new MessageActionRow()
+    //row2.components = stockHolder[1]
+    message.reply({content: "Click the buttons to display more info about the product.", components: [row]})
+  }
+  else if (isCommand('drop',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let args = await requireArgs(message,2)
+    if (!args) return;
+    let perks = args.slice(2).join(" ").replace('- ','');
+    let voucher = {
+      code: makeCode(10),
+      perks: perks
+    }
+    let vr = await getChannel(vrChannel)
+    vr.send(voucher.code+' - '+voucher.perks)
+    await dropVoucher(voucher.code,args[1],voucher.perks+' drop')
+  }
+  //
+  if (message.channel.id === shop.channels.vouch) {
+    if (message.attachments.size === 0) return message.reply('⚠️ Invalid form of vouch! Please attach an image file that shows the product you ordered!')
+    else {
+      message.react('<:08:1069200741807435866>')
+      await removeRole(message.member,['pending'])
+    }
+  }
+  //
+  let userPerms = await getPerms(message.member, 3)
+  //if mod
+  if (userPerms) {
+    if (isMessage(".rename",message)) {
+      let args = await requireArgs(message,1)
+      if (!args) return;
+      let name = args.slice(1).join(" ")
+      await message.channel.setName(name)
+      message.react(emojis.check)
+    }
+    
+    else if (isMessage(".format",message)) message.delete(), message.channel.send("<:07:1069200743959109712> __**Order form**__\n<:circley:1072388650337308742>Product:\n<:circley:1072388650337308742>Quantity:\n<:circley:1072388650337308742>Payment method:")
+    else if (isMessage(".rnitro",message)) message.delete(), message.channel.send({content: "<:07:1069200743959109712> __**Nitro report form**__\n<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch: "})
+    else if (isMessage(".boost",message)) message.delete(), message.channel.send({content: "<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.", files: [{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072852303637389403/image.png',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072853921325928519/image.png',name: 'file.png'}]})
+    else if (isMessage(".rate",message)) message.delete(), message.channel.send("**Paypal Rate** <:07:1069200743959109712>\n\n₱500 and below = 13%\n₱501 above = 7%\n₱1,000 above = 5%")
+    else if (isMessage(".robux",message)) message.delete(), message.channel.send("<:mark:1056579773989650543> Please fill up the form:\n\nGamepass/Shirt:\nAmount:")
+    else if (isMessage(".vp",message)) message.delete(), message.channel.send('<:mark:1056579773989650543> Please fill up the form:\n\n— Riot tags:\n— Email:')
+    else if (isMessage(".gcash2",message)) {
+      message.delete()
+      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
+      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 326 3549**\n— **I^^ PA••O I.**\n\n— Send screenshot of receipt here', components: [row]});
+    }
+    else if (isMessage(".gcash3",message)) {
+      message.delete()
+      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
+      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here', components: [row]});
+    }
+    else if (isMessage(".gcash",message)) {
+      message.delete()
+      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
+      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **096 620 84534**\n— **EL•A I.**\n\n— Send screenshot of receipt here', components: [row]});
+    }
+    else if (isMessage(".paypal",message)) message.delete(), message.channel.send('<a:MoneyFlash:1054781743355396186> Paypal (w/ fee)\n— nexionshin123@gmail.com\n— Please make sure to set the payment type to **friends and family**!\n\n— Send screenshot of receipt here')
+    else if (isMessage(".badge",message)) {
+      message.delete()
+      let embed = new MessageEmbed()
+      .setDescription('**Steps of claiming dev badge**\n— Activate Discord 2FA (Required)\n— Check your gmail for an invite, click **Accept Invite**\n— Join https://discord.gg/ZFc27ktaeg\n— Head to https://discord.com/developers/active-developer to claim the badge\n— Make sure to take a **SCREENSHOT** for proof/vouching!')
+      .setColor(colors.none)
+      
+      message.channel.send({embeds: [embed]})
+      }
+    else if (isMessage(".noted",message)) {
+      message.delete()
+      let row = new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<:rules1:1054722952899342377>').setCustomId('followup'),
+          new MessageButton().setLabel('Mark as Done').setStyle('PRIMARY').setEmoji('📬').setCustomId('done'),
+        )
+      message.channel.send({content: 'You can request for follow up, if you think that your order is taking too long.', components: [row]})
+      }
+  }
+  //if not
+  else if (!userPerms) {
+    moderate(message.member);
+    let args = await getArgs(message.content)
+    let moderated = moderate(message.member);
+    if (message.content.toLowerCase() === 'hi') message.channel.send("hello! \:)")
+    if (message.content.toLowerCase().includes('onhand')) message.reply("Hello, there! Please check our most recent <#1071049104001601586> to know about the availability of our products!")
+    if (message.content.toLowerCase().includes('how much') || args[0].toLowerCase() === 'hm') {
+      let channels = ''
+      message.guild.channels.cache.forEach( ch => {
+        if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {
+          channels += '\n<:circley:1072388650337308742> <#'+ch.id+'>'
+        }
+    })
+      message.reply("Hello, there! You can check our products' pricelists through these channels:\n"+channels)
+    }
+    }
+  let chance = false
+  if (message.channel.id === '1047454193595732055') {
+    let chances = [false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+    let random = chances[getRandom(0,chances.length)]
+    //chance = random
+    console.log(chance)
+  }
+  if (message.mentions.has('1057167023492300881') || message.content?.toLowerCase().includes('gude')) chance = true
+  //AI ChatBot
+  if (message.channel.name.includes('gudetama') || chance) {
+    await message.channel.sendTyping();
+    let data = await chatAI(message.content)
+    if (data.response.error) return message.reply('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
+    if (data.chosenAPI === AI.imageAPI) {
+      let url = data.response.data[0].url
+      await message.reply(url)
+    }
+    else if (data.chosenAPI === AI.chatAPI) {
+      let msg = data.response.choices[0].message.content
+      let filtered = AI.filter(msg)
+      if (filtered.length > 1999) return message.reply("⚠️ The message generated was longer than 2000 characters. Unable to send due to discord's limitations.")
+      await message.reply(filtered)
+    }
+  }
+  //Neither
+  if (message.content.toLowerCase() === '.sloopies') message.reply('https://discord.gg/sloopies');
+});//END MESSAGE CREATE
+
+let ondutyChannel = '977736253908848711'
+let tickets = []
+let vrDebounce = false
+let claimer = null
+let animation = false
+client.on('interactionCreate', async inter => {
+  if (inter.isCommand()) {
+    if (inter.commandName == 'slash') {
+      inter.reply({content: '||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _https://discord.gift/vhnuzE2YkNCZ7sfYHHKebKXB'})
+    }
+  } else if (inter.isButton()) {
+    let id = inter.customId
+    if (id.startsWith('voucher-')) {
+      let code = id.replace('voucher-','').replace(/_/g,' ')
+      if (!vrDebounce && claimer === null) {
+        !claimer ? claimer = inter.user.id : null
+        vrDebounce = true
+        await setVouchers()
+        let voucher = shop.vouchers.find(v => v.code === code)
+      if (!voucher) return vrDebounce = false, inter.update({content: emojis.x+' The voucher (`'+code+'`) was revoked!', components: []})
+        let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('design1').setStyle('SECONDARY').setEmoji('<a:party:1083355785188347984>'),//.setDisabled(true),
+          new MessageButton().setCustomId('design2').setStyle('SECONDARY').setEmoji('<a:TC_Party_Cat:1083357530786373703>'),
+          new MessageButton().setCustomId('design3').setStyle('SECONDARY').setEmoji('<a:Party_Dino:1083357739687882802>'),
+          new MessageButton().setCustomId('design4').setStyle('SECONDARY').setEmoji('<a:SREV_purple_party:1083357680174895187>'),
+          new MessageButton().setCustomId('design5').setStyle('SECONDARY').setEmoji('<a:TC_Wumpus_Party:1083357617478447124>'),
+        );
+        let quote = "Oop, I can't think of a quote right now."
+        let context = ['cats','life','dogs','panko','love','baguette','stupidity']
+        let chosenContext = context[getRandom(0,context.length)]
+        let data = await chatAI("write a random quote about "+chosenContext)
+        if (data.response.error) console.log('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
+        else if (data.chosenAPI === AI.chatAPI) {
+          let msg = data.response.choices[0].message.content
+          let filtered = AI.filter(msg)
+          if (filtered.length > 500) {
+            console.log("⚠️ The message generated was longer than 500 characters. Unable to send due to discord's limitations.")
+          } else {
+            quote = filtered
+          }
+        }
+  
+        let newEmbed = new MessageEmbed()
+        .setTitle(voucher.perks)
+        .setThumbnail(inter.user.avatarURL())
+        .setDescription('Hmm, it seems someone already claimed this voucher.')
+        .addField("Random Quote",quote)
+        .addField('Claimed by','<@'+inter.user.id+'>')
+        .setFooter({text: 'Click the buttons below for some entertainment'})
+        .setColor(colors.red)
+        
+        sendChannel(emojis.check+' <@'+inter.user.id+'> claimed a **'+voucher.perks+'**!\nCode: `'+code+'`','1047454193755107337',colors.lime)
+        let embed = new MessageEmbed()
+        .addField('You received a '+voucher.perks+'!','Code: `'+code+'`')
+        .addField('Read me','\n<:circley:1072388650337308742>This voucher will expire in 5 days\n<:circley:1072388650337308742>Must order an item to use the voucher\n<:circley:1072388650337308742>You can share the code to anyone!\n<:circley:1072388650337308742>One-time use only\n<:circley:1072388650337308742>You can only use one voucher per order')
+        .setColor(colors.none)
+        .setFooter({text: 'Type ;use '+code+' in the ticket channel to use your voucher!'})
+        
+        let row2 = await makeRow('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290','Order Here','LINK','<:09:1069200736631656518>')
+    
+        let error = false
+        if (claimer === inter.user.id) {
+          await inter.user.send({embeds: [embed], components: [row2]}).catch((err) => {
+            inter.reply({content: 'Error! Cannot send voucher to your DMs. Please open your DMs!', ephemeral: true})
+            error = true
+          })
+          .then((msg) => {
+            if (error) return;
+            inter.reply({content: "Voucher code was sent in your DMs!", ephemeral: true})
+            inter.message.edit({embeds: [newEmbed], components: [row]});
+          })
+        } else {
+          inter.reply({content: "It seems like someone was milliseconds faster than you.", ephemeral: true})
+        }
+        claimer = null
+        vrDebounce = false
+        
+    } else {
+      inter.reply({content: emojis.x+' The voucher was already claimed!', ephemeral: true})
+    }
+    }
+    else if (id.startsWith('roles-')) {
+    let role = id.replace('roles-','').replace(/_/g,' ')
+    if (hasRole(inter.member, [role], inter.guild)) {
+      removeRole(inter.member, [role], inter.guild)
+      await inter.reply({content: emojis.x+' Removed **'+role+'** role.', ephemeral: true})
+    } else {
+    addRole(inter.member, [role], inter.guild)
+    await inter.reply({ content: emojis.check+' Added **'+role+'** role.', ephemeral: true });
+    }
+  }
+    else if(id.startsWith('nitro-')) {
+      let user = id.replace('nitro-','')
+      user = await getUser(user)
+      if (!user) return inter.reply("Invalid user.")
+      let template = await getChannel("1075782410509226095")
+      
+      let msg = await template.messages.fetch("1075782458970214480")
+      let error = false;
+      let code = makeCode(15)
+      let copy = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<:07:1069200743959109712>')
+        );
+      await user.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+inter.message.content+" ||", components: [copy]}).catch((err) => {
+        error = true
+        inter.reply({content: emojis.x+" Failed to process delivery.\n\n```diff\n -"+err+"```", ephemeral: true})})
+      .then(async (msg) => {
+        if (error) return;
+        let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('sent').setStyle('SUCCESS').setLabel('Sent to '+user.tag).setDisabled(true),
+          new MessageButton().setCustomId('code').setStyle('SECONDARY').setLabel(code).setDisabled(true),
+        );
+        inter.update({content: code+"\n"+inter.message.content, components: [row]})
+      })
+      //inter.reply("Successful sent to "+user.tag)
+      //inter.message.edit({components: []})
+    }
+    else if (id.startsWith('copyLinks')) {
+      let template = await getChannel("1075782410509226095")
+      
+      let msg = await template.messages.fetch("1075782458970214480")
+      let filter = inter.message.content.replace(msg.content,'').replace(/\||Ref code:/g,'')
+      let args = await getArgs(filter)
+      filter = filter.replace(args[0],'')
+      
+      inter.reply({content: filter, ephemeral: true})
+    }
+    else if (id.startsWith('stop-')) {
+      let user = id.replace('stop-','')
+      let data = shop.scanner.find(s => s.id === user)
+      if (data) {
+        await inter.reply({content: "Stopping...", ephemeral: true})
+        data.breakLoop = true;
+        sleep(2000)
+        await inter.channel.send({content: emojis.check+" Stopped Scanning\nAuthor: `"+inter.user.tag+"`", ephemeral: true})
+      } else {
+        inter.reply({content: "The queue no longer exist.", ephemeral: true})
+      }
+    }
+    else if (id.startsWith('live-')) {
+      let user = id.replace('live-','')
+      let data = shop.scanner.find(s => s.id === user)
+      if (data) {
+        inter.reply({content: data.live !== "" ? data.live : "No live cards are found yet.", ephemeral: true})
+      } else {
+        inter.reply({content: "The queue no longer exist.", ephemeral: true})
+      }
+    }
+    else if (id.startsWith('reply-')) {
+      let reply = id.replace('reply-','')
+      inter.reply({content: reply, ephemeral: true})
+    }
+    else if (id.startsWith('approve-')) {
+      let userId = id.replace('approve-','')
+      let user = await getUser(userId);
+      if (user) {
+        let comp = inter.message.components[0]
+        for (let i in comp.components) {
+            let row = comp.components[i]
+            row.disabled = true
+          }
+        sendUser(emojis.check+" Your application was approved!",user.id,colors.lime)
+        inter.reply({content: "Application Accepted", ephemeral: true})
+        inter.message.edit({components: [comp]})
+      } else {
+        inter.reply({content: "User not found.", ephemeral: true})
+      }
+    }
+    else if (id.startsWith('decline-')) {
+      let userId = id.replace('decline-','')
+      let user = await getUser(userId);
+      if (user) {
+        let comp = inter.message.components[0]
+        for (let i in comp.components) {
+            let row = comp.components[i]
+            row.disabled = true
+          }
+        sendUser(emojis.x+" We're sorry to say this, but your application was declined.",user.id,colors.red)
+        inter.reply({content: "Application Declined", ephemeral: true})
+        inter.message.edit({components: [comp]})
+      } else {
+        inter.reply({content: "User not found.", ephemeral: true})
+      }
+    }
+    else if (id.startsWith('title-')) {
+      let name = id.replace('title-','').toLowerCase()
+      let template = await getChannel('1075782410509226095')
+      let data = [
+        {name: 'nitro boost',id: '1080344427589017710'},
+        {name: 'nitro basic',id: '1080344427589017710'},
+        {name: 'developer badge',id: '1080345129614852106'},
+        {name: 'server boost',id: '1080345981024993382'},
+        {name: 'robux',id: '1080347049922408520'},
+      ]
+      let found = data.find(d => d.name === name)
+      if (!found) return inter.deferUpdate();
+      let msg = await template.messages.fetch(found.id)
+      inter.reply({content: msg.content, ephemeral: true})
+    }
+    else if (id.startsWith('design')) {
+      if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
+      animation = true
+      let comp = inter.message.components[0]
+      let types = [
+        'DANGER',
+        'PRIMARY',
+        'SUCCESS',
+        'DANGER',
+        'PRIMARY',
+        'SUCCESS',
+      ]
+      let usern = inter.user.username.replace(/ /g,'')
+      let randomizer = [
+        usern+' is a cute catto',
+        usern+' likes eating a siopao',
+        usern+' is jumpy cute froggo',
+        usern+' eat eggs a lot',
+        usern+' is a fat catto',
+        usern+' is a hungry monster',
+        usern+' is a fast eater',
+        usern+' likes cattos very much',
+        usern+' has pet dinosor ror',
+        usern+" is gudetama's favorite person",
+        usern+" secretely likes someone's pet",
+        usern+' sleeps longer than u',
+        usern+' sucks at playing valorant',
+        usern+' likes an eggless omelete',
+        usern+' almost fell on cliff',
+      ]
+      let args = getArgs(randomizer[getRandom(0,randomizer.length)])
+      
+      async function changeRow(state,type,disabled) {
+        if (state === 'start') {
+          for (let i in comp.components) {
+            let row = comp.components[i]
+            row.style = type
+            row.disabled = disabled
+          }
+        }
+        else if (state === 'mix') {
+          for (let i in comp.components) {
+            let row = comp.components[i]
+            row.style = types[i] ? types[i] : types[0]
+            row.label = args[i] ? args[i] : args[0]
+            await inter.message.edit({components: [comp]})
+            sleep(delay)
+          }
+        }
+    }
+      let delay = 1500
+      await changeRow('start','DANGER',true)
+      inter.deferUpdate()
+      await inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('start','PRIMARY',true)
+      await inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('start','SUCCESS',true)
+      await inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('start','SECONDARY',true)
+      inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('mix','DANGER',true)
+      inter.message.edit({components: [comp]})
+      await changeRow('start','SECONDARY',true)
+      inter.message.edit({components: [comp]})
+      animation = false
+    }
+    else if (id.startsWith('followup')) {
+      let user = inter.user
+      let messageId = ''
+      let found = shop.followUps.find(f => f === inter.user.id)
+      if (found) return inter.reply({content: "Please wait for at least 2 hours before requesting another follow up!", ephemeral: true})
+      shop.followUps.push(inter.user.id)
+      let channelName = inter.channel.name
+      let template = await getChannel('1079712339122720768')
+      if (channelName.includes('ticket')) messageId = '1086505068351721472'
+      else if (channelName.includes('done')) messageId = '1086503830105104444'
+      else messageId = '1086504594860937256'
+      
+      let foundMsg = await template.messages.fetch(messageId)
+      inter.message.reply({content: "<@&1047454193184682040> **Order Status**\n\n<:03:1056580107189370922> "+foundMsg.content})
+      inter.deferUpdate();
+      setTimeout(function() {
+        shop.followUps.splice(shop.followUps.indexOf(inter.user.id),1)
+      },7200000)
+    }
+    else if (id.startsWith('done')) {
+      if (!await getPerms(inter.member,4)) return inter.deferUpdate();
+      inter.reply({content: emojis.check+" Order marked as done! `"+inter.channel.name+"`"})
+      inter.channel.setName('order-done')
+    }
+    else if (id === 'terms') {
+      let member = inter.member;
+      await addRole(member,['1077462108381388873'],inter.message.guild)
+      let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
+        );
+      inter.update({components: [row]})
+      inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
+    }
+    }
+});
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    if(newMember.nickname && oldMember.nickname !== newMember.nickname) {
+      let found = shop.customRoles.find(r => r.user === newMember.id)
+      if (found) {
+        let role = await getRole(found.role,newMember.guild)
+        role.setName(newMember.nickname)
+      }
+    }
+ });
+client.on('presenceUpdate', async (pres) => {
+  if (!pres) return;
+  let guild = await getGuild('1047454193159503904')
+  let mem = await getMember(pres.userId,guild)
+  if (!mem) return;
+  let perms = await getPerms(mem, 3)
+  let moderated = moderate(mem,perms);
+  if (moderated && hasRole(mem,'sloopies',mem.guild)) {
+    //await removeRole(mem,['sloopie','games','art','entertainment'],mem.guild)
+    //mem.user.send(notices.n1)
+  }
+})
+process.on('unhandledRejection', async error => {
+  ++errors
+  console.log(error);
+  let caller_line = error.stack.split("\n");
+  let index = await caller_line.find(b => b.includes('/app'))
+  let embed = new MessageEmbed()
+  .addField('Caller Line','```'+(index ? index : 'Unknown')+'```',true)
+  .addField('Error Code','```css\n[ '+error.code+' ]```',true)
+  .addField('Error','```diff\n- '+(error.stack >= 1024 ? error.stack.slice(0, 1023) : error.stack)+'```')
+  .setColor(colors.red)
+  
+  let channel = await getChannel(output)
+  channel ? channel.send({embeds: [embed]}).catch(error => error) : null
 });
 
-// listen for requests :)
-const listener = app.listen(process.env.PORT, function() {
-  console.log("Your app is listening on port " + listener.address().port);
-});
+//Loop
+let ready = true;
+let randomTime = null;
+const interval = setInterval(async function() {
+      //Get time//
+  let date = new Date().toLocaleString("en-US", { timeZone: 'Asia/Shanghai' });
+  let today = new Date(date);
+  let hours = (today.getHours() % 12) || 12;
+  let time = hours +":" +today.getMinutes();
+  
+  if (!randomTime) {
+    randomTime = getRandom(1,13)+":"+getRandom(today.getMinutes(),60)
+    sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
+  }
+      //Get info
+      if (ready) {
+        ready = false
+        let amount = shop.randomVouchers.amount
+        let type = shop.randomVouchers.type
+        let generatedVoucher = "₱"+amount[getRandom(0,amount.length)]+" "+type[getRandom(0,type.length)]+" voucher"
+        let template = await getChannel('1079712339122720768')
+        let annc = await getChannel(shop.channels.announcements)
+        console.log(today.getHours(), today.getMinutes(),'time check')
+      if (time === '11:11') {
+        let voucher = {
+          code: makeCode(10),
+          perks: generatedVoucher
+        }
+        let vr = await getChannel(vrChannel)
+        vr.send(voucher.code+' - '+voucher.perks)
+        await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
+      }
+        else if (time === randomTime) {
+          let voucher = {
+          code: makeCode(10),
+          perks: generatedVoucher
+          }
+          randomTime = null
+          
+          let vr = await getChannel(vrChannel)
+        vr.send(voucher.code+' - '+voucher.perks)
+        await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
+        }
+        else if (today.getHours() === 0 && today.getMinutes() === 0) {
+          let msg = await template.messages.fetch("1079716277528039468")
+        let vc = await getChannel(shop.channels.status)
+        if (vc.name === 'shop : CLOSED') return;
+        vc.setName('shop : CLOSED')
+        annc.send(msg.content)
+        } 
+        else if (today.getHours() === 8 && today.getMinutes() === 30) {
+          let msg = await template.messages.fetch("1079715999097552956")
+        let vc = await getChannel(shop.channels.status)
+        if (vc.name === 'shop : OPEN') return;
+        vc.setName('shop : OPEN')
+        annc.send(msg.content)
+      }  
+        else if (today.getHours() === 11 && today.getMinutes() === 0) {
+          let msg = await template.messages.fetch("1079712404084117524")
+          let vc = await getChannel("1079713500731015209")
+          if (vc.name === 'reports : OPEN') return;
+          vc.setName('reports : OPEN')
+          annc.send(msg.content)
+        }
+        else if (today.getHours() === 20 && today.getMinutes() === 0) {
+          let msg = await template.messages.fetch("1079715633123557496")
+          let vc = await getChannel("1079713500731015209")
+          if (vc.name === 'reports : CLOSED') return;
+          vc.setName('reports : CLOSED')
+          annc.send(msg.content)
+        }
+        if (!ready) {
+        setTimeout(function() {
+          ready = true;
+        },50000)
+        }
+      }
+  
+  },5000)

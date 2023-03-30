@@ -10,10 +10,14 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "node-fetch": "^2.6.7",
+    "mongoose": "^7.0.3",
+    "moment": "^2.29.4",
+    "discord.js": "^13.14.0"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/hello-express"
