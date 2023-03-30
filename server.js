@@ -697,8 +697,8 @@ client.on("messageCreate", async (message) => {
     if (!args) return;
     if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
     let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.05 : value >= 500 ? 0.07 : value < 500 ? 0.13 : null
-    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated by the bot.')
+    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
+    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
     let total = value+fee
     
@@ -707,7 +707,7 @@ client.on("messageCreate", async (message) => {
     .addField('Fee','x'+percentage)
     .setColor(colors.none)
     
-    message.reply({content: 'Total amount w/ fee: **₱'+total,embeds: [embed]})
+    message.reply({content: 'Total amount w/ fee: **₱'+total+'**',embeds: [embed]})
   }
   //
   if (message.channel.id === shop.channels.vouch) {
