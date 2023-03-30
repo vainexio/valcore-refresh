@@ -4,7 +4,7 @@ const https = require('https');
 const app = express();
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
-const moment = require('moment') //./node_modules/moment/moment
+const moment = require('moment')
 //
 //Discord
 const Discord = require('discord.js');
