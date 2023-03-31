@@ -599,7 +599,7 @@ client.on("messageCreate", async (message) => {
     if (!args) return;
     let code = args[1]
     let voucher = getVoucher(code)
-    if (!voucher) return message.reply(emojis.x+' The voucher: `'+code+'`  is already claimed or expired!')
+    if (!voucher) return message.reply(emojis.x+' The voucher `'+code+'` was already claimed or expired!')
     sendChannel(emojis.check+' <@'+message.author.id+'> used a **'+voucher.perks+'**!\nCode: `'+code+'`',message.channel.id,colors.none)
     let use = await useVoucher(voucher.code)
   }
