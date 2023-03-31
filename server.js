@@ -611,7 +611,7 @@ client.on("messageCreate", async (message) => {
     let user = await getUser(args[1])
     let quan = Number(args[2])
     let method = args[3]
-    let item = args.slice(3).join(" ")
+    let item = args.slice(4).join(" ")
     
     let links = ""
     let index = ""
