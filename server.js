@@ -743,13 +743,13 @@ client.on("messageCreate", async (message) => {
     }
     else if (isMessage(".gcash3",message)) {
       message.delete()
-      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
-      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here', components: [row]});
+      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
+      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here', components: [row]});
     }
     else if (isMessage(".gcash",message)) {
       message.delete()
-      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
-      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here', components: [row]});
+      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
+      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here', components: [row]});
     }
     else if (isMessage(".paypal",message)) message.delete(), message.channel.send('<a:MoneyFlash:1054781743355396186> Paypal (w/ fee)\n— https://paypal.me/nexionshin\n— Please make sure to set the payment type to **friends and family**!\n\n— Send screenshot of receipt here')
     else if (isMessage(".badge",message)) {
