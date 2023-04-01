@@ -792,7 +792,7 @@ client.on("messageCreate", async (message) => {
     let chances = [false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
     let random = chances[getRandom(0,chances.length)]
     //chance = random
-    console.log(chance)
+    //console.log(chance)
   }
   if (message.mentions.has('1057167023492300881') || message.content?.toLowerCase().includes('gude')) chance = true
   //AI ChatBot
@@ -1178,7 +1178,7 @@ const interval = setInterval(async function() {
         let generatedVoucher = "₱"+amount[getRandom(0,amount.length)]+" "+type[getRandom(0,type.length)]+" voucher"
         let template = await getChannel('1079712339122720768')
         let annc = await getChannel(shop.channels.announcements)
-        console.log(today.getHours(), today.getMinutes(),'time check')
+        //console.log(today.getHours(), today.getMinutes(),'time check')
         //annc.send({files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})
       if (time === '11:11') {
         let voucher = {
