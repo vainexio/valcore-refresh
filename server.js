@@ -630,7 +630,7 @@ client.on("messageCreate", async (message) => {
     let button = await makeRow("nitro-"+user.id,"Send to "+user.tag,"SECONDARY","📤")
     message.channel.send("<:07:1069200743959109712> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:circley:1072388650337308742> Make sure to open your DMs.\n<:circley:1072388650337308742> The message may appear as **direct or request** message.")
     message.author.send({content: links, components: [button]})
-    let orders = await getChannel("998413729525932112")
+    let orders = await getChannel("1054731027240726528")
     orders.send("<@"+user.id+">\n ("+quan+") "+(item ? item : "nitro boost")+"\n"+(method ? method : "gcash")).then(async msg => {
       await msg.react("<:g1:1056579657828417596>")
       await msg.react("<:g2:1056579660353372160>")
