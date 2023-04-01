@@ -1172,12 +1172,14 @@ const interval = setInterval(async function() {
       //Get info
       if (ready) {
         ready = false
+        
         let amount = shop.randomVouchers.amount
         let type = shop.randomVouchers.type
         let generatedVoucher = "₱"+amount[getRandom(0,amount.length)]+" "+type[getRandom(0,type.length)]+" voucher"
         let template = await getChannel('1079712339122720768')
         let annc = await getChannel(shop.channels.announcements)
         console.log(today.getHours(), today.getMinutes(),'time check')
+        //annc.send({files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})
       if (time === '11:11') {
         let voucher = {
           code: makeCode(10),
@@ -1203,28 +1205,28 @@ const interval = setInterval(async function() {
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : CLOSED') return;
         vc.setName('shop : CLOSED')
-        annc.send(msg.content)
+        annc.send({content: msg.content, files: ['https://media.discordapp.net/attachments/1047454193595732055/1091712145584038010/AS0005044_09.gif?width=457&height=370']})
         } 
         else if (today.getHours() === 8 && today.getMinutes() === 30) {
           let msg = await template.messages.fetch("1079715999097552956")
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : OPEN') return;
         vc.setName('shop : OPEN')
-        annc.send(msg.content)
+        annc.send({content: msg.content, files: ['https://media.discordapp.net/attachments/1071049104001601586/1091713363995799603/AS0005044_13.gif?width=437&height=375']})
       }  
         else if (today.getHours() === 11 && today.getMinutes() === 0) {
           let msg = await template.messages.fetch("1079712404084117524")
           let vc = await getChannel("1079713500731015209")
           if (vc.name === 'reports : OPEN') return;
           vc.setName('reports : OPEN')
-          annc.send(msg.content)
+          annc.send({content: msg.content, files: ['https://media.tenor.com/H6H2hhidRhIAAAAC/chick-pio.gif']})
         }
         else if (today.getHours() === 20 && today.getMinutes() === 0) {
           let msg = await template.messages.fetch("1079715633123557496")
           let vc = await getChannel("1079713500731015209")
           if (vc.name === 'reports : CLOSED') return;
           vc.setName('reports : CLOSED')
-          annc.send(msg.content)
+          annc.send({content: msg.content, files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})
         }
         if (!ready) {
         setTimeout(function() {
