@@ -639,6 +639,7 @@ client.on("messageCreate", async (message) => {
   }
   else if (isCommand('stocks',message)) {
     let stocks = await getChannel("1054929031881035789")
+    let stocks2 = await getChannel("1080087813032263690");
     let quan = 0;
     let messages = await stocks.messages.fetch({limit: 100}).then(async messages => {
       messages.forEach(async (gotMsg) => {
