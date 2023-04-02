@@ -646,7 +646,15 @@ client.on("messageCreate", async (message) => {
         quan++
       })
     })
-    let arrays = [
+    let arrays = []
+    let messages2 = await stocks2.messages
+      .fetch({ limit: 100 })
+      .then(async (messages) => {
+        messages.forEach(async (gotMsg) => {
+          arrays.push(gotMsg.content);
+        });
+      });
+    /*let arrays = [
     [
       {name: 'Nitro Basic',id:"1080097861460578334", type: 'SECONDARY'},
       {name: 'Developer Badge',id:"1080097846453350460", type: 'SECONDARY'},
@@ -657,13 +665,27 @@ client.on("messageCreate", async (message) => {
       //{name: 'Paypal to GCash',id:"1080097803612725248"},
     ],
       
-    ]
+    ]*/
     let stockHolder = [
       [],[]
     ]
     let template = await getChannel("1075782410509226095")
-    stockHolder[0].push(new MessageButton().setCustomId('title-Nitro Boost').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
+    stockHolder[0].push(new MessageButton().setCustomId('none').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
     for (let i in arrays) {
+      let msg = arrays[i];
+      if (arrays.length > 0) {
+        let args = await getArgs(msg);
+        let text = args.slice(1).join(" ");
+        stockHolder[0].push(
+          new MessageButton()
+            .setCustomId("none"+getRandom(1,100000))
+            .setStyle("SECONDARY")
+            .setLabel(text)
+            .setEmoji(args[0])
+        );
+      }
+    }
+    /*for (let i in arrays) {
       let array = arrays[i]
       if (array.length > 0) {
       for (let e in array) {
@@ -673,13 +695,13 @@ client.on("messageCreate", async (message) => {
       stockHolder[i].push(new MessageButton().setCustomId('title-'+array[e].name).setStyle(array[e].type).setLabel(text).setEmoji(args[0]))
       }
       }
-    }
+    }*/
     
     let row = new MessageActionRow()
     row.components = stockHolder[0]
     //let row2 = new MessageActionRow()
     //row2.components = stockHolder[1]
-    message.reply({content: "Click the buttons to display more info about the product.", components: [row]})
+    message.reply({components: [row]}) //content: "Click the buttons to display more info about the product.", 
   }
   else if (isCommand('drop',message)) {
     if (!await getPerms(message.member,4)) return;
@@ -1108,6 +1130,9 @@ client.on('interactionCreate', async inter => {
       if (!await getPerms(inter.member,4)) return inter.deferUpdate();
       inter.reply({content: emojis.check+" Order marked as done! `"+inter.channel.name+"`"})
       inter.channel.setName('order-done')
+    }
+    else if (id.startsWith('none')) {
+      inter.deferUpdate();
     }
     else if (id === 'terms') {
       let member = inter.member;
