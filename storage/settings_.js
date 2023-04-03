@@ -291,6 +291,33 @@ module.exports = {
       level: 4,
     },
     {
+      Command: "drop",
+      Template: "<channel> <voucher>",
+      Alias: [],
+      Category: "Handler",
+      Desc: 'Drops a voucher in a specific channel',
+      ex: ['nitro @channel ₱5 voucher','nitro @channel ₱10 premium voucher'],
+      level: 4,
+    },
+    {
+      Command: "rate",
+      Template: "<amount>",
+      Alias: [],
+      Category: "Handler",
+      Desc: 'Calculates the fee for paypal buyers',
+      ex: ['rate 509','rate 69.23'],
+      level: 4,
+    },
+    {
+      Command: "ex",
+      Template: "<amount>",
+      Alias: ['exchange'],
+      Category: "Handler",
+      Desc: 'Calculates the amount to receive in e-wallet exchange',
+      ex: ['ex 509','exchange 69.23'],
+      level: 4,
+    },
+    {
       Command: "use",
       Template: "<voucher>",
       Alias: [],
@@ -323,7 +350,7 @@ module.exports = {
       level: 4,
     },
     {
-      id: "477729368622497803",
+      id: "1047454193197252639",
       level: 5,
     },
     {
