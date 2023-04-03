@@ -565,7 +565,88 @@ client.on("messageCreate", async (message) => {
 }
   
   //Commands
-  if (isCommand('forceall',message)) {
+  if (isCommand("cmds", message)) {
+    let args = await getArgs(message.content);
+    let clearFilter = args[1] && args[1].toLowerCase() === "clear";
+    if (!args[1] || clearFilter) {
+      let botMsg = null;
+      let current = "desc";
+      async function displayHelp(type) {
+        let known = [];
+        let embed = null;
+
+        embed = new MessageEmbed()
+          .setDescription(
+            "`<>` = Required Arguments\n `[]` = Optional Arguments\n**•** Type the commands without the `<>` or `[]`"
+          )
+          .setColor(colors.none)
+          .setTimestamp();
+        for (let i in commands) {
+          if (
+            (await getPerms(message.member, commands[i].level)) ||
+            commands[i].level === 0
+          ) {
+            let foundCmd = await known.find((a) => a === commands[i].Category);
+            if (!foundCmd) {
+              known.push(commands[i].Category);
+              embed = new MessageEmbed(embed).addField(
+                commands[i].Category,
+                "[_]"
+              );
+            }
+          }
+        }
+
+        for (let i in commands) {
+          if (
+            (await getPerms(message.member, commands[i].level)) ||
+            commands[i].level === 0
+          ) {
+            let field = embed.fields.find(
+              (field) => field.name === commands[i].Category
+            );
+
+            if (field) {
+              let template =
+                commands[i].Template.length > 0
+                  ? " `" + commands[i].Template + "`"
+                  : "";
+              let desc =
+                commands[i].Desc.length > 0
+                  ? " – " + commands[i].Desc + ""
+                  : "";
+              let fieldValue = field.value.replace("[_]", "");
+              embed.fields[embed.fields.indexOf(field)] = {
+                name: commands[i].Category,
+                value:
+                  fieldValue +
+                  (type === "desc"
+                    ? "`" + prefix + commands[i].Command + "`" + desc
+                    : prefix + commands[i].Command + template) +
+                  "\n",
+              };
+            } else {
+              console.log("Invalid Category: " + commands[i].Category);
+            }
+          }
+        }
+        if (botMsg) return embed;
+        !botMsg
+          ? await message.channel
+              .send({ embeds: [embed] })
+              .then((msg) => (botMsg = msg))
+          : null;
+      }
+      await displayHelp("desc");
+    } else {
+      let template = await getTemplate(
+        prefix + args[1],
+        await getPerms(message.member, 0)
+      );
+      sendChannel(template, message.channel.id, theme);
+    }
+  }
+  else if (isCommand('forceall',message)) {
     if (!await getPerms(message.member,4)) return;
     let cc = 0
     let f = '〔,〕'.replace(/ /,'').split(/,/)
