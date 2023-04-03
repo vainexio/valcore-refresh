@@ -641,12 +641,16 @@ client.on("messageCreate", async (message) => {
     let stocks = await getChannel("1054929031881035789")
     let stocks2 = await getChannel("1080087813032263690");
     let quan = 0;
+    
+    let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
+    let holderCount = 0
+    let arrays = []
     let messages = await stocks.messages.fetch({limit: 100}).then(async messages => {
       messages.forEach(async (gotMsg) => {
         quan++
       })
     })
-    let arrays = []
+    
     let messages2 = await stocks2.messages
       .fetch({ limit: 100 })
       .then(async (messages) => {
@@ -654,54 +658,33 @@ client.on("messageCreate", async (message) => {
           arrays.push(gotMsg.content);
         });
       });
-    /*let arrays = [
-    [
-      {name: 'Nitro Basic',id:"1080097861460578334", type: 'SECONDARY'},
-      {name: 'Developer Badge',id:"1080097846453350460", type: 'SECONDARY'},
-      {name: 'Server Boost',id:"1080097887041638460", type: 'SECONDARY'},
-      {name: 'Robux',id:"1080097878564937728", type: 'SECONDARY'},
-    ],
-    [
-      //{name: 'Paypal to GCash',id:"1080097803612725248"},
-    ],
-      
-    ]*/
-    let stockHolder = [
-      [],[]
-    ]
-    let template = await getChannel("1075782410509226095")
+
     stockHolder[0].push(new MessageButton().setCustomId('none').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
     for (let i in arrays) {
       let msg = arrays[i];
       if (arrays.length > 0) {
         let args = await getArgs(msg);
         let text = args.slice(1).join(" ");
-        stockHolder[0].push(
+        if (stockHolder[holderCount].length === 5) holderCount++
+        stockHolder[holderCount].push(
           new MessageButton()
-            .setCustomId("none"+getRandom(1,100000))
+            .setCustomId("none"+getRandom(1,10000))
             .setStyle("SECONDARY")
             .setLabel(text)
             .setEmoji(args[0])
         );
       }
     }
-    /*for (let i in arrays) {
-      let array = arrays[i]
-      if (array.length > 0) {
-      for (let e in array) {
-      let msg = await template.messages.fetch(array[e].id)
-      let args = await getArgs(msg.content)
-      let text = args.slice(1).join(" ")
-      stockHolder[i].push(new MessageButton().setCustomId('title-'+array[e].name).setStyle(array[e].type).setLabel(text).setEmoji(args[0]))
-      }
-      }
-    }*/
     
-    let row = new MessageActionRow()
-    row.components = stockHolder[0]
-    //let row2 = new MessageActionRow()
-    //row2.components = stockHolder[1]
-    message.reply({components: [row]}) //content: "Click the buttons to display more info about the product.", 
+    let comps = []
+    for (let i in stockHolder) {
+      if (stockHolder[i].length !== 0) {
+        let row = new MessageActionRow();
+        row.components = stockHolder[i];
+        comps.push(row)
+      }
+    }
+    message.reply({components: comps}) //content: "Click the buttons to display more info about the product.", 
   }
   else if (isCommand('drop',message)) {
     if (!await getPerms(message.member,4)) return;
