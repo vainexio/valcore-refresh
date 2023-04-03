@@ -708,9 +708,12 @@ client.on("messageCreate", async (message) => {
     if (links === "") return message.reply(emojis.x+" No stocks left.")
     if (quan > index) return message.reply(emojis.warning+" Insufficient stocks. **"+index+"** nitro boost(s) remaining.")
     stocks.bulkDelete(quan)
-    let button = await makeRow("nitro-"+user.id,"Send to "+user.tag,"SECONDARY","📤")
+    let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId("nitro-"+user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.tag),
+      new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
+    );
     message.channel.send("<:07:1069200743959109712> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:circley:1072388650337308742> Make sure to open your DMs.\n<:circley:1072388650337308742> The message may appear as **direct or request** message.")
-    message.author.send({content: links, components: [button]})
+    message.author.send({content: links, components: [row]})
     let orders = await getChannel("1054731027240726528")
     orders.send("<@"+user.id+">\n ("+quan+") "+(item ? item : "nitro boost")+"\n"+(method ? method : "gcash")).then(async msg => {
       await msg.react("<:g1:1056579657828417596>")
@@ -1042,7 +1045,17 @@ client.on('interactionCreate', async inter => {
       let content = inter.message.content
       let stocks = await getChannel(shop.channels.stocks)
       let args = await getArgs(content)
+      let returned = 0
       
+      inter.update({content: 'Returned\n'+content, components: []})
+      
+      for (let i = args.length - 1; i >= 0; i--) {
+        if (args[i].includes('https://discord.gift/')) {
+          await stocks.send(args[i])
+          returned++
+        }
+      }
+      inter.message.reply({content: emojis.check+' Returned '+returned+' links to stocks.'})
     }
     else if (id.startsWith('copyLinks')) {
       let template = await getChannel("1075782410509226095")
