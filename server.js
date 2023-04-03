@@ -997,13 +997,15 @@ client.on('interactionCreate', async inter => {
       let user = await getUser(userId);
       if (user) {
         let comp = inter.message.components[0]
-        comp.components[0] = "SUCCESS"
-        comp.components[1] = "SECONDARY"
+        comp.components[0].style = "SUCCESS"
+        comp.components[1].style = "SECONDARY"
         for (let i in comp.components) {
             let row = comp.components[i]
             row.disabled = true
           }
         sendUser(emojis.check+" Your application was approved!",user.id,colors.lime)
+        let member = await getMember(user.id,inter.guild)
+        member ? await addRole(member,['resellers'],inter.guild) : null
         inter.reply({content: "Application Accepted", ephemeral: true})
         inter.message.edit({components: [comp]})
       } else {
@@ -1015,8 +1017,8 @@ client.on('interactionCreate', async inter => {
       let user = await getUser(userId);
       if (user) {
         let comp = inter.message.components[0]
-        comp.components[0] = "SECONDARY"
-        comp.components[1] = "DANGER"
+        comp.components[0].style = "SECONDARY"
+        comp.components[1].style = "DANGER"
         for (let i in comp.components) {
             let row = comp.components[i]
             row.disabled = true
