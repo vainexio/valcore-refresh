@@ -142,6 +142,7 @@ module.exports = {
       announcements: '1071049104001601586',
       status: '1054766857552396419',
       vouch: '1054724474659946606',
+      stocks: '1054929031881035789'
     },
     stickyChannels: [
       {

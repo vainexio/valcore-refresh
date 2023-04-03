@@ -1038,6 +1038,12 @@ client.on('interactionCreate', async inter => {
       //inter.reply("Successful sent to "+user.tag)
       //inter.message.edit({components: []})
     }
+    else if (id.startsWith('returnLinks')) {
+      let content = inter.message.content
+      let stocks = await getChannel(shop.channels.stocks)
+      let args = await getArgs(content)
+      
+    }
     else if (id.startsWith('copyLinks')) {
       let template = await getChannel("1075782410509226095")
       
