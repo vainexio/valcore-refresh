@@ -1250,7 +1250,7 @@ const interval = setInterval(async function() {
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : CLOSED') return;
         vc.setName('shop : CLOSED')
-        annc.send({content: msg.content, files: ['https://media.discordapp.net/attachments/1047454193595732055/1091712145584038010/AS0005044_09.gif?width=457&height=370']})
+        annc.send({content: msg.content, files: ['https://i.pinimg.com/originals/72/7b/24/727b247bc2d09404b67a7ed275b8d85d.gif']})
         } 
         else if (today.getHours() === 8 && today.getMinutes() === 30) {
           let msg = await template.messages.fetch("1079715999097552956")
