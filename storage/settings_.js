@@ -367,6 +367,6 @@ module.exports = {
   ping: true,
 },
   colors: colors,
-  theme: colors.yellow,
+  theme: colors.none,
   emojis: emojis,
 };
