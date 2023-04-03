@@ -730,8 +730,27 @@ client.on("messageCreate", async (message) => {
     .addField('Base Amount','₱'+value)
     .addField('Fee','x'+percentage)
     .setColor(colors.none)
+    .setFooter({text: "Paypal Rate"})
     
     message.reply({content: 'Total amount w/ fee: **₱'+total+'**',embeds: [embed]})
+  }
+  else if (isCommand('ex',message)) {
+    let args = await requireArgs(message,1)
+    if (!args) return;
+    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
+    let value = Number(args[1])
+    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
+    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
+    let fee = value*percentage
+    let total = value-fee
+    
+    let embed = new MessageEmbed()
+    .addField('Base Amount','₱'+value)
+    .addField('Fee','x'+percentage)
+    .setColor(colors.none)
+    .setFooter({text: "Money Exchange"})
+    
+    message.reply({content: 'You will receive **₱'+total+'**',embeds: [embed]})
   }
   //
   if (message.channel.id === shop.channels.vouch) {
