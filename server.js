@@ -791,7 +791,7 @@ client.on("messageCreate", async (message) => {
     let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
-    let total = value+fee
+    let total = Math.round(value+fee)
     
     let embed = new MessageEmbed()
     .addField('Total Amount','```yaml\n'+total+'```')
@@ -811,7 +811,7 @@ client.on("messageCreate", async (message) => {
     let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
-    let total = value-fee
+    let total = Math.round(value-fee)
 
     let embed = new MessageEmbed()
     .addField('You Will Receive','```yaml\n'+total+'```')
@@ -830,7 +830,7 @@ client.on("messageCreate", async (message) => {
     let value = Number(args[1])
     let percentage = .4286
     let fee = value*percentage
-    let total = value+fee
+    let total = Math.round(value+fee)
     
     let embed = new MessageEmbed()
     .addField('Expected Gamepass Price','```yaml\n'+total+'```')
