@@ -794,12 +794,14 @@ client.on("messageCreate", async (message) => {
     let total = value+fee
     
     let embed = new MessageEmbed()
-    .addField('Base Amount','₱'+value)
-    .addField('Fee','x'+percentage)
+    .addField('Total Amount','```yaml\n'+total+'```')
+    .addField('Base Amount','₱'+value,true)
+    .addField('Fee','x'+percentage,true)
     .setColor(colors.none)
     .setFooter({text: "Paypal Rate"})
     
-    message.reply({content: 'Total amount w/ fee: **₱'+total+'**',embeds: [embed]})
+    message.reply({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
+    message.delete();
   }
   else if (isCommand('ex',message)) {
     let args = await requireArgs(message,1)
@@ -810,14 +812,35 @@ client.on("messageCreate", async (message) => {
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
     let total = value-fee
-    
+
     let embed = new MessageEmbed()
-    .addField('Base Amount','₱'+value)
-    .addField('Fee','x'+percentage)
+    .addField('You Will Receive','```yaml\n'+total+'```')
+    .addField('Base Amount','₱'+value,true)
+    .addField('Fee','x'+percentage,true)
     .setColor(colors.none)
     .setFooter({text: "Money Exchange"})
     
-    message.reply({content: 'You will receive **₱'+total+'**',embeds: [embed]})
+    message.reply({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
+    message.delete();
+  }
+  else if (isCommand('robux',message)) {
+    let args = await requireArgs(message,1)
+    if (!args) return;
+    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
+    let value = Number(args[1])
+    let percentage = .4286
+    let fee = value*percentage
+    let total = value+fee
+    
+    let embed = new MessageEmbed()
+    .addField('Expected Gamepass Price','```yaml\n'+total+'```')
+    .addField('Base Amount','₱'+value,true)
+    .addField('Roblox Fee','x'+percentage,true)
+    .setColor(colors.none)
+    .setFooter({text: "Robux Covered Tax"})
+    
+    message.reply({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
+    message.delete();
   }
   //
   if (message.channel.id === shop.channels.vouch) {
@@ -843,7 +866,7 @@ client.on("messageCreate", async (message) => {
     else if (isMessage(".rnitro",message)) message.delete(), message.channel.send({content: "<:07:1069200743959109712> __**Nitro report form**__\n<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch: "})
     else if (isMessage(".boost",message)) message.delete(), message.channel.send({content: "<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.", files: [{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072852303637389403/image.png',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072853921325928519/image.png',name: 'file.png'}]})
     else if (isMessage(".rate",message)) message.delete(), message.channel.send("**Paypal Rate** <:07:1069200743959109712>\n\n₱499 below = 10%\n₱500 above = 7%\n₱1,000 above = 3%")
-    else if (isMessage(".robux",message)) message.delete(), message.channel.send("<:mark:1056579773989650543> Please fill up the form:\n\nGamepass/Shirt:\nAmount:")
+    else if (isMessage(".robux",message)) message.delete(), message.channel.send("<:circley:1072388650337308742> Please fill up the form:\n\nGamepass/Shirt:\nAmount:")
     else if (isMessage(".vp",message)) message.delete(), message.channel.send('<:mark:1056579773989650543> Please fill up the form:\n\n— Riot tags:\n— Email:')
     else if (isMessage(".gcash2",message)) {
       message.delete()
