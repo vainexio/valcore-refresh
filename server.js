@@ -1052,7 +1052,7 @@ client.on('interactionCreate', async inter => {
         );
       await user.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+inter.message.content+" ||", components: [copy]}).catch((err) => {
         error = true
-        inter.reply({content: emojis.x+" Failed to process delivery.\n\n```diff\n -"+err+"```", ephemeral: true})})
+        inter.reply({content: emojis.x+" Failed to process delivery.\n\n```diff\n- "+err+"```", ephemeral: true})})
       .then(async (msg) => {
         if (error) return;
         let row = new MessageActionRow().addComponents(
