@@ -236,7 +236,7 @@ client.on("messageCreate", async (message) => {
       if (shopStatus.name === 'shop : CLOSED') {
         message.channel.send("<@"+member.id+"> The shop is currently **CLOSED**, please come back at <t:1677542400:t> to proceed with your order.")
       }
-    else if (!await hasRole(member,['1077462108381388873'],message.guild)) {
+    if (!await hasRole(member,['1077462108381388873'],message.guild)) {
       let embed = new MessageEmbed()
       .addField('Terms and Conditions','Before proceeding, you must read and accept our terms and conditions.\n\nBy clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail. You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.')
       .setColor(colors.red)
@@ -1364,7 +1364,7 @@ const interval = setInterval(async function() {
         vc.setName('shop : CLOSED')
         annc.send({content: msg.content, files: ['https://i.pinimg.com/originals/72/7b/24/727b247bc2d09404b67a7ed275b8d85d.gif']})
         } 
-        else if (today.getHours() === 8 && today.getMinutes() === 30) {
+        else if (today.getHours() === 8 && today.getMinutes() === 0) {
           let msg = await template.messages.fetch("1079715999097552956")
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : OPEN') return;
