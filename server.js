@@ -1369,7 +1369,7 @@ const interval = setInterval(async function() {
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : OPEN') return;
         vc.setName('shop : OPEN')
-        annc.send({content: msg.content, files: ['https://media.discordapp.net/attachments/1071049104001601586/1091713363995799603/AS0005044_13.gif?width=437&height=375']})
+        annc.send({content: msg.content, files: ['https://i.pinimg.com/originals/1e/ed/c4/1eedc43a10e28ce98b9bd0ad2384c905.gif']})
       }  
         else if (today.getHours() === 11 && today.getMinutes() === 0) {
           let msg = await template.messages.fetch("1079712404084117524")
