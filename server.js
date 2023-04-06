@@ -460,14 +460,27 @@ client.on("messageCreate", async (message) => {
     }
     if (codes.length === 0) return;
     if (codes.length > 100) return message.reply('You can only request a maximum of 100 giftcodes per message')
-    await message.channel.send('Fetching nitro codes (0/'+codes.length+') '+emojis.loading).then(botMsg => msg = botMsg)
-
+    
+    let scanData = shop.checkers.find(c => c.id === message.author.id)
+    if (!scanData) {
+      let data = {
+        id: message.author.id,
+        scanned: 0,
+      }
+      shop.checkers.push(data)
+      scanData = shop.checkers.find(c => c.id === message.author.id)
+    }
+    let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId('scanData-'+message.author.id).setStyle('SECONDARY').setLabel('Check Status').setEmoji('🏷️'),
+    );
+    await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading, components: [row]}).then(botMsg => msg = botMsg)
+    
     let embed = new MessageEmbed()
     let num = 0
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
-    let ipCount = 0
     let counter = 0
+    let version = 6
     for (let i in codes) {
       counter++
       let fetched = false
@@ -475,37 +488,10 @@ client.on("messageCreate", async (message) => {
       while (!fetched) {
         sleep(waitingTime)
         let eCode = expCodes.find(e => e.code === codes[i].code)
-        let yeet = counter % 2 == 0 ? '/' : ''
-        let ip = [
-          '35.98.234.131',
-          '23.53.235.219',
-          '209.83.183.164',
-          '146.157.181.65',
-          '75.105.149.188',
-          '136.210.195.137',
-          '173.198.93.61',
-          '54.83.241.209',
-          '35.243.89.200',
-          '63.158.124.79',
-          '181.98.22.191',
-          '230.202.145.36',
-          '55.57.152.51',
-          '137.141.30.202',
-          '187.78.70.196',
-          '184.184.176.211',
-          '166.166.29.61',
-          '38.181.20.119',
-        ]
-        ipCount++
-        !ip[ipCount] ? ipCount == 0 : null 
-        let headers = {
-          method: 'GET',
-            headers: {
-              'X-Forwarded-For': 0,
-              'X-Forwarded-For': ip[ipCount]
-            }
-        }
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v8/entitlements/gift-codes/'+codes[i].code+yeet,headers)
+        let dash = counter % 2 == 0 ? '/' : ''
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code+dash)
+        version++
+        version ? version === 11 : version = 6
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
           console.log('retry for '+codes[i].code)
@@ -520,7 +506,8 @@ client.on("messageCreate", async (message) => {
           }
         if (!res.retry_after) {
           fetched = true
-          msg.edit('Fetching nitro codes ('+(i)+'/'+codes.length+') '+emojis.loading)
+          console.log(i)
+          //msg.edit('Fetching nitro codes ('+(i)+'/'+codes.length+') '+emojis.loading)
           let e = res.expires_at ? moment(res.expires_at).unix() : null
           codes[i].expire = !isNaN(e) ? Number(e) : 'Expired'
           let expire = res.expires_at ? 'Expires in <t:'+e+':f>' : '`Expired`'
@@ -1066,6 +1053,11 @@ client.on('interactionCreate', async inter => {
     } else {
       inter.reply({content: emojis.x+' The voucher was already claimed!', ephemeral: true})
     }
+    }
+    else if (id.startsWith('scanData-')) {
+      let userId = id.replace('scanData-','')
+      let scanData = shop.checkers.find(c => c.id === userId)
+      
     }
     else if (id.startsWith('roles-')) {
     let role = id.replace('roles-','').replace(/_/g,' ')

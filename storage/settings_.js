@@ -110,6 +110,7 @@ module.exports = {
     
   },
   shop: {
+    checkers: [],
     ar: {
       prefix: '.',
       responders: [
