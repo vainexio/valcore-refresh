@@ -515,7 +515,19 @@ client.on("messageCreate", async (message) => {
           method: 'GET',
             headers: {
               'X-Forwarded-For': 0,
-              'X-Forwarded-For': ip[ipCount]
+              'X-Forwarded-For': ip[ipCount],
+              'X-Forwarded': ip[ipCount],
+              'X-Forwarded-By': ip[ipCount],
+              'X-Forwarded-For': ip[ipCount],
+              'X-Forwarded-For-Original': ip[ipCount],
+              'X-Forwarder-For': ip[ipCount],
+              'X-Forward-For': ip[ipCount],
+              'Forwarded-For': ip[ipCount],
+              'Forwarded-For-Ip': ip[ipCount],
+              'X-Custom-IP-Authorization': ip[ipCount],
+              'X-Originating-IP': ip[ipCount],
+              'X-Remote-IP': ip[ipCount],
+              'X-Remote-Addr': ip[ipCount],
             }
         }
         let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,headers)
@@ -535,8 +547,7 @@ client.on("messageCreate", async (message) => {
           }
         if (!res.retry_after) {
           fetched = true
-          console.log(res)
-          //msg.edit('Fetching nitro codes ('+(i)+'/'+codes.length+') '+emojis.loading)
+          msg.edit('Fetching nitro codes ('+(i)+'/'+codes.length+') '+emojis.loading)
           let e = res.expires_at ? moment(res.expires_at).unix() : null
           codes[i].expire = !isNaN(e) ? Number(e) : 'Expired'
           let expire = res.expires_at ? 'Expires in <t:'+e+':f>' : '`Expired`'
@@ -572,6 +583,10 @@ client.on("messageCreate", async (message) => {
       embed = new MessageEmbed(embed)
       } 
       else {
+        embed = new MessageEmbed(embed)
+          .addField('\u200b',ind)
+          .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
+          .setTimestamp()
         embeds.push(embed)
         embed = new MessageEmbed()
           .addField('\u200b',ind)
