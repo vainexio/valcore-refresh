@@ -5,6 +5,7 @@ const app = express();
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const moment = require('moment')
+
 //
 //Discord
 const Discord = require('discord.js');
@@ -55,7 +56,7 @@ let listener = app.listen(process.env.PORT, function() {
 //LOG VARIABLES
 var output = "901759430457167872";
 const settings = require('./storage/settings_.js')
-const {filteredWords, AI, shop, notices, auth, prefix, colors, status, theme, commands, permissions, emojis, timeout, rateLimit, assets, townhallData, leagueData} = settings
+const {filteredWords, AI, shop, notices, auth, prefix, colors, status, theme, commands, permissions, emojis} = settings
 /*
 ██████╗░███████╗██████╗░███╗░░░███╗░██████╗
 ██╔══██╗██╔════╝██╔══██╗████╗░████║██╔════╝
@@ -465,13 +466,16 @@ client.on("messageCreate", async (message) => {
     let num = 0
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
+    let counter = 0
     for (let i in codes) {
+      counter++
       let fetched = false
       let waitingTime = 1000
       while (!fetched) {
         sleep(waitingTime)
         let eCode = expCodes.find(e => e.code === codes[i].code)
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v8/entitlements/gift-codes/'+codes[i].code)
+        let yeet = counter % 2 == 0 ? '/' : ''
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v8/entitlements/gift-codes/'+codes[i].code+yeet)
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
           let ret = Math.ceil(res.retry_after)
@@ -722,7 +726,7 @@ client.on("messageCreate", async (message) => {
     })
   }
   else if (isCommand('stocks',message)) {
-    if (message.channel.id !== '1047454193595732058') {
+    if (message.channel.id !== '1047454193595732058' || await getPerms(message.member,4)) {
       let botMsg = null
       await message.reply('This command can only works in <#1047454193595732058>\nPlease head there to use the command.')
       setTimeout(function() {

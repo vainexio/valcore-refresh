@@ -436,7 +436,6 @@ module.exports = {
 ],
   botlog: '901759430457167872',
   prefix: ';',
-  assets: {},
   status: {
   enabled: true,
   valorant: true,
