@@ -845,7 +845,8 @@ client.on("messageCreate", async (message) => {
   else if (isCommand('ar',message)) {
     let string = ''
     for (let i in shop.ar.responders) {
-      string += shop.ar.prefix+shop.ar.responders[i].command+'\n'
+      let responder = shop.ar.responders[i]
+      if (responder.command) string += shop.ar.prefix+responder.command+'\n'
     }
     let embed = new MessageEmbed()
     .addField('Auto Responders List',string)
@@ -865,7 +866,8 @@ client.on("messageCreate", async (message) => {
     let content = message.content.toLowerCase()
     let responder = shop.ar.responders.find(res => content === shop.ar.prefix+res.command)
     if (responder) {
-      message.reply({content: responder.response ? responder.response : null, files: responder.files ? responder.files : [], components: responder.components ? responder.components : []})
+      if (responder.autoDelete) message.delete();
+      message.channel.send({content: responder.response ? responder.response : null, files: responder.files ? responder.files : [], components: responder.components ? [responder.components] : []})
     }
   //
   let userPerms = await getPerms(message.member, 3)

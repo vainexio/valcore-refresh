@@ -114,9 +114,14 @@ module.exports = {
       prefix: '.',
       responders: [
         {
+          command: 'rpremium',
+          response: '<:circley:1072388650337308742>premium purchased:\n<:circley:1072388650337308742>subscription:\n<:circley:1072388650337308742>original email:\n<:circley:1072388650337308742>replacement email:\n<:circley:1072388650337308742>working pass:\n<:circley:1072388650337308742>shared/solo/fh:\n<:circley:1072388650337308742>date availed :\n<:circley:1072388650337308742>date reported:\n<:circley:1072388650337308742>days used:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>price paid:\n<:circley:1072388650337308742>issue & screenshot of issue:\n<:circley:1072388650337308742>screenshot of vouch with proof of login:',
+          autoDelete: false,
+        },
+        {
           command: 'rnitro',
-          response: '<:07:1069200743959109712> __**Nitro report form**__\n<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n<:circley:1072388650337308742>remaining days:',
-          autoDelete: true,
+          response: '<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n<:circley:1072388650337308742>remaining days:',
+          autoDelete: false,
         },
         {
           command: 'rate',
@@ -126,7 +131,7 @@ module.exports = {
         {
           command: 'boost',
           response: '<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.',
-          files: [{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072852303637389403/image.png',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072853921325928519/image.png',name: 'file.png'}],
+          files: [{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1093391789223850044/image.png?width=1135&height=527',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1093391724249878560/image.png?width=791&height=117',name: 'file.png'}],
           autoDelete: true,
         },
         {
