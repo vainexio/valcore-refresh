@@ -114,18 +114,52 @@ module.exports = {
       prefix: '.',
       responders: [
         {
-          command: '',
-          response: '<:07:1069200743959109712> __**Nitro report form**__\n<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n',
+          command: 'rnitro',
+          response: '<:07:1069200743959109712> __**Nitro report form**__\n<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n<:circley:1072388650337308742>remaining days:',
           autoDelete: true,
         },
         {
-          command: '',
-          response: '',
+          command: 'rate',
+          response: '**Paypal Rate** <:07:1069200743959109712>\n\n₱499 below = 10%\n₱500 above = 7%\n₱1,000 above = 3%',
           autoDelete: true,
         },
         {
-          command: '',
-          response: '',
+          command: 'boost',
+          response: '<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.',
+          files: [{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072852303637389403/image.png',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072853921325928519/image.png',name: 'file.png'}],
+          autoDelete: true,
+        },
+        {
+          command: 'robux',
+          response: '<:circley:1072388650337308742>Gamepass/Shirt Link:\n<:circley:1072388650337308742>Amount:',
+          autoDelete: true,
+        },
+        {
+          command: 'valorant',
+          response: '<:mark:1056579773989650543>Riot ID:',
+          autoDelete: true,
+        },
+        {
+          command: 'gcash3',
+          response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here',
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          autoDelete: true,
+        },
+        {
+          command: 'gcash2',
+          response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 326 3549**\n— **I^^ PA••O I.**\n\n— Send screenshot of receipt here',
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          autoDelete: true,
+        },
+        {
+          command: 'gcash',
+          response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here',
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          autoDelete: true,
+        },
+        {
+          command: 'paypal',
+          response: '<a:MoneyFlash:1054781743355396186> Paypal (w/ fee)\n— Link: https://paypal.me/nexionshin\n— Email: nexionshin123@gmail.com\n— Please make sure to set the payment type to **friends and family**!\n\n— Send screenshot of receipt here',
           autoDelete: true,
         },
         {

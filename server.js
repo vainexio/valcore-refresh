@@ -842,6 +842,17 @@ client.on("messageCreate", async (message) => {
     message.reply({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
     message.delete();
   }
+  else if (isCommand('ar',message)) {
+    let string = ''
+    for (let i in shop.ar.responders) {
+      string += shop.ar.prefix+shop.ar.responders[i].command+'\n'
+    }
+    let embed = new MessageEmbed()
+    .addField('Auto Responders List',string)
+    .setColor(colors.none)
+    
+    message.channel.send({embeds: [embed]})
+  }
   //
   if (message.channel.id === shop.channels.vouch) {
     if (message.attachments.size === 0) return message.reply('⚠️ Invalid form of vouch! Please attach an image file that shows the product you ordered!')
@@ -850,6 +861,12 @@ client.on("messageCreate", async (message) => {
       await removeRole(message.member,['pending'])
     }
   }
+  //
+    let content = message.content.toLowerCase()
+    let responder = shop.ar.responders.find(res => content === shop.ar.prefix+res.command)
+    if (responder) {
+      message.reply({content: responder.response ? responder.response : null, files: responder.files ? responder.files : [], components: responder.components ? responder.components : []})
+    }
   //
   let userPerms = await getPerms(message.member, 3)
   //if mod
@@ -861,28 +878,6 @@ client.on("messageCreate", async (message) => {
       await message.channel.setName(name)
       message.react(emojis.check)
     }
-    
-    else if (isMessage(".rnitro",message)) message.delete(), message.channel.send({content: ""})
-    else if (isMessage(".boost",message)) message.delete(), message.channel.send({content: "<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.", files: [{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072852303637389403/image.png',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1054984446631235635/1072853921325928519/image.png',name: 'file.png'}]})
-    else if (isMessage(".rate",message)) message.delete(), message.channel.send("**Paypal Rate** <:07:1069200743959109712>\n\n₱499 below = 10%\n₱500 above = 7%\n₱1,000 above = 3%")
-    else if (isMessage(".robux",message)) message.delete(), message.channel.send("<:circley:1072388650337308742> Please fill up the form:\n\nGamepass/Shirt:\nAmount:")
-    else if (isMessage(".vp",message)) message.delete(), message.channel.send('<:mark:1056579773989650543> Please fill up the form:\n\n— Riot tags:\n— Email:')
-    else if (isMessage(".gcash2",message)) {
-      message.delete()
-      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
-      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 326 3549**\n— **I^^ PA••O I.**\n\n— Send screenshot of receipt here', components: [row]});
-    }
-    else if (isMessage(".gcash3",message)) {
-      message.delete()
-      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
-      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here', components: [row]});
-    }
-    else if (isMessage(".gcash",message)) {
-      message.delete()
-      let row = new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste"));
-      message.channel.send({content: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here', components: [row]});
-    }
-    else if (isMessage(".paypal",message)) message.delete(), message.channel.send('<a:MoneyFlash:1054781743355396186> Paypal (w/ fee)\n— https://paypal.me/nexionshin\n— Please make sure to set the payment type to **friends and family**!\n\n— Send screenshot of receipt here')
     else if (isMessage(".badge",message)) {
       message.delete()
       let embed = new MessageEmbed()
