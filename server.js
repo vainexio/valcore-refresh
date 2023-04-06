@@ -795,7 +795,7 @@ client.on("messageCreate", async (message) => {
     })
   }
   else if (isCommand('stocks',message)) {
-    if (message.channel.id !== '1047454193595732058' || await getPerms(message.member,4)) {
+    if (message.channel.id !== '1047454193595732058' && !await getPerms(message.member,4)) {
       let botMsg = null
       await message.reply('This command can only works in <#1047454193595732058>\nPlease head there to use the command.')
       setTimeout(function() {
