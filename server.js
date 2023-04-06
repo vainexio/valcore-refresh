@@ -465,7 +465,9 @@ client.on("messageCreate", async (message) => {
     if (!scanData) {
       let data = {
         id: message.author.id,
-        scanned: 0,
+        valid: 0,
+        claimbed: 0,
+        invalid: 0,
       }
       shop.checkers.push(data)
       scanData = shop.checkers.find(c => c.id === message.author.id)
@@ -474,9 +476,6 @@ client.on("messageCreate", async (message) => {
       new MessageButton().setCustomId('scanData-'+message.author.id).setStyle('SECONDARY').setLabel('Check Status').setEmoji('🏷️'),
     );
     await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading, components: [row]}).then(botMsg => msg = botMsg)
-    
-    let embed = new MessageEmbed()
-    let num = 0
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
     let counter = 0
@@ -514,6 +513,7 @@ client.on("messageCreate", async (message) => {
           codes[i].emoji = res.uses === 0 ? emojis.check : emojis.x
           codes[i].state = res.expires_at && res.uses === 0 ? 'Claimable' : res.expires_at ? 'Claimed' : 'Invalid'
           codes[i].user = res.user ? '`'+res.user.username+'#'+res.user.discriminator+'`' : "`Unknown User`"
+          codes[i].state === 'Claimable' ? scanData.valid++ : codes[i].state === 'Claimed' ? scanData.claimed++ : scanData.invalid++
           if ((!res.expires_at || res.uses >= 1) && !eCode) {
             let data = {
               code: codes[i].code,
@@ -527,6 +527,9 @@ client.on("messageCreate", async (message) => {
       }
     }
     codes.sort((a, b) => (b.expire - a.expire));
+    let embeds = []
+    let embed = new MessageEmbed()
+    let num = 0
     for (let i in codes) {
       num++
       let data = codes[i]
@@ -534,25 +537,27 @@ client.on("messageCreate", async (message) => {
       let state = data.state
       let user = data.user
       let expire = data.expire
+      if (embed.fields.length < 25) {
       embed = new MessageEmbed(embed)
-      .addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
-      
+      } 
+      else {
+        embeds.push(embed)
+        embed = new MessageEmbed()
+          .addField('\u200b',ind)
+          .setColor(colors.none)
+          .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
+          .setTimestamp()
+      }
+      embed.addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
     if (message.content.toLowerCase().includes("stocks")) {
       let stocks = await getChannel('1054929031881035789')
       await stocks.send("https://discord.gift/"+codes[i].code)
     }
-    }
-    embed = new MessageEmbed(embed)
-    //.setDescription(text)
-    .addField('\u200b',ind)
-    .setColor(colors.none)
-    .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
-    .setTimestamp()
-    
+    }  
     msg.delete();
     let logs = await getChannel('1060786672201105419')
     logs.send({embeds: [embed]})
-    message.channel.send({embeds: [embed]})
+    message.channel.send({embeds: embeds.length > 0 ? embeds : [embed]})
   }
   //
   if (message.channel.type === 'DM') return;
@@ -1056,8 +1061,20 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('scanData-')) {
       let userId = id.replace('scanData-','')
+      let user = await getUser(userId)
       let scanData = shop.checkers.find(c => c.id === userId)
-      
+      if (scanData) {
+      let embed = new MessageEmbed()
+      .addField('Claimable Links',emojis.check+' '+scanData.valid)
+      .addField('Claimed Links',emojis.x+' '+scanData.claimed)
+      .addField('Invalid Links',emojis.warning+' '+scanData.invalid)
+      .addField('Scanned By',user.tag)
+      .setColor(colors.none)
+      .setThumbnail(user.avatarURL())
+      inter.reply({embeds: [embed], ephemeral: true})
+    } else {
+      inter.reply({content: emojis.x+" No checker in queue", ephemeral: true})
+    }
     }
     else if (id.startsWith('roles-')) {
     let role = id.replace('roles-','').replace(/_/g,' ')
