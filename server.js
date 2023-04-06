@@ -881,7 +881,7 @@ client.on("messageCreate", async (message) => {
     .setColor(colors.none)
     .setFooter({text: "Paypal Rate"})
     
-    message.reply({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
+    await message.channel.send({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
     message.delete();
   }
   else if (isCommand('ex',message)) {
@@ -901,7 +901,7 @@ client.on("messageCreate", async (message) => {
     .setColor(colors.none)
     .setFooter({text: "Money Exchange"})
     
-    message.reply({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
+    await message.channel.send({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
     message.delete();
   }
   else if (isCommand('robux',message)) {
