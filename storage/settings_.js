@@ -110,6 +110,36 @@ module.exports = {
     
   },
   shop: {
+    ar: {
+      prefix: '.',
+      responders: [
+        {
+          command: '',
+          response: '<:07:1069200743959109712> __**Nitro report form**__\n<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (your account email must be visible in the same screenshot):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n',
+          autoDelete: true,
+        },
+        {
+          command: '',
+          response: '',
+          autoDelete: true,
+        },
+        {
+          command: '',
+          response: '',
+          autoDelete: true,
+        },
+        {
+          command: '',
+          response: '',
+          autoDelete: true,
+        },
+        {
+          command: '',
+          response: '',
+          autoDelete: true,
+        },
+      ]
+    },
     followUps: [],
     customRoles: [
       {
