@@ -466,6 +466,7 @@ client.on("messageCreate", async (message) => {
     let num = 0
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
+    let ipCount = 0
     let counter = 0
     for (let i in codes) {
       counter++
@@ -475,9 +476,39 @@ client.on("messageCreate", async (message) => {
         sleep(waitingTime)
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let yeet = counter % 2 == 0 ? '/' : ''
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v8/entitlements/gift-codes/'+codes[i].code+yeet)
+        let ip = [
+          '35.98.234.131',
+          '23.53.235.219',
+          '209.83.183.164',
+          '146.157.181.65',
+          '75.105.149.188',
+          '136.210.195.137',
+          '173.198.93.61',
+          '54.83.241.209',
+          '35.243.89.200',
+          '63.158.124.79',
+          '181.98.22.191',
+          '230.202.145.36',
+          '55.57.152.51',
+          '137.141.30.202',
+          '187.78.70.196',
+          '184.184.176.211',
+          '166.166.29.61',
+          '38.181.20.119',
+        ]
+        ipCount++
+        !ip[ipCount] ? ipCount == 0 : null 
+        let headers = {
+          method: 'GET',
+            headers: {
+              'X-Forwarded-For': 0,
+              'X-Forwarded-For': ip[ipCount]
+            }
+        }
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v8/entitlements/gift-codes/'+codes[i].code+yeet,headers)
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
+          console.log('retry for '+codes[i].code)
           let ret = Math.ceil(res.retry_after)
           ret = ret.toString()+"000"
           waitingTime = Number(ret) < 300000 ? Number(ret) : 60000
@@ -517,7 +548,7 @@ client.on("messageCreate", async (message) => {
       let user = data.user
       let expire = data.expire
       embed = new MessageEmbed(embed)
-      .addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\nExpires in '+(!expire ? 'Expired' : '<t:'+expire)+':f>'+'\n\u200b')
+      .addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
       
     if (message.content.toLowerCase().includes("stocks")) {
       let stocks = await getChannel('1054929031881035789')
