@@ -513,7 +513,7 @@ client.on("messageCreate", async (message) => {
       let user = data.user
       let expire = data.expire
       embed = new MessageEmbed(embed)
-      .addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\nExpires in <t:'+(!expire ? 'Expired' : expire)+':f>\n\u200b')
+      .addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\nExpires in '+(!expire ? 'Expired' : '<t:'+expire)+':f>'+'\n\u200b')
       
     if (message.content.toLowerCase().includes("stocks")) {
       let stocks = await getChannel('1054929031881035789')
