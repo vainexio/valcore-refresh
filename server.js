@@ -480,6 +480,7 @@ client.on("messageCreate", async (message) => {
     //
     let counter = 0
     let version = 6
+    let ipCount = 0
     for (let i in codes) {
       counter++
       let fetched = false
@@ -488,8 +489,36 @@ client.on("messageCreate", async (message) => {
         sleep(waitingTime)
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let dash = counter % 2 == 0 ? '/' : ''
-        console.log(version)
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code)
+        let ip = [
+          '35.98.234.131',
+          '23.53.235.219',
+          '209.83.183.164',
+          '146.157.181.65',
+          '75.105.149.188',
+          '136.210.195.137',
+          '173.198.93.61',
+          '54.83.241.209',
+          '35.243.89.200',
+          '63.158.124.79',
+          '181.98.22.191',
+          '230.202.145.36',
+          '55.57.152.51',
+          '137.141.30.202',
+          '187.78.70.196',
+          '184.184.176.211',
+          '166.166.29.61',
+          '38.181.20.119',
+        ]
+        ipCount++
+        !ip[ipCount] ? ipCount == 0 : null 
+        let headers = {
+          method: 'GET',
+            headers: {
+              'X-Forwarded-For': 0,
+              'X-Forwarded-For': ip[ipCount]
+            }
+        }
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,headers)
         version++
         version >= 11 ? version = 6 : null
         res = eCode ? eCode : await res.json()
