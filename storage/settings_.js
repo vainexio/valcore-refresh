@@ -145,6 +145,12 @@ module.exports = {
           autoDelete: true,
         },
         {
+          command: 'gcash4',
+          response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0906 412 6440**\n— **LE•••N K•• F.**\n\n— Send screenshot of receipt here',
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09064126440').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          autoDelete: true,
+        },
+        {
           command: 'gcash3',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here',
           components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
