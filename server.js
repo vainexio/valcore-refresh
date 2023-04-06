@@ -466,7 +466,7 @@ client.on("messageCreate", async (message) => {
       let data = {
         id: message.author.id,
         valid: 0,
-        claimbed: 0,
+        claimed: 0,
         invalid: 0,
       }
       shop.checkers.push(data)
@@ -488,9 +488,10 @@ client.on("messageCreate", async (message) => {
         sleep(waitingTime)
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let dash = counter % 2 == 0 ? '/' : ''
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code+dash)
+        console.log(version)
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code)
         version++
-        version ? version === 11 : version = 6
+        version >= 11 ? version = 6 : null
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
           console.log('retry for '+codes[i].code)
@@ -505,7 +506,7 @@ client.on("messageCreate", async (message) => {
           }
         if (!res.retry_after) {
           fetched = true
-          console.log(i)
+          console.log(res)
           //msg.edit('Fetching nitro codes ('+(i)+'/'+codes.length+') '+emojis.loading)
           let e = res.expires_at ? moment(res.expires_at).unix() : null
           codes[i].expire = !isNaN(e) ? Number(e) : 'Expired'
@@ -529,6 +530,7 @@ client.on("messageCreate", async (message) => {
     codes.sort((a, b) => (b.expire - a.expire));
     let embeds = []
     let embed = new MessageEmbed()
+    .setColor(colors.none)
     let num = 0
     for (let i in codes) {
       num++
