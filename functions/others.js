@@ -109,7 +109,7 @@ module.exports = {
       msgSize = messages.size
       
     messages.forEach(async (gotMsg) => {
-    if (gotMsg.content.includes(key) && gotMsg.author.id === '1057167023492300881') {
+    if (gotMsg.content.toLowerCase().includes(key.toLowerCase()) && gotMsg.author.id === '1057167023492300881') {
       mentionsCount += 1
       gotMsg.reply(emojis.check+' Reference code was found.')
       foundKey = true
