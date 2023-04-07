@@ -728,8 +728,20 @@ client.on("messageCreate", async (message) => {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,4)
     if (!args) return;
-    let category = args[1].toUpperCase()
-    let 
+    args = message.content.toLowerCase().replace(';setprice','').trim().split(/,|, /);
+    let category = args[0].toUpperCase()
+    let parent = args[1].toLowerCase()
+    let child = args[2].toLowerCase()
+    let price = Number(args[3])
+    let foundCat = shop.pricelists.find(c => c.name === category)
+    if (!foundCat) return message.reply(emojis.x+' Invalid Category: `'+category+'`')
+    let foundParent = foundCat.types.find(c => c.parent.toLowerCase() === parent)
+    if (!foundParent) return message.reply(emojis.x+' Invalid Parent: `'+parent+'`')
+    let foundChild = foundParent.children.find(c => c.name.toLowerCase() === child)
+    if (!foundChild) return message.reply(emojis.x+' Invalid Child: `'+child+'`')
+    
+    foundChild.price = price
+    message.channel.send(emojis.check+' Successfully updated: '+child+"'s price to: `"+price+"`")
   }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
