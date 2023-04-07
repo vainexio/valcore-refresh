@@ -733,7 +733,7 @@ client.on("messageCreate", async (message) => {
       if (data.name.length > 0) {
         let embed = new MessageEmbed()
         .setTitle(data.name)
-        .setDescription('\n\n')
+        .setDescription('\n\n** **')
         .setColor(colors.none)
         let channel = await getChannel(data.channel)
         !bulked.find(b => b === channel.id) ? await channel.bulkDelete(10) : null
@@ -743,7 +743,7 @@ client.on("messageCreate", async (message) => {
           let children = ''
           for (let c in type.children) {
             let child = type.children[c]
-            children += '> <:08:1069200741807435866> '+child.name+' — ₱'+child.price+'\n'
+            children += '> <:08:1069200741807435866> '+child.name+(child.price > 0 ? ' — ₱'+child.price : '')+'\n'
           }
           let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)

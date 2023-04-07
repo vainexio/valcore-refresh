@@ -271,6 +271,208 @@ module.exports = {
       },
       {
         //Category
+        name: 'DEVELOPER BADGE',
+        channel: '1057249812656955514',
+        types: [
+          //Types
+          {
+            parent: 'Monthly',
+            children: [
+              //
+              { name: '1 month', price: 10 },
+              { name: '2 months', price: 15 },
+              { name: '3 months', price: 25 },
+              { name: '4 months', price: 30 },
+              //
+            ],
+          },
+          {
+            parent: 'Permanent',
+            children: [
+              //
+              { name: 'Permanent', price: 90 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'E-WALLET EXCHANGE',
+        channel: '1072434004873195540',
+        types: [
+          //Types
+          {
+            parent: 'Paypal to GCash',
+            children: [
+              //
+              { name: '₱499 below — 10% fee', price: 0 },
+              { name: '₱500 above — 5% fee', price: 0 },
+              { name: '₱1,000 above — 3% fee', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'BOT COMMISSIONS',
+        channel: '1081107027054571550',
+        types: [
+          //Types
+          {
+            parent: 'Auto nitro stocks dropper',
+            children: [
+              //
+              { name: 'Uncovered hosting', price: 299 },
+              { name: 'Covered hosting', price: 599 },
+              //
+            ],
+          },
+          {
+            parent: 'Custom Commission',
+            children: [
+              //
+              { name: 'This type of commission allows you to choose freely from anything you want your bot function. The price may range depending on the proposed functionality.', price: 0 },
+              //
+            ],
+          },
+          {
+            parent: 'Uncovered Hosting',
+            children: [
+              //
+              { name: 'This indicates that your bot will not be online, unless you are too. You will have to keep your device turned on, alongside the project website of the bot.', price: 0 },
+              //
+            ],
+          },
+          {
+            parent: 'Covered Hosting',
+            children: [
+              //
+              { name: 'All discord bots require paid hosting services (if not manually hosted) to stay up and working.', price: 0 },
+              { name: 'Covered hosting keeps your bot alive 24/7.', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'SERVER BOOSTING',
+        channel: '1054720561277841438',
+        types: [
+          //Types
+          {
+            parent: '3 Months',
+            children: [
+              //
+              { name: '2 server boosts', price: 80 },
+              { name: '8 server boosts', price: 150 },
+              { name: '14 server boosts', price: 220 },
+              //
+            ],
+          },
+          {
+            parent: 'Lifetime Boosts',
+            children: [
+              //
+              { name: '2 server boosts', price: 600 },
+              { name: '8 server boosts', price: 1600 },
+              { name: '14 server boosts', price: 2200 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        channel: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'DISCORD NITRO',
+        channel: '1054720561277841438',
+        types: [
+          //Types
+          {
+            parent: 'Monthly Subscription',
+            children: [
+              //
+              { name: 'Nitro Basic', price: 80 },
+              { name: 'Nitro Boost', price: 100 },
+              //
+            ],
+          },
+          {
+            parent: 'Yearly Subscription',
+            children: [
+              //
+              { name: 'Nitro Basic', price: 0 },
+              { name: 'Nitro Boost', price: 800 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'STEAM',
+        channel: '1054989628765122571',
+        types: [
+          //Types
+          {
+            parent: 'Steam Wallet Codes',
+            children: [
+              //
+              { name: '50 swc', price: 50 },
+              { name: '100 swc', price: 100 },
+              { name: '200 swc', price: 200 },
+              { name: '300 swc', price: 297 },
+              { name: '500 swc', price: 495 },
+              { name: '1000 swc', price: 985 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'GENSHIN IMPACT',
+        channel: '1054989628765122571',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
         name: '',
         channel: '',
         types: [
