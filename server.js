@@ -265,6 +265,36 @@ client.on("messageCreate", async (message) => {
    } 
   }
   //
+  if (!message.author.bot || (message.author.bot && message.content.includes('nitro'))) {
+  for (let i in shop.stickyChannels) {
+  let sticky = shop.stickyChannels[i]
+  if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
+    const options = { limit: 10 };
+    return;
+    //
+    if (message.channel.id === '1054731027240726528' || message.channel.id === '1055030500508569620') {
+      let member = message.mentions.members.first()
+      if (member) {
+      await addRole(member,['pending','buyer'],message.guild)
+      message.react('<:gude1:1056579657828417596>')
+      }
+    }
+    let messages = await message.channel.messages.fetch(options).then(messages => {
+      messages.forEach(async (gotMsg) => {
+        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && message.content !== sticky.message) {
+          gotMsg.delete();
+          //
+        }
+      })
+    });
+    //
+
+    if ((sticky.condition && sticky.condition(message)) || !sticky.condition) {
+    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : []});
+    }
+  }
+}
+  }
   if (message.author.bot) return;
   if (isCommand('find',message)) { 
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
@@ -612,30 +642,6 @@ client.on("messageCreate", async (message) => {
   if (filter) {
     message.delete();
   }
-  for (let i in shop.stickyChannels) {
-  let sticky = shop.stickyChannels[i]
-  if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
-    const options = { limit: 10 };
-    //
-    if (message.channel.id === '1054731027240726528' || message.channel.id === '1055030500508569620') {
-      let member = message.mentions.members.first()
-      await addRole(member,['pending','buyer'],message.guild)
-      message.react('<:gude1:1056579657828417596>')
-    }
-    let messages = await message.channel.messages.fetch(options).then(messages => {
-      messages.forEach(async (gotMsg) => {
-        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message) {
-          gotMsg.delete();
-        }
-      })
-    });
-    //
-
-    if ((sticky.condition && sticky.condition(message)) || !sticky.condition) {
-    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : []});
-    }
-  }
-}
   
   //Commands
   if (isCommand("cmds", message)) {
