@@ -1150,7 +1150,7 @@ client.on('interactionCreate', async inter => {
       let error = false;
       let code = makeCode(15)
       let copy = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<:07:1069200743959109712>')
+          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<a:S_pastelheart:1093737606451298354>')
         );
       await user.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+inter.message.content+" ||", components: [copy]}).catch((err) => {
         error = true
