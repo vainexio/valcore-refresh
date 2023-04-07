@@ -268,7 +268,7 @@ client.on("messageCreate", async (message) => {
    } 
   }
   //
-  if (!message.author.bot || (message.author.bot && message.content.includes('nitro'))) {
+  if (message.author.bot) return;
   for (let i in shop.stickyChannels) {
   let sticky = shop.stickyChannels[i]
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
@@ -296,8 +296,6 @@ client.on("messageCreate", async (message) => {
     }
   }
 }
-  }
-  if (message.author.bot) return;
   if (isCommand('find',message)) { 
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
     let args = await requireArgs(message,1)
