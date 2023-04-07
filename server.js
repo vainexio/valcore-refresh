@@ -1180,14 +1180,23 @@ client.on('interactionCreate', async inter => {
       inter.message.reply({content: emojis.check+' Returned '+returned+' links to stocks.'})
     }
     else if (id.startsWith('copyLinks')) {
-      let template = await getChannel("1075782410509226095")
       
-      let msg = await template.messages.fetch("1075782458970214480")
-      let filter = inter.message.content.replace(msg.content,'').replace(/\||Ref code:/g,'')
-      let args = await getArgs(filter)
-      filter = filter.replace(args[0],'')
-      
-      inter.reply({content: filter, ephemeral: true})
+      let content = inter.message.content//.replace(msg.content,'').replace(/\||Ref code:/g,'')
+      let args = await getArgs(content)
+      let count = 0
+      let string = ''
+      for (let i in args) {
+        if (args[i].includes('https://discord.gift/')) {
+          count++;
+          string += count+'. '+args[i]+'\n'
+        }
+      }
+      //filter = filter.replace(args[0],'')
+      if (count === 0) {
+        inter.reply({content: emojis.x+' No links found.', ephemeral: true})
+      } else {
+      inter.reply({content: string, ephemeral: true})
+      }
     }
     else if (id.startsWith('stop-')) {
       let user = id.replace('stop-','')
