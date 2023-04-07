@@ -119,7 +119,7 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'solo',
+            parent: 'Solo',
             children: [
               //
               { name: '1 month', price: 30 },
@@ -140,7 +140,7 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'via inv',
+            parent: 'Via Invite',
             children: [
               //
               { name: '1 month', price: 20 },
@@ -148,7 +148,7 @@ module.exports = {
             ],
           },
           {
-            parent: 'solo',
+            parent: 'Solo',
             children: [
               //
               { name: '1 month', price: 40 },
@@ -157,7 +157,7 @@ module.exports = {
             ],
           },
           {
-            parent: 'famhead',
+            parent: 'Famhead',
             children: [
               //
               { name: '1 month', price: 60 },
@@ -206,7 +206,7 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'shared profile',
+            parent: 'Shared Profile',
             children: [
               //
               { name: '1 month', price: 90 },
@@ -214,7 +214,7 @@ module.exports = {
             ],
           },
           {
-            parent: 'solo profile',
+            parent: 'Solo Profile',
             children: [
               //
               { name: '1 month', price: 110 },
@@ -222,7 +222,7 @@ module.exports = {
             ],
           },
           {
-            parent: 'solo account',
+            parent: 'Solo Account',
             children: [
               //
               { name: '1 month', price: 380 },
@@ -239,7 +239,7 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'fan',
+            parent: 'Fan',
             children: [
               //
               { name: '1 month', price: 50 },
@@ -253,7 +253,7 @@ module.exports = {
             ],
           },
           {
-            parent: 'mega fan',
+            parent: 'Mega Fan',
             children: [
               //
               { name: '1 month', price: 60 },

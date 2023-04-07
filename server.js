@@ -727,23 +727,27 @@ client.on("messageCreate", async (message) => {
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
     let pricelists = shop.pricelists
-    for (let i in pricelists) {
-      let data = pricelists[i]
+    let bulked = []
+    for (let a in pricelists) {
+      let data = pricelists[a]
       if (data.name.length > 0) {
         let embed = new MessageEmbed()
         .setTitle(data.name)
+        .setDescription('\n\n')
         .setColor(colors.none)
         let channel = await getChannel(data.channel)
-        await channel.bulkDelete(10)
-        for (let i in data.types) {
-          let type = data.types[i]
+        !bulked.find(b => b === channel.id) ? await channel.bulkDelete(10) : null
+        bulked.push(channel.id)
+        for (let b in data.types) {
+          let type = data.types[b]
           let children = ''
-          for (let i in type.children) {
-            let child = type.children[i]
+          for (let c in type.children) {
+            let child = type.children[c]
             children += '> <:08:1069200741807435866> '+child.name+' — ₱'+child.price+'\n'
           }
+          let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)
-          .addField(type.parent,children)
+          .addField(type.parent,children+state)
         }
         await channel.send({embeds: [embed]})
       }
