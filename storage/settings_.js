@@ -122,9 +122,10 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 30 },
-              { name: '2 months', price: 50 },
-              { name: '3 months', price: 60,
-              },
+              { name: '2 months', price: 40 },
+              { name: '3 months', price: 50 },
+              { name: '6 months', price: 60 },
+              { name: '12 months', price: 90 },
               //
             ],
           },
@@ -132,17 +133,164 @@ module.exports = {
         ],
       },
       {
+        //Category
+        name: 'YOUTUBE PREMIUM',
+        types: [
+          //Types
+          {
+            parent: 'via inv',
+            children: [
+              //
+              { name: '1 month', price: 20 },
+              //
+            ],
+          },
+          {
+            parent: 'solo',
+            children: [
+              //
+              { name: '1 month', price: 40 },
+              { name: '4 months', price: 60 },
+              //
+            ],
+          },
+          {
+            parent: 'famhead',
+            children: [
+              //
+              { name: '1 month', price: 60 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
         name: '',
         types: [
+          //Types
           {
             parent: '',
             children: [
-              {
-                name: '',
-                price: 0,
-              }
+              //
+              { name: '', price: 0 },
+              //
             ],
-          }
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'NETFLIX PREMIUM',
+        types: [
+          //Types
+          {
+            parent: 'shared profile',
+            children: [
+              //
+              { name: '1 month', price: 90 },
+              //
+            ],
+          },
+          {
+            parent: 'solo profile',
+            children: [
+              //
+              { name: '1 month', price: 110 },
+              //
+            ],
+          },
+          {
+            parent: 'solo account',
+            children: [
+              //
+              { name: '1 month', price: 3 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
         ],
       },
       //
