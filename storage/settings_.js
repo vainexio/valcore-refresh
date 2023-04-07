@@ -115,6 +115,7 @@ module.exports = {
       {
         //Category
         name: 'SPOTIFY PREMIUM',
+        channel: '1054989652416798750',
         types: [
           //Types
           {
@@ -135,6 +136,7 @@ module.exports = {
       {
         //Category
         name: 'YOUTUBE PREMIUM',
+        channel: '1054989652416798750',
         types: [
           //Types
           {
@@ -200,6 +202,7 @@ module.exports = {
       {
         //Category
         name: 'NETFLIX PREMIUM',
+        channel: '1054989652416798750',
         types: [
           //Types
           {
@@ -222,7 +225,44 @@ module.exports = {
             parent: 'solo account',
             children: [
               //
-              { name: '1 month', price: 3 },
+              { name: '1 month', price: 380 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'CRUNCHYROLL',
+        channel: '1054989652416798750',
+        types: [
+          //Types
+          {
+            parent: 'fan',
+            children: [
+              //
+              { name: '1 month', price: 50 },
+              { name: '2 months', price: 60 },
+              { name: '3 months', price: 70 },
+              { name: '4 months', price: 80 },
+              { name: '5 months', price: 95 },
+              { name: '6 months', price: 115 },
+              { name: '12 months', price: 160 },
+              //
+            ],
+          },
+          {
+            parent: 'mega fan',
+            children: [
+              //
+              { name: '1 month', price: 60 },
+              { name: '2 months', price: 70 },
+              { name: '3 months', price: 80 },
+              { name: '4 months', price: 95 },
+              { name: '5 months', price: 115 },
+              { name: '6 months', price: 135 },
+              { name: '12 months', price: 180 },
               //
             ],
           },
@@ -232,6 +272,7 @@ module.exports = {
       {
         //Category
         name: '',
+        channel: '',
         types: [
           //Types
           {
@@ -248,6 +289,7 @@ module.exports = {
       {
         //Category
         name: '',
+        channel: '',
         types: [
           //Types
           {
@@ -264,22 +306,7 @@ module.exports = {
       {
         //Category
         name: '',
-        types: [
-          //Types
-          {
-            parent: '',
-            children: [
-              //
-              { name: '', price: 0 },
-              //
-            ],
-          },
-          //
-        ],
-      },
-      {
-        //Category
-        name: '',
+        channel: '',
         types: [
           //Types
           {

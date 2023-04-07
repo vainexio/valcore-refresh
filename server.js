@@ -724,6 +724,31 @@ client.on("messageCreate", async (message) => {
       sendChannel(template, message.channel.id, theme);
     }
   }
+  else if (isCommand('setpr',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let pricelists = shop.pricelists
+    for (let i in pricelists) {
+      let data = pricelists[i]
+      if (data.name.length > 0) {
+        let embed = new MessageEmbed()
+        .setTitle(data.name)
+        .setColor(colors.none)
+        let channel = await getChannel(data.channel)
+        await channel.bulkDelete(10)
+        for (let i in data.types) {
+          let type = data.types[i]
+          let children = ''
+          for (let i in type.children) {
+            let child = type.children[i]
+            children += '> <:08:1069200741807435866> '+child.name+' — ₱'+child.price+'\n'
+          }
+          embed = new MessageEmbed(embed)
+          .addField(type.parent,children)
+        }
+        await channel.send({embeds: [embed]})
+      }
+    }
+  }
   else if (isCommand('forceall',message)) {
     if (!await getPerms(message.member,4)) return;
     let cc = 0
