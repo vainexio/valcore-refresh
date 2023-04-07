@@ -270,7 +270,6 @@ client.on("messageCreate", async (message) => {
   let sticky = shop.stickyChannels[i]
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
     const options = { limit: 10 };
-    return;
     //
     if (message.channel.id === '1054731027240726528' || message.channel.id === '1055030500508569620') {
       let member = message.mentions.members.first()
@@ -281,7 +280,7 @@ client.on("messageCreate", async (message) => {
     }
     let messages = await message.channel.messages.fetch(options).then(messages => {
       messages.forEach(async (gotMsg) => {
-        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && message.content !== sticky.message) {
+        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message) {
           gotMsg.delete();
           //
         }
