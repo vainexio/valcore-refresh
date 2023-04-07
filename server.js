@@ -796,7 +796,10 @@ client.on("messageCreate", async (message) => {
     message.channel.send("<:07:1069200743959109712> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:circley:1072388650337308742> Make sure to open your DMs.\n<:circley:1072388650337308742> The message may appear as **direct or request** message.")
     message.author.send({content: links, components: [row]})
     let orders = await getChannel("1054731027240726528")
-    orders.send("<@"+user.id+">\n ("+quan+") "+(item ? item : "nitro boost")+"\n"+(method ? method : "gcash")).then(async msg => {
+    let template = await getChannel("1079712339122720768")
+    let msg = await template.messages.fetch("1093800287002693702")
+    msg.content = msg.content.replace('{user}','<@'+user.id+'>').replace('{quan}',quan.toString()).replace('{product}',item ? item : "nitro boost").replace('{mop}',method ? method : "gcash")
+    orders.send(msg.content).then(async msg => {
       await msg.react("<:g1:1056579657828417596>")
       await msg.react("<:g2:1056579660353372160>")
       await msg.react("<:g3:1056579662572179586>")
