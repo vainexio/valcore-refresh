@@ -111,6 +111,42 @@ module.exports = {
   },
   shop: {
     checkers: [],
+    pricelists: [
+      {
+        //Category
+        name: 'SPOTIFY PREMIUM',
+        types: [
+          //Types
+          {
+            parent: 'solo',
+            children: [
+              //
+              { name: '1 month', price: 30 },
+              { name: '2 months', price: 50 },
+              { name: '3 months', price: 60,
+              },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        name: '',
+        types: [
+          {
+            parent: '',
+            children: [
+              {
+                name: '',
+                price: 0,
+              }
+            ],
+          }
+        ],
+      },
+      //
+    ],
     ar: {
       prefix: '.',
       responders: [
