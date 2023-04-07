@@ -616,12 +616,11 @@ client.on("messageCreate", async (message) => {
       } 
       else {
         embed = new MessageEmbed(embed)
-          .addField('\u200b',ind)
           .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
           .setTimestamp()
         embeds.push(embed)
         embed = new MessageEmbed()
-          .addField('\u200b',ind)
+          //.addField('\u200b',ind)
           .setColor(colors.none)
           .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
           .setTimestamp()
