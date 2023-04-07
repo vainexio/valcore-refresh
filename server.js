@@ -724,6 +724,13 @@ client.on("messageCreate", async (message) => {
       sendChannel(template, message.channel.id, theme);
     }
   }
+  else if (isCommand('setprice',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let args = await requireArgs(message,4)
+    if (!args) return;
+    let category = args[1].toUpperCase()
+    let 
+  }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
     let pricelists = shop.pricelists
@@ -752,6 +759,7 @@ client.on("messageCreate", async (message) => {
         await channel.send({embeds: [embed]})
       }
     }
+    message.channel.send(emojis.check+' Successfully updated all the pricelists!')
   }
   else if (isCommand('forceall',message)) {
     if (!await getPerms(message.member,4)) return;

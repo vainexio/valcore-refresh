@@ -461,10 +461,14 @@ module.exports = {
         types: [
           //Types
           {
-            parent: '',
+            parent: 'Genesis Crystals',
             children: [
               //
-              { name: '', price: 0 },
+              { name: '60 gc', price: 47 },
+              { name: '330 gc', price: 230 },
+              { name: '1090 gc', price: 695 },
+              { name: '2240 gc', price: 1365 },
+              { name: '3880 gc', price: 2375 },
               //
             ],
           },
@@ -473,15 +477,18 @@ module.exports = {
       },
       {
         //Category
-        name: '',
-        channel: '',
+        name: 'ROBUX',
+        channel: '1054989628765122571',
         types: [
           //Types
           {
-            parent: '',
+            parent: 'Via Gamepass',
             children: [
               //
-              { name: '', price: 0 },
+              { name: '250 Robux', price: 90 },
+              { name: '500 Robux', price: 150 },
+              { name: '700 Robux', price: 200 },
+              { name: '1000 Robux', price: 300 },
               //
             ],
           },
@@ -490,15 +497,20 @@ module.exports = {
       },
       {
         //Category
-        name: '',
-        channel: '',
+        name: 'VALORANT',
+        channel: '1054989628765122571',
         types: [
           //Types
           {
-            parent: '',
+            parent: 'Valorant Points',
             children: [
               //
-              { name: '', price: 0 },
+              { name: '125 vp', price: 50 },
+              { name: '380 vp', price: 150 },
+              { name: '790 vp', price: 285 },
+              { name: '1,650 vp', price: 560 },
+              { name: '2,850 vp', price: 910 },
+              { name: '5,800 vp', price: 1880 },
               //
             ],
           },
