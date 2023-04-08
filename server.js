@@ -768,7 +768,7 @@ client.on("messageCreate", async (message) => {
           let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)
           .addField(type.parent,children)
-          .setImage(data.thumbnail ? data.thumbnail : '')
+          .setImage(data.image ? data.image : '')
         }
         await channel.send({embeds: [embed]})
       }
