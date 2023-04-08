@@ -258,9 +258,9 @@ client.on("messageCreate", async (message) => {
    if (message.author.id === "557628352828014614") {
      let vc = await getChannel("1079713500731015209")
      let member = message.mentions.members.first()
-     let state = await hasRole(member,["Accepted TOS"]) ? "You have accepted our terms.\n→ Therefore, we shall not be liable for any mistakes or excuses made once you've violated our rules." : "We shall not be liable for any mistakes or excuses made once you've violated our rules."
+     let state = await hasRole(member,["Accepted TOS"]) ? "You have accepted our terms.\n— Therefore, we shall not be liable for any mistakes or excuses made once you've violated our rules." : "We shall not be liable for any mistakes or excuses made once you've violated our rules."
      if (vc.name === 'reports : CLOSED') {
-     message.channel.send(emojis.warning+" **Void Warranty**\nReport was submitted outside reporting hours.\n\n<:07:1069200743959109712> Remarks\n→ Void warranty means no replacement nor refund.\n→ "+state)
+     message.channel.send(emojis.warning+" **Void Warranty**\nReport was submitted outside reporting hours.\n\n<:07:1069200743959109712> Remarks\n→ Void warranty means no replacement nor refund.\n— "+state)
      await addRole(member,['void'],message.guild)
      } else if (await hasRole(member,['void'],message.guild)) {
        message.channel.send(emojis.warning+' **Void Warranty**\nA recent remark was detected that you violated our terms.\n→ '+state)
