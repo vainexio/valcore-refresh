@@ -91,7 +91,7 @@ module.exports = {
       //string = string.replace('as an ai language model, ','')
       string = string.replace('As an AI language model, ','')
       string = string.replace(' As an AI language model, ','')
-      string = string.replace('an AI language model','I am a clueless egg')
+      string = string.replace('an AI language model','gudetama')
       string = string.replace('OpenAI','Sloopies')
       return string;
     },
