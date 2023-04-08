@@ -891,15 +891,6 @@ module.exports = {
       ex: ['cmds stocks','cmds use'],
       level: 0,
     },
-    {
-      Command: "setprice",
-      Template: "<category>,<parent>,<child>,<price>",
-      Alias: ['set'],
-      Category: "Misc",
-      Desc: 'Updates the current price of a product',
-      ex: ['cmds stocks','cmds use'],
-      level: 0,
-    },
   ],
   permissions: [
   {
