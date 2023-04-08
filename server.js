@@ -612,11 +612,11 @@ client.on("messageCreate", async (message) => {
       let expire = data.expire
       if (embed.fields.length < 25) {
       embed = new MessageEmbed(embed)
+        .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
+        .setTimestamp()
       } 
       else {
         embed = new MessageEmbed(embed)
-          .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
-          .setTimestamp()
         embeds.push(embed)
         embed = new MessageEmbed()
           //.addField('\u200b',ind)
