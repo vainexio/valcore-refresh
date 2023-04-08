@@ -95,11 +95,9 @@ module.exports = {
       string = string.replace('OpenAI','Sloopies')
       return string;
     },
-    chatAPI: 'https://api.openai.com/v1/completions',
     chatAPI: 'https://api.openai.com/v1/chat/completions',
     imageAPI: 'https://api.openai.com/v1/images/generations',
-    model: "text-babbage-001"//"gpt-3.5-turbo",
-    
+    model: "gpt-3.5-turbo"//  
   },
   shop: {
     checkers: [],
