@@ -545,7 +545,7 @@ client.on("messageCreate", async (message) => {
         let headers = {
           method: 'GET',
             headers: {
-              'X-Forwarded-For': 0,
+              'X-Forwarded-For': ip[ipCount],
               'X-Forwarded-For': ip[ipCount],
               'X-Forwarded': ip[ipCount],
               'X-Forwarded-By': ip[ipCount],
