@@ -216,7 +216,7 @@ client.on("messageCreate", async (message) => {
     let user = message.mentions.members.first()
     let id = user.id
     
-    let webhook = new WebhookClient({ url: 'https://discord.com/api/webhooks/1067065095613583380/J0y0QwCDld-1e1nHDvh6nkjh6QYOVIzdRXYvz5Gg18T6aYV8FUpV5g4s-vePqi_qWp2_'})
+    let webhook = new WebhookClient({ url: process.env.ChatWebhook})
     let zarche = await getUser('900011518714847282')
     webhook.send({
       content: 'welcome po <:gude_heart:1056580152852762694>',

@@ -85,15 +85,7 @@ let keys = [
 ]
 //const {makeButton} = others
 module.exports = {
-  filteredWords: [
-    'iglipa',
-    'justin',
-    '1glipa',
-    'lipa',
-    'paolo',
-    'elsa',
-    'ramil',
-  ],
+  filteredWords: [],
   AI: {
     filter: function(string) {
       //string = string.replace('as an ai language model, ','')
@@ -406,7 +398,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic', price: 80 },
-              { name: 'Nitro Boost', price: 100 },
+              { name: 'Nitro Boost', price: 110 },
               //
             ],
           },
@@ -415,7 +407,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic', price: 0 },
-              { name: 'Nitro Boost', price: 800 },
+              { name: 'Nitro Boost', price: 850 },
               //
             ],
           },
@@ -898,6 +890,15 @@ module.exports = {
       Alias: ['cmd','help'],
       Category: "Misc",
       Desc: 'Shows the list of available commands',
+      ex: ['cmds stocks','cmds use'],
+      level: 0,
+    },
+    {
+      Command: "setprice",
+      Template: "<category>,<parent>,<child>,<price>",
+      Alias: ['set'],
+      Category: "Misc",
+      Desc: 'Updates the current price of a product',
       ex: ['cmds stocks','cmds use'],
       level: 0,
     },
