@@ -1234,7 +1234,7 @@ client.on('interactionCreate', async inter => {
       
       let msg = await template.messages.fetch("1075782458970214480")
       let error = false;
-      let code = makeCode(15)
+      let code = makeCode(10)
       let copy = new MessageActionRow().addComponents(
           new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<a:S_pastelheart:1093737606451298354>')
         );

@@ -98,7 +98,7 @@ module.exports = {
     chatAPI: 'https://api.openai.com/v1/completions',
     chatAPI: 'https://api.openai.com/v1/chat/completions',
     imageAPI: 'https://api.openai.com/v1/images/generations',
-    model: "gpt-3.5-turbo",
+    model: "text-babbage-001"//"gpt-3.5-turbo",
     
   },
   shop: {
