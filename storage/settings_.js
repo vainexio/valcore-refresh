@@ -114,7 +114,7 @@ module.exports = {
     pricelists: [
       {
         //Category
-        name: 'SPOTIFY PREMIUM',
+        name: 'Spotify',
         channel: '1054989652416798750',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186379624478/Logopit_1680918508558.png?width=1440&height=360',
         types: [
@@ -136,7 +136,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'YOUTUBE PREMIUM',
+        name: 'Youtube',
         channel: '1054989652416798750',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077235713028126/Logopit_1680918525501.png?width=1440&height=360',
         types: [
@@ -172,7 +172,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'NETFLIX PREMIUM',
+        name: 'Netflix',
         channel: '1054989652416798750',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077235939512320/Logopit_1680918539369.png?width=1440&height=360',
         types: [
@@ -208,7 +208,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'CRUNCHYROLL',
+        name: 'Crunchyroll',
         channel: '1054989652416798750',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236161818664/Logopit_1680918569709.png?width=1440&height=360',
         types: [
@@ -246,7 +246,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'DEVELOPER BADGE',
+        name: 'Developer Badge',
         channel: '1057249812656955514',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077237004865556/Logopit_1680918616490.png?width=1440&height=360',
         types: [
@@ -275,7 +275,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'E-WALLET EXCHANGE',
+        name: 'E-Wallet Exchange',
         channel: '1072434004873195540',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077237348794368/Logopit_1680918656290.png?width=1440&height=360',
         types: [
@@ -295,7 +295,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'BOT COMMISSIONS',
+        name: 'Bot Commission',
         channel: '1081107027054571550',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077237592076389/Logopit_1680918672598.png?width=1440&height=360',
         types: [
@@ -339,7 +339,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'SERVER BOOSTING',
+        name: 'Server Boosting',
         channel: '1054720561277841438',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185905676309/Logopit_1680918458337.png?width=1440&height=360',
         types: [
@@ -369,7 +369,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'DISNEY+',
+        name: 'Disney+',
         channel: '1054989652416798750',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236413468672/Logopit_1680918581099.png?width=1440&height=360',
         types: [
@@ -395,7 +395,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'DISCORD NITRO',
+        name: 'Discord Nitro',
         channel: '1054720561277841438',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186127970414/Logopit_1680918484757.png?width=1440&height=360',
         types: [
@@ -423,7 +423,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'STEAM',
+        name: 'Steam',
         channel: '1054989628765122571',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185125535844/Logopit_1680918431372.png?width=1440&height=360',
         types: [
@@ -446,7 +446,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'GENSHIN IMPACT',
+        name: 'Genshin Impact',
         channel: '1054989628765122571',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185406550136/Logopit_1680918406428.png?width=1440&height=360',
         types: [
@@ -468,7 +468,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'ROBUX',
+        name: 'Robux',
         channel: '1054989628765122571',
         image: "https://media.discordapp.net/attachments/1093391705753002064/1094077237839532123/Logopit_1680918693719.png?width=1440&height=360",
         types: [
@@ -489,7 +489,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'VALORANT',
+        name: 'Valorant',
         channel: '1054989628765122571',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185666592768/Logopit_1680918349259.png?width=1440&height=360',
         types: [
@@ -512,7 +512,7 @@ module.exports = {
       },
       {
         //Category
-        name: 'VYPER VPN',
+        name: 'Vyper VPN',
         channel: '1094056028938698833',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236648345710/Logopit_1680918601382.png?width=1440&height=360',
         types: [

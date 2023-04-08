@@ -780,7 +780,7 @@ client.on("messageCreate", async (message) => {
       let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
       let holderCount = 0
       let channel = await getChannel(bulked[i].channel)
-      stockHolder[0].push(new MessageActionRow().addComponents(new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>')))
+      stockHolder[0].push(new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>'))
       for (let b in bulked[i].messages) {
       let msg = bulked[i].messages[b];
         let name = msg.name
@@ -792,7 +792,9 @@ client.on("messageCreate", async (message) => {
           .setStyle("LINK")
           .setLabel(name)
           .setURL(url)
+          .setEmoji('<a:S_pastelheart:1093737606451298354>')
         );
+        console.log(stockHolder[holderCount])
     }
       let comps = []
     for (let i in stockHolder) {
