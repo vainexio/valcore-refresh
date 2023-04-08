@@ -1435,17 +1435,20 @@ client.on('interactionCreate', async inter => {
       inter.deferUpdate();
     }
     else if (id.startsWith('prVerify')) {
-      let code = makeCode(5)
-      
-      let embed = new MessageEmbed()
-      .addField('Prompt','Click the button that matches the code below')
-      .setColor(colors.none)
-      
-      let row = new MessageActionRow()
-        .addComponents(
-          new MessageButton().setLabel('').setCustomId('Option').setStyle('DANGER')
-        )
-      
+      let member = inter.member
+      if (await hasRole(member,['1094084379137032252'],inter.guild)) {
+        inter.deferUpdate();
+        return
+      } else {
+        await addRole(member,['1094084379137032252'],inter.guild)
+        let channels = ''
+        inter.guild.channels.cache.forEach( ch => {
+          if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {
+            channels += '\n<:circley:1072388650337308742> <#'+ch.id+'>'
+          }
+        })
+        inter.reply({content: emojis.check+' <:S_seperator:1093733778633019492> You now have access to our pricelists! You can view them through these channels: \n'+channels, ephemeral: true})
+      }
     }
     else if (id === 'terms') {
       let member = inter.member;
