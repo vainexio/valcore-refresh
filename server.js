@@ -755,9 +755,12 @@ client.on("messageCreate", async (message) => {
         .setDescription('\n\n** **')
         .setColor(colors.none)
         let channel = await getChannel(data.channel)
-        let foundBulked = bulked.find(b => b === channel.id)
+        let foundBulked = bulked.find(b => b.channel === channel.id)
         !foundBulked ? await channel.bulkDelete(10) : null
-        !foundBulked ? bulked.push(channel.id) : null
+        if (!foundBulked) {
+          bulked.push({channel: channel.id, messages: []})
+          foundBulked = bulked.find(b => b.channel === channel.id)
+        }
         for (let b in data.types) {
           let type = data.types[b]
           let children = ''
@@ -770,14 +773,36 @@ client.on("messageCreate", async (message) => {
           .addField(type.parent,children)
           .setImage(data.image ? data.image : '')
         }
-        await channel.send({embeds: [embed]})
+        await channel.send({embeds: [embed]}).then(msg => foundBulked.messages.push({name: data.name, url: msg.url}))
       }
     }
     for (let i in bulked) {
-      let channel = await getChannel(bulked[i])
-      let row = new MessageActionRow().addComponents(
-          new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>'))
-      await channel.send({components: [row]})
+      let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
+      let holderCount = 0
+      let channel = await getChannel(bulked[i].channel)
+      stockHolder[0].push(new MessageActionRow().addComponents(new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>')))
+      for (let b in bulked[i].messages) {
+      let msg = bulked[i].messages[b];
+        let name = msg.name
+        let url = msg.url
+        console.log(name,url)
+        if (stockHolder[holderCount].length === 5) holderCount++
+        stockHolder[holderCount].push(
+          new MessageButton()
+          .setStyle("LINK")
+          .setLabel(name)
+          .setURL(url)
+        );
+    }
+      let comps = []
+    for (let i in stockHolder) {
+      if (stockHolder[i].length !== 0) {
+        let row = new MessageActionRow();
+        row.components = stockHolder[i];
+        comps.push(row)
+      }
+    }
+      await channel.send({components: comps})
     }
     message.channel.send(emojis.check+' Successfully updated all the pricelists!')
   }
