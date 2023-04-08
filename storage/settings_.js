@@ -143,7 +143,7 @@ module.exports = {
             parent: 'Via Invite',
             children: [
               //
-              { name: '1 month', price: 20 },
+              { name: '1 month', price: 15 },
               //
             ],
           },
@@ -153,6 +153,7 @@ module.exports = {
               //
               { name: '1 month', price: 40 },
               { name: '4 months', price: 60 },
+              { name: '6 months', price: 90 },
               //
             ],
           },
@@ -161,38 +162,6 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 60 },
-              //
-            ],
-          },
-          //
-        ],
-      },
-      {
-        //Category
-        name: '',
-        types: [
-          //Types
-          {
-            parent: '',
-            children: [
-              //
-              { name: '', price: 0 },
-              //
-            ],
-          },
-          //
-        ],
-      },
-      {
-        //Category
-        name: '',
-        types: [
-          //Types
-          {
-            parent: '',
-            children: [
-              //
-              { name: '', price: 0 },
               //
             ],
           },
@@ -210,6 +179,7 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 90 },
+              { name: '3 months', price: 145 },
               //
             ],
           },
@@ -218,6 +188,7 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 110 },
+              { name: '3 months', price: 200 },
               //
             ],
           },
@@ -398,7 +369,15 @@ module.exports = {
             parent: 'Shared Acc',
             children: [
               //
-              { name: '90', price: 0 },
+              { name: '1 month', price: 90 },
+              //
+            ],
+          },
+          {
+            parent: 'Solo Profile',
+            children: [
+              //
+              { name: '1 month', price: 120 },
               //
             ],
           },
@@ -511,6 +490,67 @@ module.exports = {
               { name: '1,650 vp', price: 560 },
               { name: '2,850 vp', price: 910 },
               { name: '5,800 vp', price: 1880 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'VYPER VPN',
+        channel: '1094056028938698833',
+        types: [
+          //Types
+          {
+            parent: 'Shared',
+            children: [
+              //
+              { name: '1 month', price: 45 },
+              { name: '12 months', price: 90 },
+              //
+            ],
+          },
+          {
+            parent: 'Solo',
+            children: [
+              //
+              { name: '1 month', price: 60 },
+              { name: '12 months', price: 190 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        channel: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: '',
+        channel: '',
+        types: [
+          //Types
+          {
+            parent: '',
+            children: [
+              //
+              { name: '', price: 0 },
               //
             ],
           },

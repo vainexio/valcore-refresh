@@ -771,6 +771,12 @@ client.on("messageCreate", async (message) => {
         await channel.send({embeds: [embed]})
       }
     }
+    for (let i in bulked) {
+      let channel = bulked[i]
+      let row = new MessageActionRow().addComponents(
+          new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>'))
+      await channel.send({components: [row]})
+    }
     message.channel.send(emojis.check+' Successfully updated all the pricelists!')
   }
   else if (isCommand('forceall',message)) {
