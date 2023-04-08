@@ -1198,7 +1198,7 @@ client.on('interactionCreate', async inter => {
     await inter.reply({ content: emojis.check+' Added **'+role+'** role.', ephemeral: true });
     }
   }
-    else if(id.startsWith('nitro-')) {
+    else if (id.startsWith('nitro-')) {
       let user = id.replace('nitro-','')
       user = await getUser(user)
       if (!user) return inter.reply("Invalid user.")
@@ -1433,6 +1433,12 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('none')) {
       inter.deferUpdate();
+    }
+    else if (id.startsWith('prVerify')) {
+      let code = makeCode(5)
+      
+      let embed = new MessageEmbed()
+      .addField('Click the ')
     }
     else if (id === 'terms') {
       let member = inter.member;

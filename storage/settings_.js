@@ -116,6 +116,7 @@ module.exports = {
         //Category
         name: 'SPOTIFY PREMIUM',
         channel: '1054989652416798750',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186379624478/Logopit_1680918508558.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -137,6 +138,7 @@ module.exports = {
         //Category
         name: 'YOUTUBE PREMIUM',
         channel: '1054989652416798750',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077235713028126/Logopit_1680918525501.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -172,6 +174,7 @@ module.exports = {
         //Category
         name: 'NETFLIX PREMIUM',
         channel: '1054989652416798750',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077235939512320/Logopit_1680918539369.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -207,7 +210,7 @@ module.exports = {
         //Category
         name: 'CRUNCHYROLL',
         channel: '1054989652416798750',
-        image: '',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236161818664/Logopit_1680918569709.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -467,7 +470,7 @@ module.exports = {
         //Category
         name: 'ROBUX',
         channel: '1054989628765122571',
-        image: "https://media.discordapp.net/attachments/1093391705753002064/1094077184836124742/Logopit_1680918229221.png?width=1440&height=360",
+        image: "https://media.discordapp.net/attachments/1093391705753002064/1094077237839532123/Logopit_1680918693719.png?width=1440&height=360",
         types: [
           //Types
           {
@@ -719,11 +722,19 @@ module.exports = {
         message: '<:gude1:1056579657828417596> — Noted\n<:gude2:1056579660353372160> — Fixing\n<:gude3:1056579662572179586> — Fixed',
       },
       {
-        id: '1054720449835171900',
+        id: '0',
         message: '',
         comp: new MessageActionRow()
         .addComponents(
           new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>')
+        ),
+      },
+      {
+        id: '1094079711753281596',
+        message: 'Click the button below to access our pricelists.',
+        comp: new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('Access').setCustomId('prVerify').setStyle('DANGER').setEmoji('🔓')
         ),
       },
       {
