@@ -601,7 +601,7 @@ module.exports = {
         },
         {
           command: 'rnitro',
-          response: '<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (click "to me" in the email to confirm that the email is connected ):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account (in discord settings):\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n<:circley:1072388650337308742>Ref code:',
+          response: '<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (click "to me" in the email to confirm that the email is connected with your acc):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account:\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n<:circley:1072388650337308742>Ref code:',
           autoDelete: false,
         },
         {
