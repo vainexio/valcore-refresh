@@ -458,6 +458,7 @@ module.exports = {
         //Category
         name: 'ROBUX',
         channel: '1054989628765122571',
+        thumbnail: "https://media.discordapp.net/attachments/1093391705753002064/1094074368713293864/Logopit_1680918047079.png?width=1440&height=360",
         types: [
           //Types
           {
