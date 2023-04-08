@@ -1438,7 +1438,14 @@ client.on('interactionCreate', async inter => {
       let code = makeCode(5)
       
       let embed = new MessageEmbed()
-      .addField('Click the ')
+      .addField('Prompt','Click the button that matches the code below')
+      .setColor(colors.none)
+      
+      let row = new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('').setCustomId('Option').setStyle('DANGER')
+        )
+      
     }
     else if (id === 'terms') {
       let member = inter.member;
