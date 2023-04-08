@@ -410,6 +410,7 @@ client.on("messageCreate", async (message) => {
     await message.channel.send({content: "Scanning "+data.cc.length+" cards "+emojis.loading, components: [row]}).then(msg => botMsg = msg)
     let live = false
     let index = 0
+    let filter = 'Please consider making a donation or we will be forced to shutdown the xchecker.cc service, thanks you.\nDonations: bc1qlfu2atqvwnw4mlwv3f3wggpwtnvyhpxw3hyl30'
     for (let i = 0; i < data.cc.length; i++) {
       if (data.breakLoop) break;
       index++
@@ -438,21 +439,21 @@ client.on("messageCreate", async (message) => {
         .setTitle('Unknown Status')
         .setColor(colors.orange)
         .addField('Status','```diff\n- '+response.status+'```')
-        .addField('Error Code','```diff\n- '+response.details+'```')
+        .addField('Error Code','```diff\n- '+response.details.replace(filter,'')+'```')
       }
       else if (!response.error) {
         failed++
         embed = new MessageEmbed(embed)
         .setTitle('Dead')
         .setColor(colors.red)
-        .addField('Card Declined','```diff\n- '+response.details+'```')
+        .addField('Card Declined','```diff\n- '+response.details.replace(filter,'')+'```')
         
       } else {
         error++
         embed = new MessageEmbed(embed)
         .setTitle('Error')
         .setColor(colors.orange)
-        .addField('Error Code','```diff\n- '+response.error+'```')
+        .addField('Error Code','```diff\n- '+response.error.replace(filter,'')+'```')
         
         errorText += !errorText.includes(response.error) ? "\n"+response.error : ""
       }
