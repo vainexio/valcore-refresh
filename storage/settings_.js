@@ -390,15 +390,15 @@ module.exports = {
       },
       {
         //Category
-        name: '',
-        channel: '',
+        name: 'DISNEY+',
+        channel: '1054989652416798750',
         types: [
           //Types
           {
-            parent: '',
+            parent: 'Shared Acc',
             children: [
               //
-              { name: '', price: 0 },
+              { name: '90', price: 0 },
               //
             ],
           },
