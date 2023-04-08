@@ -306,6 +306,7 @@ module.exports = {
               //
               { name: 'Uncovered hosting', price: 299 },
               { name: 'Covered hosting', price: 599 },
+              { name: '[Example](https://cdn.discordapp.com/attachments/1047454194086465538/1081112070403141632/VID_20230303142312.mp4)', price: 0 },
               //
             ],
           },
