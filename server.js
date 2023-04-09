@@ -1468,7 +1468,7 @@ client.on('interactionCreate', async inter => {
         inter.deferUpdate();
         return
       } else {
-        let botMsg = null
+        
         let chosen = makeCode(5)
         let codes = [
           makeCode(5),
@@ -1482,29 +1482,65 @@ client.on('interactionCreate', async inter => {
         codes[random] = chosen
         let row = new MessageActionRow()
         .addComponents(
-          new MessageButton().setCustomId(random === 0 ? 'prCode-'+codes[random] : 'randomCode-'+codes[0]).setStyle('SECONDARY').setLabel(codes[0]),
-          new MessageButton().setCustomId(random === 1 ? 'prCode-'+codes[random] : 'randomCode-'+codes[1]).setStyle('SECONDARY').setLabel(codes[1]),
-          new MessageButton().setCustomId(random === 2 ? 'prCode-'+codes[random] : 'randomCode-'+codes[2]).setStyle('SECONDARY').setLabel(codes[2]),
-          new MessageButton().setCustomId(random === 3 ? 'prCode-'+codes[random] : 'randomCode-'+codes[3]).setStyle('SECONDARY').setLabel(codes[4]),
-          new MessageButton().setCustomId(random === 4 ? 'prCode-'+codes[random] : 'randomCode-'+codes[4]).setStyle('SECONDARY').setLabel(codes[5]),
+          new MessageButton().setCustomId(random === 0 ? 'prCode-'+random : 'randomCode-0').setStyle('SECONDARY').setLabel(codes[0]),
+          new MessageButton().setCustomId(random === 1 ? 'prCode-'+random : 'randomCode-1').setStyle('SECONDARY').setLabel(codes[1]),
+          new MessageButton().setCustomId(random === 2 ? 'prCode-'+random : 'randomCode-2').setStyle('SECONDARY').setLabel(codes[2]),
+          new MessageButton().setCustomId(random === 3 ? 'prCode-'+random : 'randomCode-3').setStyle('SECONDARY').setLabel(codes[4]),
+          new MessageButton().setCustomId(random === 4 ? 'prCode-'+random : 'randomCode-4').setStyle('SECONDARY').setLabel(codes[5]),
         );
         let embed = new MessageEmbed()
         .addField('Choose the correct matching code','```diff\n- '+chosen+'```')
         .setColor(colors.none)
-        
-        await inter.user.send({embeds: [embed], components: [row]})
-        await addRole(member,['1094084379137032252'],inter.guild)
+        let botMsg = null
+        await inter.user.send({embeds: [embed], components: [row]}).then(msg => botMsg = msg).catch(err => inter.reply({content: emojis.warning+" Failed to send verification. Please open your DMs!", ephemeral: true}))
         let channels = ''
         inter.guild.channels.cache.forEach( ch => {
           if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {
             channels += '\n<:circley:1072388650337308742> <#'+ch.id+'>'
           }
         })
-        inter.reply({content: emojis.check+' <:S_seperator:1093733778633019492> You now have access to our pricelists! You can view them through these channels: \n'+channels, ephemeral: true})
+        let linker = new MessageActionRow()
+        .addComponents(
+          new MessageButton().setURL(botMsg.url).setStyle('LINK').setLabel('Proceed'),
+        );
+        inter.reply({content: emojis.loading+' Verification prompt was sent in your DMs!', components: [linker], ephemeral: true})
       }
     }
     else if (id.startsWith('prCode-')) {
-      let member = await getMember(inter.user.id,'')
+      let index = id.replace('prCode-','')
+      let guild = await getGuild('1047454193159503904')
+      if (!guild) return;
+      let member = await getMember(inter.user.id,guild)
+      if (member) {
+        let comp = inter.message.components[0]
+        for (let i in comp.components) {
+          let row = comp.components[i]
+          row.disabled = true
+          if (i == index) row.style = 'SUCCESS'
+        }
+        inter.message.edit({components: [comp]})
+        await addRole(member,['1094084379137032252'],guild)
+        let channels = ''
+        guild.channels.cache.forEach( ch => {
+          if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {
+            channels += '\n<:circley:1072388650337308742> <#'+ch.id+'>'
+          }
+        })
+        inter.reply({content: emojis.check+' <:S_seperator:1093733778633019492> You now have access to our pricelists! You can view them through these channels: \n'+channels, ephemeral: true})
+      } else {
+        inter.reply({content: emojis.warning+' Unexpected error occured.', ephemeral: true})
+      }
+    }
+    else if (id.startsWith('randomCode-')) {
+      let index = id.replace('prCode-','')
+      let comp = inter.message.components[0]
+        for (let i in comp.components) {
+          let row = comp.components[i]
+          row.disabled = true
+          if (i == index) row.style = 'DANGER'
+        }
+      inter.reply({content: emojis.x+" Code did not match. Please try again by clicking the access button.", ephemeral: true})
+      inter.message.edit({components: [comp]})
     }
     else if (id === 'terms') {
       let member = inter.member;
