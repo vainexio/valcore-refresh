@@ -388,6 +388,7 @@ module.exports = {
         //Category
         name: 'Discord Nitro',
         channel: '1054720561277841438',
+        rs: '1078708432091226112',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186127970414/Logopit_1680918484757.png?width=1440&height=360',
         types: [
           //Types
@@ -395,8 +396,8 @@ module.exports = {
             parent: 'Monthly Subscription',
             children: [
               //
-              { name: 'Nitro Basic', price: 80 },
-              { name: 'Nitro Boost', price: 110 },
+              { name: 'Nitro Basic', price: 80, rs: 70 },
+              { name: 'Nitro Boost', price: 110, rs: 105 },
               //
             ],
           },
@@ -405,7 +406,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic', price: 0 },
-              { name: 'Nitro Boost', price: 850 },
+              { name: 'Nitro Boost', price: 850, rs: 800 },
               //
             ],
           },
