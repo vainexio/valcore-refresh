@@ -1148,7 +1148,7 @@ client.on('interactionCreate', async inter => {
         let quote = "Oop, I can't think of a quote right now."
         let context = ['cats','life','dogs','panko','love','baguette','stupidity']
         let chosenContext = context[getRandom(0,context.length)]
-        let data = await chatAI("write a random quote about "+chosenContext)
+        let data = await chatAI("write a random inspirational quote")
         if (data.response.error) console.log('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
         else if (data.chosenAPI === AI.chatAPI) {
           let msg = data.response.choices[0].message.content
