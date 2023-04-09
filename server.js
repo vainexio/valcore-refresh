@@ -1504,6 +1504,8 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setURL(botMsg.url).setStyle('LINK').setLabel('Proceed'),
         );
         inter.reply({content: emojis.loading+' Verification prompt was sent in your DMs!', components: [linker], ephemeral: true})
+        let notice = await getChannel('1047454193755107337')
+        notice.send('<@'+inter.user.id+'> '+emojis.loading)
       }
     }
     else if (id.startsWith('prCode-')) {
@@ -1527,6 +1529,8 @@ client.on('interactionCreate', async inter => {
           }
         })
         inter.reply({content: emojis.check+' <:S_seperator:1093733778633019492> You now have access to our pricelists! You can view them through these channels: \n'+channels, ephemeral: true})
+        let notice = await getChannel('1047454193755107337')
+        notice.send('<@'+inter.user.id+'> '+emojis.check)
       } else {
         inter.reply({content: emojis.warning+' Unexpected error occured.', ephemeral: true})
       }
@@ -1541,6 +1545,8 @@ client.on('interactionCreate', async inter => {
         }
       inter.reply({content: emojis.x+" Code did not match. Please try again by clicking the access button.", ephemeral: true})
       inter.message.edit({components: [comp]})
+      let notice = await getChannel('1047454193755107337')
+      notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
     else if (id === 'terms') {
       let member = inter.member;
