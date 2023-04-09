@@ -1468,6 +1468,31 @@ client.on('interactionCreate', async inter => {
         inter.deferUpdate();
         return
       } else {
+        let botMsg = null
+        let chosen = makeCode(5)
+        let codes = [
+          makeCode(5),
+          makeCode(5),
+          makeCode(5),
+          makeCode(5),
+          makeCode(5),
+          makeCode(5),
+        ]
+        let random = getRandom(0,4)
+        codes[random] = chosen
+        let row = new MessageActionRow()
+        .addComponents(
+          new MessageButton().setCustomId(random === 0 ? 'prCode-'+codes[random] : 'randomCode-'+codes[0]).setStyle('SECONDARY').setLabel(codes[0]),
+          new MessageButton().setCustomId(random === 1 ? 'prCode-'+codes[random] : 'randomCode-'+codes[1]).setStyle('SECONDARY').setLabel(codes[1]),
+          new MessageButton().setCustomId(random === 2 ? 'prCode-'+codes[random] : 'randomCode-'+codes[2]).setStyle('SECONDARY').setLabel(codes[2]),
+          new MessageButton().setCustomId(random === 3 ? 'prCode-'+codes[random] : 'randomCode-'+codes[3]).setStyle('SECONDARY').setLabel(codes[4]),
+          new MessageButton().setCustomId(random === 4 ? 'prCode-'+codes[random] : 'randomCode-'+codes[4]).setStyle('SECONDARY').setLabel(codes[5]),
+        );
+        let embed = new MessageEmbed()
+        .addField('Choose the correct matching code','```diff\n- '+chosen+'```')
+        .setColor(colors.none)
+        
+        await inter.user.send({embeds: [embed], components: [row]})
         await addRole(member,['1094084379137032252'],inter.guild)
         let channels = ''
         inter.guild.channels.cache.forEach( ch => {
@@ -1477,6 +1502,9 @@ client.on('interactionCreate', async inter => {
         })
         inter.reply({content: emojis.check+' <:S_seperator:1093733778633019492> You now have access to our pricelists! You can view them through these channels: \n'+channels, ephemeral: true})
       }
+    }
+    else if (id.startsWith('prCode-')) {
+      let member = await getMember(inter.user.id,'')
     }
     else if (id === 'terms') {
       let member = inter.member;
