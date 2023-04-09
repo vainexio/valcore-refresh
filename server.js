@@ -1485,11 +1485,11 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId(random === 0 ? 'prCode-'+random : 'randomCode-0').setStyle('SECONDARY').setLabel(codes[0]),
           new MessageButton().setCustomId(random === 1 ? 'prCode-'+random : 'randomCode-1').setStyle('SECONDARY').setLabel(codes[1]),
           new MessageButton().setCustomId(random === 2 ? 'prCode-'+random : 'randomCode-2').setStyle('SECONDARY').setLabel(codes[2]),
-          new MessageButton().setCustomId(random === 3 ? 'prCode-'+random : 'randomCode-3').setStyle('SECONDARY').setLabel(codes[4]),
-          new MessageButton().setCustomId(random === 4 ? 'prCode-'+random : 'randomCode-4').setStyle('SECONDARY').setLabel(codes[5]),
+          new MessageButton().setCustomId(random === 3 ? 'prCode-'+random : 'randomCode-3').setStyle('SECONDARY').setLabel(codes[3]),
+          new MessageButton().setCustomId(random === 4 ? 'prCode-'+random : 'randomCode-4').setStyle('SECONDARY').setLabel(codes[4]),
         );
         let embed = new MessageEmbed()
-        .addField('Choose the correct matching code','```diff\n- '+chosen+'```')
+        .addField('Choose the correct matching code','```yaml\n'+chosen+'```')
         .setColor(colors.none)
         let botMsg = null
         await inter.user.send({embeds: [embed], components: [row]}).then(msg => botMsg = msg).catch(err => inter.reply({content: emojis.warning+" Failed to send verification. Please open your DMs!", ephemeral: true}))
@@ -1532,7 +1532,7 @@ client.on('interactionCreate', async inter => {
       }
     }
     else if (id.startsWith('randomCode-')) {
-      let index = id.replace('prCode-','')
+      let index = id.replace('randomCode-','')
       let comp = inter.message.components[0]
         for (let i in comp.components) {
           let row = comp.components[i]
