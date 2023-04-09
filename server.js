@@ -978,7 +978,7 @@ client.on("messageCreate", async (message) => {
     await message.channel.send({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
     message.delete();
   }
-  else if (isCommand('ex',message)) {
+  else if (isCommand('exchange',message)) {
     let args = await requireArgs(message,1)
     if (!args) return;
     if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
@@ -987,7 +987,7 @@ client.on("messageCreate", async (message) => {
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
     let total = Math.round(value-fee)
-
+    
     let embed = new MessageEmbed()
     .addField('You Will Receive','```yaml\n'+total+'```')
     .addField('Base Amount','₱'+value,true)

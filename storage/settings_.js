@@ -866,9 +866,9 @@ module.exports = {
       level: 4,
     },
     {
-      Command: "ex",
+      Command: "exchange",
       Template: "<amount>",
-      Alias: ['exchange'],
+      Alias: ['ex'],
       Category: "Handler",
       Desc: 'Calculates the amount to receive in e-wallet exchange',
       ex: ['ex 509','exchange 69.23'],
