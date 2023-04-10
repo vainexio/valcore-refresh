@@ -234,6 +234,14 @@ client.on("messageCreate", async (message) => {
     })
   } 
   else if (message.channel.parent?.name.toLowerCase().includes('orders')) {
+    //
+    let embed = new MessageEmbed()
+      .addField('Terms and Conditions','<:S_letter:1092606891240198154> Before proceeding, you must read and accept our terms and conditions.\n\n<:S_seperator:1093733778633019492> By clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail.\n\n<:S_seperator:1093733778633019492> You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.',true)
+      .setColor(colors.yellow)
+      .setThumbnail(message.channel.guild.iconURL())
+      
+      let row = await makeRow('terms','Agree and continue','SECONDARY','<a:S_bearheart:1094190497179910225>')
+      //
     if (message.author.id === "557628352828014614") {
     let member = message.mentions.members.first()
     //if (!member) return;
@@ -242,20 +250,14 @@ client.on("messageCreate", async (message) => {
         message.channel.send("<@"+member.id+"> The shop is currently **CLOSED**, please come back at <t:1677542400:t> to proceed with your order.")
       }
     if (!await hasRole(member,['1094909481806205009'],message.channel.guild)) {
-      let embed = new MessageEmbed()
-      .addField('Terms and Conditions','<:S_letter:1092606891240198154> Before proceeding, you must read and accept our terms and conditions.\n\n<:S_seperator:1093733778633019492> By clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail.\n\n<:S_seperator:1093733778633019492> You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.',true)
-      .setColor(colors.yellow)
-      .setThumbnail(message.channel.guild.iconURL())
-      
-      let row = await makeRow('terms','Agree and continue','SECONDARY','<a:S_bearheart:1094190497179910225>')
       
       message.channel.send({content: "<@"+member.id+">", embeds: [embed], components: [row]})
-    } else if (await hasRole(member,['1077462108381388873','1094909481806205009'],message.guild)) {
+    } else if (await hasRole(member,['1077462108381388873'],message.guild)) {
       message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
     }
     } else if (!message.author.bot) {
-      if (!await hasRole(message.member,['1077462108381388873'])) {
-        message.reply('Please make sure that you have accepted the terms above before proceeding with your order.')
+      if (!await hasRole(message.member,['1094909481806205009'])) {
+      message.reply({content: "Please make sure that you have accepted the terms before proceeding with your order.", embeds: [embed], components: [row]})
       }
     }
   } 
@@ -311,6 +313,16 @@ client.on("messageCreate", async (message) => {
     console.log(args[1])
     
     await fetchMany(message.channel,args[1])
+  }
+  if (isCommand('feedback',message)) { 
+    if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
+    let args = await requireArgs(message,1)
+    if (!args) return;
+    let feedback = await getChannel('1094975726127685726')
+    let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId('feedback-').setStyle('DANGER').setLabel('Decline').setEmoji(emojis.x),
+      new MessageButton().setCustomId('feedbackAnon-').setStyle('SUCCESS').setLabel('Approve').setEmoji(emojis.check),
+    );
   }
   if (isCommand('apply',message)) { 
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
@@ -1577,7 +1589,7 @@ client.on('interactionCreate', async inter => {
     }
     else if (id === 'terms') {
       let member = inter.member;
-      await addRole(member,['1077462108381388873'],inter.message.guild)
+      await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
       let row = new MessageActionRow().addComponents(
           new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
         );
