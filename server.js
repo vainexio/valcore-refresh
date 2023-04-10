@@ -241,7 +241,7 @@ client.on("messageCreate", async (message) => {
       if (shopStatus.name === 'shop : CLOSED') {
         message.channel.send("<@"+member.id+"> The shop is currently **CLOSED**, please come back at <t:1677542400:t> to proceed with your order.")
       }
-    if (!await hasRole(member,['1077462108381388873'],message.channel.guild)) {
+    if (!await hasRole(member,['1094909481806205009'],message.channel.guild)) {
       let embed = new MessageEmbed()
       .addField('Terms and Conditions','<:S_letter:1092606891240198154> Before proceeding, you must read and accept our terms and conditions.\n\n<:S_seperator:1093733778633019492> By clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail.\n\n<:S_seperator:1093733778633019492> You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.',true)
       .setColor(colors.yellow)
@@ -250,7 +250,7 @@ client.on("messageCreate", async (message) => {
       let row = await makeRow('terms','Agree and continue','SECONDARY','<a:S_bearheart:1094190497179910225>')
       
       message.channel.send({content: "<@"+member.id+">", embeds: [embed], components: [row]})
-    } else if (await hasRole(member,['1077462108381388873'],message.guild)) {
+    } else if (await hasRole(member,['1077462108381388873','1094909481806205009'],message.guild)) {
       message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
     }
     } else if (!message.author.bot) {
@@ -900,7 +900,7 @@ client.on("messageCreate", async (message) => {
       new MessageButton().setCustomId("nitro-"+user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.tag),
       new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
     );
-    message.channel.send("<:07:1069200743959109712> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:circley:1072388650337308742> Make sure to open your DMs.\n<:circley:1072388650337308742> The message may appear as **direct or request** message.")
+    message.channel.send("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
     message.author.send({content: links, components: [row]})
     let orders = await getChannel("1054731027240726528")
     let template = await getChannel("1079712339122720768")
