@@ -234,13 +234,14 @@ client.on("messageCreate", async (message) => {
   else if (message.channel.parent?.name.toLowerCase().includes('orders')) {
     if (message.author.id === "557628352828014614") {
     let member = message.mentions.members.first()
+    //if (!member) return;
     let shopStatus = await getChannel(shop.channels.status);
       if (shopStatus.name === 'shop : CLOSED') {
         message.channel.send("<@"+member.id+"> The shop is currently **CLOSED**, please come back at <t:1677542400:t> to proceed with your order.")
       }
     if (!await hasRole(member,['1077462108381388873'],message.channel.guild)) {
       let embed = new MessageEmbed()
-      .addField('Terms and Conditions','<:S_letter:1092606891240198154> Before proceeding, you must read and accept our terms and conditions.\n\n<:S_seperator:1093733778633019492> By clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail.\n<:S_seperator:1093733778633019492> You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.',true)
+      .addField('Terms and Conditions','<:S_letter:1092606891240198154> Before proceeding, you must read and accept our terms and conditions.\n\n<:S_seperator:1093733778633019492> By clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail.\n\n<:S_seperator:1093733778633019492> You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.',true)
       .setColor(colors.yellow)
       .setThumbnail(message.channel.guild.iconURL())
       
