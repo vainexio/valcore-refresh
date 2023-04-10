@@ -485,7 +485,7 @@ client.on("messageCreate", async (message) => {
     let msg = null
     for (let i in args) {
       if (args[i].toLowerCase().includes('discord.gift')) {
-      let code = args[i].replace(/ttps:|discord.gift|\/|/g,'').replace(/ /g,'')
+      let code = args[i].replace(/https:|discord.gift|\/|/g,'').replace(/ /g,'')
       let found = codes.find(c => c.code === code)
       !found ? codes.push({code: code, expire: null, emoji: null, user: null, state: null}) : null
     }
@@ -522,24 +522,17 @@ client.on("messageCreate", async (message) => {
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let dash = counter % 2 == 0 ? '/' : ''
         let ip = [
-          '35.98.234.131',
-          '23.53.235.219',
-          '209.83.183.164',
-          '146.157.181.65',
-          '75.105.149.188',
-          '136.210.195.137',
-          '173.198.93.61',
-          '54.83.241.209',
-          '35.243.89.200',
-          '63.158.124.79',
-          '181.98.22.191',
-          '230.202.145.36',
-          '55.57.152.51',
-          '137.141.30.202',
-          '187.78.70.196',
-          '184.184.176.211',
-          '166.166.29.61',
-          '38.181.20.119',
+          '185.199.229.156:7492',
+          '185.199.228.220:7300',
+          '185.199.231.45:8382',
+          '188.74.210.207:6286',
+          '188.74.183.10:8279',
+          '188.74.210.21:6100',
+          '45.155.68.129:8133',
+          '154.95.36.199:6893',
+          '45.94.47.66:8110',
+          '144.168.217.88:8780',
+
         ]
         ipCount++
         !ip[ipCount] ? ipCount == 0 : null 
