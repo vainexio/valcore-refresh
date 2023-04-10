@@ -314,15 +314,28 @@ client.on("messageCreate", async (message) => {
     
     await fetchMany(message.channel,args[1])
   }
-  if (isCommand('feedback',message)) { 
+  if (isCommand('feedback',message)) {
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
-    let args = await requireArgs(message,1)
-    if (!args) return;
-    let feedback = await getChannel('1094975726127685726')
-    let row = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId('feedback-').setStyle('DANGER').setLabel('Decline').setEmoji(emojis.x),
-      new MessageButton().setCustomId('feedbackAnon-').setStyle('SUCCESS').setLabel('Approve').setEmoji(emojis.check),
-    );
+    
+    message.channel.awaitMessages({filter,max: 1,time: 900000 ,errors: ['time']})
+    .then(async responseMsg => {
+    responseMsg = responseMsg.first()
+      
+      let feedback = await getChannel('1094975726127685726')
+      
+      let embed = new MessageEmbed()
+      .addField()
+      
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('feedback').setStyle('SECONDARY').setLabel('Send Publicly').setEmoji('<:S_letter:1092606891240198154>'),
+        new MessageButton().setCustomId('feedbackAnon').setStyle('DANGER').setLabel('Send Anonymously').setEmoji('🎭'),
+      );
+    })
+    .catch(collected => {
+    
+    console.log("Msg Collection Error: "+collected)
+    sendUser("**[Timed-out]** No response collected. Please rerun the command if you wish to retry.\n",message.author.id,colors.red)
+  });
   }
   if (isCommand('apply',message)) { 
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
@@ -1022,7 +1035,7 @@ client.on("messageCreate", async (message) => {
     if (!args) return;
     if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
     let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.02 : value >= 500 ? 0.05 : value < 500 ? 0.8 : null
+    let percentage = value >= 1000 ? 0.02 : value >= 500 ? 0.05 : value < 500 ? 0.08 : null
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
     let total = Math.round(value-fee)
