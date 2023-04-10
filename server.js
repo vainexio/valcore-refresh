@@ -26,6 +26,7 @@ async function startApp() {
     promise.catch(function(error) {
       console.error("Discord bot login | " + error);
       process.exit(1);
+      
     });
 }
 startApp();
@@ -743,7 +744,7 @@ client.on("messageCreate", async (message) => {
     
     foundChild.price = price
     message.channel.send(emojis.check+' Successfully updated: '+child+"'s price to: `"+price+"`")
-  }
+  } 
   else if (isCommand('stat',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,2)
