@@ -525,10 +525,11 @@ client.on("messageCreate", async (message) => {
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let dash = counter % 2 == 0 ? '/' : ''
         let ip = [
-          '190.113.41.165:999',
-          '93.180.222.134:8080',
-          '103.84.159.8:80'
+          '1.1.1.18:5678',
+          '38.91.107.2:17372',
+          '103.207.98.82:41238'
         ]
+        
         ipCount++
         !ip[ipCount] ? ipCount == 0 : null 
         /*let headers = {
