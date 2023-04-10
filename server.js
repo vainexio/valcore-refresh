@@ -565,31 +565,7 @@ client.on("messageCreate", async (message) => {
         ]
         
         ipCount++
-        !ip[ipCount] ? ipCount == 0 : null 
-        /*let headers = {
-          method: 'GET',
-            headers: {
-              'Authorization': ip[ipCount],
-              'X-Forwarded-For': ip[ipCount],
-              'X-Forwarded-For': ip[ipCount],
-              'X-Forwarded': ip[ipCount],
-              'X-Forwarded-By': ip[ipCount],
-              'X-Forwarded-For': ip[ipCount],
-              'X-Forwarded-For-Original': ip[ipCount],
-              'X-Forwarder-For': ip[ipCount],
-              'X-Forward-For': ip[ipCount],
-              'Forwarded-For': ip[ipCount],
-              'Forwarded-For-Ip': ip[ipCount],
-              'X-Custom-IP-Authorization': ip[ipCount],
-              'X-Originating-IP': ip[ipCount],
-              'X-Remote-IP': ip[ipCount],
-              'X-Remote-Addr': ip[ipCount],
-            }
-        }
-        var proxyOpts = url.parse('http://'+ip[ipCount]);
-        proxyOpts.headers = {
-          'Proxy-Authentication': 'Basic ' + new Buffer('ianpaolo:1254').toString('base64')
-        };*/
+        !ip[ipCount] ? ipCount == 0 : null
         const proxyAgent = new HttpsProxyAgent('http://'+ip[ipCount]);
         let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code)
         version++
@@ -655,11 +631,11 @@ client.on("messageCreate", async (message) => {
           .setTimestamp()
       }
       embed.addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
-    if (message.content.toLowerCase().includes("stocks")) {
+    if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
       let stocks = await getChannel('1054929031881035789')
       await stocks.send("https://discord.gift/"+codes[i].code)
     }
-    }  
+    }
     msg.delete();
     let logs = await getChannel('1060786672201105419')
     logs.send({embeds: [embed]})
