@@ -214,7 +214,7 @@ function makeCode(length) {
 }
 client.on("messageCreate", async (message) => {
   //Ping
-  if (message.channel.id === '1094079711753281596') console.log(message)
+  if (message.channel.id === '1047454193197252644') console.log(message)
   if (message.channel.id === '1047454193595732055' && message.author.id === '968378766260846713') {
     let user = message.mentions.members.first()
     let id = user.id
@@ -275,6 +275,7 @@ client.on("messageCreate", async (message) => {
   
   //
   for (let i in shop.stickyChannels) {
+    if (message.applicationId) return;
   let sticky = shop.stickyChannels[i]
   let foundSticky = shop.stickyChannels.find(s => s.message === message.content)
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
