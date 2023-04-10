@@ -272,7 +272,6 @@ client.on("messageCreate", async (message) => {
    } 
   }
   //
-  if (message.author.bot) return;
   for (let i in shop.stickyChannels) {
   let sticky = shop.stickyChannels[i]
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
@@ -287,7 +286,7 @@ client.on("messageCreate", async (message) => {
     }
     let messages = await message.channel.messages.fetch(options).then(messages => {
       messages.forEach(async (gotMsg) => {
-        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message) {
+        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && (message.author.id !== '1057167023492300881' || (message.author.id === '1057167023492300881' && message.content !== sticky.message))) {
           gotMsg.delete();
           //
         }
@@ -295,11 +294,12 @@ client.on("messageCreate", async (message) => {
     });
     //
 
-    if ((sticky.condition && sticky.condition(message)) || !sticky.condition) {
+    if (((sticky.condition && sticky.condition(message)) || !sticky.condition) && message.content !== sticky.message) {
     message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : []});
     }
   }
 }
+  if (message.author.bot) return;
   if (isCommand('find',message)) { 
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
     let args = await requireArgs(message,1)
@@ -804,7 +804,6 @@ client.on("messageCreate", async (message) => {
       let msg = bulked[i].messages[b];
         let name = msg.name
         let url = msg.url
-        console.log(name,url)
         if (stockHolder[holderCount].length === 5) holderCount++
         stockHolder[holderCount].push(
           new MessageButton()
