@@ -339,6 +339,7 @@ module.exports = {
         //Category
         name: 'Server Boosting',
         channel: '1054720561277841438',
+        rs: '1078708432091226112',
         status: 2,
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185905676309/Logopit_1680918458337.png?width=1440&height=360',
         types: [
@@ -347,9 +348,9 @@ module.exports = {
             parent: '3 Months',
             children: [
               //
-              { name: '2 server boosts', price: 80 },
-              { name: '8 server boosts', price: 150 },
-              { name: '14 server boosts', price: 220 },
+              { name: '2 server boosts', price: 80, rs: 60 },
+              { name: '8 server boosts', price: 150, rs: 140 },
+              { name: '14 server boosts', price: 220, rs: 200 },
               //
             ],
           },
@@ -378,7 +379,7 @@ module.exports = {
             parent: 'Shared Acc',
             children: [
               //
-              { name: '1 month', price: 90 },
+              { name: '1 month', price: 90, rs: 0 },
               //
             ],
           },
@@ -386,7 +387,7 @@ module.exports = {
             parent: 'Solo Profile',
             children: [
               //
-              { name: '1 month', price: 120 },
+              { name: '1 month', price: 120, rs: 0 },
               //
             ],
           },
@@ -474,6 +475,7 @@ module.exports = {
         //Category
         name: 'Robux',
         channel: '1054989628765122571',
+        rs: '1078710810806853704',
         status: 4,
         image: "https://media.discordapp.net/attachments/1093391705753002064/1094077237839532123/Logopit_1680918693719.png?width=1440&height=360",
         types: [
@@ -482,10 +484,10 @@ module.exports = {
             parent: 'Via Gamepass',
             children: [
               //
-              { name: '250 Robux', price: 90 },
-              { name: '500 Robux', price: 150 },
-              { name: '700 Robux', price: 200 },
-              { name: '1000 Robux', price: 300 },
+              { name: '250 Robux', price: 90, rs: 80 },
+              { name: '500 Robux', price: 150, rs: 130 },
+              { name: '700 Robux', price: 200, rs: 180 },
+              { name: '1000 Robux', price: 300, rs: 260 },
               //
             ],
           },
@@ -710,7 +712,8 @@ module.exports = {
     stickyChannels: [
       {
         id: '1081107027054571550',
-        message: '<a:nitrowumpus:1078244919623295046> **Nitro stocks dropper**\nhttps://cdn.discordapp.com/attachments/1047454194086465538/1081112070403141632/VID_20230303142312.mp4',
+        message: '<a:nitrowumpus:1078244919623295046> **Nitro stocks dropper**',
+        files: ['https://cdn.discordapp.com/attachments/1093391705753002064/1094942394480332820/2023-04-10_19-06-25.mp4']
       },
       {
         id: '1047454193595732049',

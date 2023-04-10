@@ -295,7 +295,7 @@ client.on("messageCreate", async (message) => {
     //
 
     if (((sticky.condition && sticky.condition(message)) || !sticky.condition) && message.content !== sticky.message) {
-    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : []});
+    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : [], files: sticky.files ? sticky.files : []});
     }
   }
 }
