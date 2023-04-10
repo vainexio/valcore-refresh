@@ -279,7 +279,7 @@ client.on("messageCreate", async (message) => {
   for (let i in shop.stickyChannels) {
     if (message.applicationId) return;
   let sticky = shop.stickyChannels[i]
-  let foundSticky = shop.stickyChannels.find(s => s.message === message.content)
+  let foundSticky = message.content.length > 0 ? shop.stickyChannels.find(s => s.message === message.content) : null
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
     const options = { limit: 10 };
     //
