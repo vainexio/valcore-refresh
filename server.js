@@ -776,7 +776,7 @@ client.on("messageCreate", async (message) => {
           let children = ''
           for (let c in type.children) {
             let child = type.children[c]
-            children += '> <:08:1069200741807435866> '+child.name+(child.price > 0 ? ' — ₱'+child.price : '')+'\n'
+            children += '> <:S_seperator:1093733778633019492> '+child.name+(child.price > 0 ? ' — ₱'+child.price : '')+'\n'
           }
           let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)
@@ -813,7 +813,6 @@ client.on("messageCreate", async (message) => {
           .setURL(url)
           .setEmoji(msg.emoji)
         );
-        console.log(stockHolder[holderCount])
     }
       let comps = []
     for (let i in stockHolder) {
@@ -1003,7 +1002,7 @@ client.on("messageCreate", async (message) => {
     if (!args) return;
     if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
     let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
+    let percentage = value >= 1000 ? 0.02 : value >= 500 ? 0.05 : value < 500 ? 0.8 : null
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
     let total = Math.round(value-fee)
