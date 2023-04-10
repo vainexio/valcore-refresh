@@ -907,6 +907,24 @@ module.exports = {
       ex: ['cmds stocks','cmds use'],
       level: 0,
     },
+    {
+      Command: "stat",
+      Template: "<category> <stat>",
+      Alias: [],
+      Category: "Misc",
+      Desc: 'Changes the product status\n\n1 — Avail\n2 — Avail (MTO)\n3 — Restocking\n4 — Not avail',
+      ex: ['stat nitro 1','stat spotify 2'],
+      level: 0,
+    },
+    {
+      Command: "setpr",
+      Template: "",
+      Alias: [],
+      Category: "Misc",
+      Desc: 'Updates the pricelist',
+      ex: ['setpr'],
+      level: 0,
+    },
   ],
   permissions: [
   {

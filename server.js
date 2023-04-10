@@ -744,16 +744,16 @@ client.on("messageCreate", async (message) => {
     foundChild.price = price
     message.channel.send(emojis.check+' Successfully updated: '+child+"'s price to: `"+price+"`")
   }
-  else if (isCommand('toggle',message)) {
+  else if (isCommand('stat',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,2)
     if (!args) return;
     let category = args[1].toLowerCase()
     let toggle = Number(args[2])
-    let foundCat = shop.pricelists.find(c => c.name.toLowerCase())
+    let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes(category))
     if (!foundCat) return message.reply(emojis.x+' Invalid Category: `'+category+'`')
     foundCat.status = Number(toggle)
-    message.channel.send(emojis.check+' Successfully updated: '+category+"'s availability to: `"+toggle+"`")
+    message.channel.send(emojis.check+' Successfully updated: '+foundCat.name+"'s availability to: `"+toggle+"`")
   }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
@@ -770,7 +770,7 @@ client.on("messageCreate", async (message) => {
         let foundBulked = bulked.find(b => b.channel === channel.id)
         !foundBulked ? await channel.bulkDelete(10) : null
         if (!foundBulked) {
-          bulked.push({channel: channel.id, messages: [], emoji: data.status === 4 ? 'DANGER' : data.status === 3 ? 'PRIMARY' : 'SECONDARY'})
+          bulked.push({channel: channel.id, messages: []})
           foundBulked = bulked.find(b => b.channel === channel.id)
         }
         for (let b in data.types) {
@@ -794,7 +794,7 @@ client.on("messageCreate", async (message) => {
           ]
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
-        await channel.send({embeds: [embed]}).then(msg => foundBulked.messages.push({name: data.name, url: msg.url}))
+        await channel.send({embeds: [embed]}).then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : '<a:S_pastelheart:1093737606451298354>'}))
       }
     }
     for (let i in bulked) {
@@ -813,7 +813,7 @@ client.on("messageCreate", async (message) => {
           .setStyle("LINK")
           .setLabel(name)
           .setURL(url)
-          .setEmoji('<a:S_pastelheart:1093737606451298354>')
+          .setEmoji(msg.emoji)
         );
         console.log(stockHolder[holderCount])
     }
