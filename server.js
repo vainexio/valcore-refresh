@@ -317,19 +317,23 @@ client.on("messageCreate", async (message) => {
   if (isCommand('feedback',message)) {
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
     
+    let botMsg = message.channel.send("<:S_seperator:1093733778633019492> Please send your feedback message after this message. Don't worry, your feedback won't automatically send if in any case that you changed your mind.")
     message.channel.awaitMessages({filter,max: 1,time: 900000 ,errors: ['time']})
     .then(async responseMsg => {
     responseMsg = responseMsg.first()
-      
-      let feedback = await getChannel('1094975726127685726')
+      if (responseMsg.content.length > 0) return message.channel.send(emojis.warning+' No message content was collected.')
       
       let embed = new MessageEmbed()
-      .addField()
+      .setTitle('Your Feedback')
+      .setDescription(responseMsg.content)
+      .setColor(colors.yellow)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('feedback').setStyle('SECONDARY').setLabel('Send Publicly').setEmoji('<:S_letter:1092606891240198154>'),
+        new MessageButton().setCustomId('feedback').setStyle('SUCCESS').setLabel('Send Publicly').setEmoji('<:S_letter:1092606891240198154>'),
         new MessageButton().setCustomId('feedbackAnon').setStyle('DANGER').setLabel('Send Anonymously').setEmoji('🎭'),
+        new MessageButton().setCustomId('cancel').setStyle('SECONDARY').setLabel('Cancel Feedback').setEmoji(emojis.x),
       );
+      message.channel.send({embeds: [embed], components: [row]})
     })
     .catch(collected => {
     
@@ -1250,6 +1254,23 @@ client.on('interactionCreate', async inter => {
     } else {
       inter.reply({content: emojis.x+' The voucher was already claimed!', ephemeral: true})
     }
+    }
+    else if (id.startsWith('feedback')) {
+      let feedback = await getChannel('1094975726127685726')
+      let anon = false
+      if (id === 'feedbackAnon') anon = true
+      let type = anon ? 'Anonymous' : 'Public'
+      
+      let embed = new MessageEmbed()
+      .setAuthor({ name: anon ? 'Sent Anonymously' : inter.user.tag, iconURL: anon ? 'https://cdn-icons-png.flaticon.com/512/4123/4123763.png' : inter.user.avatarURL(), url: 'https://discord.gg/sloopies' })
+      .setDescription(inter.message.embeds[0].description)
+      .setFooter({text: type+'Feedback'})
+      
+      feedback.send({embeds: [embed]})
+      inter.reply({content: emojis.check+' Feedback sent ('+type+')', ephemeral: true})
+    } else if (id === 'cancel') {
+      inter.reply({content: 'Interaction cancelled.', ephemeral: true})
+      inter.message.edit({components: []})
     }
     else if (id.startsWith('scanData-')) {
       let userId = id.replace('scanData-','')
