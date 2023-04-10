@@ -547,29 +547,23 @@ client.on("messageCreate", async (message) => {
     await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading}).then(botMsg => msg = botMsg)
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
-    let counter = 0
-    let version = 6
-    let ipCount = 0
+    if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
+      msg.edit("Fetching nitro codes (adding to stocks / "+codes.length+") " + emojis.loading);
+      for (let i in codes) {
+        let stocks = await getChannel('1054929031881035789')
+        sleep(1000);
+        await stocks.send("https://discord.gift/"+codes[i].code);
+      }
+      return;
+    }
+    
     for (let i in codes) {
-      counter++
       let fetched = false
       let waitingTime = 1000
       while (!fetched) {
         sleep(waitingTime)
         let eCode = expCodes.find(e => e.code === codes[i].code)
-        let dash = counter % 2 == 0 ? '/' : ''
-        let ip = [
-          '1.1.1.18:5678',
-          '38.91.107.2:17372',
-          '103.207.98.82:41238'
-        ]
-        
-        ipCount++
-        !ip[ipCount] ? ipCount == 0 : null
-        const proxyAgent = new HttpsProxyAgent('http://'+ip[ipCount]);
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code)
-        version++
-        version >= 11 ? version = 6 : null
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v10/entitlements/gift-codes/'+codes[i].code)
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
           console.log('retry for '+codes[i].code)
@@ -631,10 +625,10 @@ client.on("messageCreate", async (message) => {
           .setTimestamp()
       }
       embed.addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
-    if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
-      let stocks = await getChannel('1054929031881035789')
-      await stocks.send("https://discord.gift/"+codes[i].code)
-    }
+      if (message.content.toLowerCase().includes("stocks") && message.content.toLowerCase().includes('sort')) {
+        let stocks = await getChannel('1054929031881035789')
+        await stocks.send("https://discord.gift/"+codes[i].code)
+      }
     }
     msg.delete();
     let logs = await getChannel('1060786672201105419')
