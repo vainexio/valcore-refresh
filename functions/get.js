@@ -11,10 +11,10 @@ const {AI, shop, notices, auth, prefix, status, theme, commands, permissions, em
 const open_ai = process.env.OPEN_AI
 
 module.exports = {
-  chatAI: async function(content) {
+  chatAI: async function(content,type) {
     let data = {}
     let chosenAPI = null
-    if (content.toLowerCase().includes('show me')) {
+    if (content.toLowerCase().includes('show me') || type === 'image') {
       chosenAPI = AI.imageAPI
       data = {
         "prompt": content,

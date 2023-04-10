@@ -1120,9 +1120,9 @@ client.on("messageCreate", async (message) => {
   }
   if ((message.mentions.has('1057167023492300881') || message.content?.toLowerCase().includes('gude')) && message.channel.parent?.id !== '1054731483656499290' && message.channel.parent?.id !== '1068070430457470976'  && message.channel.parent?.id !== '1047454193197252645') chance = true
   //AI ChatBot
-  if (message.channel.name.includes('gudetama') || chance) {
+  if (message.channel.name.includes('gudetama') || chance || message.channel.id === '1094841303050756098') {
     await message.channel.sendTyping();
-    let data = await chatAI(message.content)
+    let data = await chatAI(message.content,message.channel.id === '1094841303050756098' ? 'image' : 'chat')
     if (data.response.error) return message.reply('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
     if (data.chosenAPI === AI.imageAPI) {
       let url = data.response.data[0].url
