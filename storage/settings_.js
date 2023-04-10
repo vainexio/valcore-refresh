@@ -745,7 +745,7 @@ module.exports = {
         ),
       },
       {
-        id: '1094079711753281596',
+        id: '0',
         message: 'Click the button below to access our pricelists.',
         comp: new MessageActionRow()
         .addComponents(

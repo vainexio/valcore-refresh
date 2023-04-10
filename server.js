@@ -275,6 +275,7 @@ client.on("messageCreate", async (message) => {
   //
   for (let i in shop.stickyChannels) {
   let sticky = shop.stickyChannels[i]
+  let foundSticky = shop.stickyChannels.find(s => s.message === message.content)
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
     const options = { limit: 10 };
     //
@@ -287,7 +288,7 @@ client.on("messageCreate", async (message) => {
     }
     let messages = await message.channel.messages.fetch(options).then(messages => {
       messages.forEach(async (gotMsg) => {
-        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && (message.author.id !== '1057167023492300881' || (message.author.id === '1057167023492300881' && message.content !== sticky.message))) {
+        if (!foundSticky && gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && (message.author.id !== '1057167023492300881' || (message.author.id === '1057167023492300881' && message.content !== sticky.message))) {
           gotMsg.delete();
           //
         }
@@ -767,6 +768,7 @@ client.on("messageCreate", async (message) => {
         .setDescription('\n\n** **')
         .setColor(colors.none)
         let channel = await getChannel(method === 'rs' ? data.rs : data.channel)
+        if (channel) {
         let foundBulked = bulked.find(b => b.channel === channel.id)
         !foundBulked ? await channel.bulkDelete(10) : null
         if (!foundBulked) {
@@ -779,7 +781,8 @@ client.on("messageCreate", async (message) => {
           for (let c in type.children) {
             let child = type.children[c]
             let pr = method === 'rs' ? child.rs ? child.rs : child.price : child.price
-            children += '> <:S_seperator:1093733778633019492> '+child.name+(pr > 0 ? ' — ₱'+pr : '')+'\n'
+            let emoji = method === 'rs' ? '<:Pastelred:1094798538220765274>' : '<:S_seperator:1093733778633019492>'
+            children += '> '+emoji+' '+child.name+(pr > 0 ? ' — ₱'+pr : '')+'\n'
           }
           let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)
@@ -795,7 +798,8 @@ client.on("messageCreate", async (message) => {
           ]
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
-        await channel.send({embeds: [embed]}).then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : '<a:S_pastelheart:1093737606451298354>'}))
+        await channel.send({embeds: [embed]}).then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
+      }
       }
     }
     for (let i in bulked) {
