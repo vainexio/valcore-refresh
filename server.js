@@ -214,6 +214,7 @@ function makeCode(length) {
 }
 client.on("messageCreate", async (message) => {
   //Ping
+  if (message.channel.id === '1094079711753281596') console.log(message)
   if (message.channel.id === '1047454193595732055' && message.author.id === '968378766260846713') {
     let user = message.mentions.members.first()
     let id = user.id
@@ -753,6 +754,9 @@ client.on("messageCreate", async (message) => {
   }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
+    let args = await requireArgs(message,1)
+    if (!args) return
+    let method = args[1].toLowerCase()
     let pricelists = shop.pricelists
     let bulked = []
     for (let a in pricelists) {
@@ -762,7 +766,7 @@ client.on("messageCreate", async (message) => {
         .setTitle(data.name)
         .setDescription('\n\n** **')
         .setColor(colors.none)
-        let channel = await getChannel(data.channel)
+        let channel = await getChannel(method === 'rs' ? data.rs : data.channel)
         let foundBulked = bulked.find(b => b.channel === channel.id)
         !foundBulked ? await channel.bulkDelete(10) : null
         if (!foundBulked) {
@@ -774,7 +778,8 @@ client.on("messageCreate", async (message) => {
           let children = ''
           for (let c in type.children) {
             let child = type.children[c]
-            children += '> <:S_seperator:1093733778633019492> '+child.name+(child.price > 0 ? ' — ₱'+child.price : '')+'\n'
+            let pr = method === 'rs' ? child.rs ? child.rs : child.price : child.price
+            children += '> <:S_seperator:1093733778633019492> '+child.name+(pr > 0 ? ' — ₱'+pr : '')+'\n'
           }
           let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)

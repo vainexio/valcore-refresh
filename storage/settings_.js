@@ -242,6 +242,7 @@ module.exports = {
         //Category
         name: 'Developer Badge',
         channel: '1057249812656955514',
+        rs: '1078708594188496987',
         status: 1,
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077237004865556/Logopit_1680918616490.png?width=1440&height=360',
         types: [
@@ -250,10 +251,10 @@ module.exports = {
             parent: 'Monthly',
             children: [
               //
-              { name: '1 month', price: 10 },
-              { name: '2 months', price: 15 },
-              { name: '3 months', price: 25 },
-              { name: '4 months', price: 30 },
+              { name: '1 month', price: 10, rs: 5 },
+              { name: '2 months', price: 15, rs: 10 },
+              { name: '3 months', price: 25, rs: 20  },
+              { name: '4 months', price: 30, rs: 25 },
               //
             ],
           },
@@ -261,7 +262,7 @@ module.exports = {
             parent: 'Permanent',
             children: [
               //
-              { name: 'Permanent', price: 90 },
+              { name: 'Permanent', price: 90, rs: 50 },
               //
             ],
           },
