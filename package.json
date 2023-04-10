@@ -15,7 +15,8 @@
     "mongoose": "^7.0.3",
     "moment": "^2.29.4",
     "discord.js": "^13.14.0",
-    "express-rate-limit": "^6.7.0"
+    "express-rate-limit": "^6.7.0",
+    "https-proxy-agent": "^5.0.1"
   },
   "engines": {
     "node": "16.x"

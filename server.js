@@ -5,7 +5,7 @@ const app = express();
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const moment = require('moment')
-
+const HttpsProxyAgent = require('https-proxy-agent');
 //
 //Discord
 const Discord = require('discord.js');
@@ -524,23 +524,23 @@ client.on("messageCreate", async (message) => {
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let dash = counter % 2 == 0 ? '/' : ''
         let ip = [
-          '185.199.229.156',
-          '185.199.228.220',
-          '185.199.231.45',
-          '188.74.210.207',
-          '188.74.183.10',
-          '188.74.210.21',
-          '45.155.68.129',
-          '154.95.36.199',
-          '45.94.47.66',
-          '144.168.217.88',
-
+          '185.199.229.156:7492',
+          '185.199.228.220:7300',
+          '185.199.231.45:8382',
+          '188.74.210.207:6286',
+          '188.74.183.10:8279',
+          '188.74.210.21:6100',
+          '45.155.68.129:8133',
+          '154.95.36.199:6893',
+          '45.94.47.66:8110',
+          '144.168.217.88:8780',
         ]
         ipCount++
         !ip[ipCount] ? ipCount == 0 : null 
-        let headers = {
+        /*let headers = {
           method: 'GET',
             headers: {
+              'Authorization': ip[ipCount],
               'X-Forwarded-For': ip[ipCount],
               'X-Forwarded-For': ip[ipCount],
               'X-Forwarded': ip[ipCount],
@@ -556,8 +556,9 @@ client.on("messageCreate", async (message) => {
               'X-Remote-IP': ip[ipCount],
               'X-Remote-Addr': ip[ipCount],
             }
-        }
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,headers)
+        }*/
+        const proxyAgent = new HttpsProxyAgent('http://'+ip[ipCount]);
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,{ agent: proxyAgent})
         version++
         version >= 11 ? version = 6 : null
         res = eCode ? eCode : await res.json()
