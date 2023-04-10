@@ -744,6 +744,17 @@ client.on("messageCreate", async (message) => {
     foundChild.price = price
     message.channel.send(emojis.check+' Successfully updated: '+child+"'s price to: `"+price+"`")
   }
+  else if (isCommand('toggle',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let args = await requireArgs(message,2)
+    if (!args) return;
+    let category = args[1].toLowerCase()
+    let toggle = Number(args[2])
+    let foundCat = shop.pricelists.find(c => c.name.toLowerCase())
+    if (!foundCat) return message.reply(emojis.x+' Invalid Category: `'+category+'`')
+    foundCat.status = Number(toggle)
+    message.channel.send(emojis.check+' Successfully updated: '+category+"'s availability to: `"+toggle+"`")
+  }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
     let pricelists = shop.pricelists
@@ -759,7 +770,7 @@ client.on("messageCreate", async (message) => {
         let foundBulked = bulked.find(b => b.channel === channel.id)
         !foundBulked ? await channel.bulkDelete(10) : null
         if (!foundBulked) {
-          bulked.push({channel: channel.id, messages: []})
+          bulked.push({channel: channel.id, messages: [], emoji: data.status === 4 ? 'DANGER' : data.status === 3 ? 'PRIMARY' : 'SECONDARY'})
           foundBulked = bulked.find(b => b.channel === channel.id)
         }
         for (let b in data.types) {
@@ -771,15 +782,15 @@ client.on("messageCreate", async (message) => {
           }
           let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
           embed = new MessageEmbed(embed)
-          .addField(type.parent,children,true)
+          .addField(type.parent,children)
           .setImage(data.image ? data.image : '')
         }
         let productStatus = [
             'None',
-            emojis.check+'Available ', //1
-            emojis.check+'Available (Made to Order) ', //2
-            emojis.loading+'Restocking ', //3
-            emojis.x+'Not available ' //4
+            emojis.check+' Available ', //1
+            emojis.check+' Available (Made to Order)', //2
+            emojis.loading+' Restocking ', //3
+            emojis.x+' Not available ' //4
           ]
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
