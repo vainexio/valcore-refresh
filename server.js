@@ -510,7 +510,7 @@ client.on("messageCreate", async (message) => {
     let row = new MessageActionRow().addComponents(
       new MessageButton().setCustomId('scanData-'+message.author.id).setStyle('SECONDARY').setLabel('Check Status').setEmoji('🏷️'),
     );
-    await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading, components: [row]}).then(botMsg => msg = botMsg)
+    await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading}).then(botMsg => msg = botMsg)
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
     let counter = 0
@@ -557,11 +557,9 @@ client.on("messageCreate", async (message) => {
           'Proxy-Authentication': 'Basic ' + new Buffer('ianpaolo:1254').toString('base64')
         };*/
         const proxyAgent = new HttpsProxyAgent('http://'+ip[ipCount]);
-        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,{ agent: proxyAgent})
+        let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code)
         version++
         version >= 11 ? version = 6 : null
-        console.log(res)
-        return;
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
           console.log('retry for '+codes[i].code)
