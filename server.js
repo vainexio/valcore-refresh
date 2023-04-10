@@ -272,6 +272,7 @@ client.on("messageCreate", async (message) => {
      }
    } 
   }
+  
   //
   for (let i in shop.stickyChannels) {
   let sticky = shop.stickyChannels[i]
@@ -286,18 +287,18 @@ client.on("messageCreate", async (message) => {
       message.react('<:gude1:1056579657828417596>')
       }
     }
-    let messages = await message.channel.messages.fetch(options).then(messages => {
+
+    if (((sticky.condition && sticky.condition(message)) || !sticky.condition) && message.content !== sticky.message && !foundSticky) {
+    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : [], files: sticky.files ? sticky.files : []});
+      
+      let messages = await message.channel.messages.fetch(options).then(messages => {
       messages.forEach(async (gotMsg) => {
-        if (!foundSticky && gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && (message.author.id !== '1057167023492300881' || (message.author.id === '1057167023492300881' && message.content !== sticky.message))) {
+        if (gotMsg.author.id === '1057167023492300881' && gotMsg.content === sticky.message && (message.author.id !== '1057167023492300881' || (message.author.id === '1057167023492300881' && message.content !== sticky.message))) {
           gotMsg.delete();
           //
         }
       })
     });
-    //
-
-    if (((sticky.condition && sticky.condition(message)) || !sticky.condition) && message.content !== sticky.message) {
-    message.channel.send({content: sticky.message == '' ? null : sticky.message, components: sticky.comp ? [sticky.comp] : [], files: sticky.files ? sticky.files : []});
     }
   }
 }
