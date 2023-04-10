@@ -1264,11 +1264,11 @@ client.on('interactionCreate', async inter => {
       let type = anon ? 'Anonymous' : 'Public'
       
       let embed = new MessageEmbed()
-      .setAuthor({ name: anon ? 'Sent Anonymously' : inter.user.tag, iconURL: anon ? 'https://w7.pngwing.com/pngs/339/149/png-transparent-incognito-hd-logo.png' : inter.user.avatarURL(), url: 'https://discord.gg/sloopies' })
+      .setAuthor({ name: anon ? 'Sent Anonymously' : inter.user.tag, iconURL: anon ? 'https://www.freepnglogos.com/uploads/discord-logo-png/discord-logo-logodownload-download-logotipos-1.png' : inter.user.avatarURL(), url: 'https://discord.gg/sloopies' })
       .setDescription(inter.message.embeds[0].description)
       .setFooter({text: type+' Feedback'})
-      .setColor(colors.yellow)
-      .setThumbnail(anon ? 'https://w7.pngwing.com/pngs/339/149/png-transparent-incognito-hd-logo.png' : inter.user.avatarURL())
+      .setColor(colors.none)
+      .setThumbnail(anon ? 'https://www.freepnglogos.com/uploads/discord-logo-png/discord-logo-logodownload-download-logotipos-1.png' : inter.user.avatarURL())
       
       inter.update({content: 'Feedback sent `('+type+')`',components: []})
       feedback.send({embeds: [embed]})
