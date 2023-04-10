@@ -712,6 +712,10 @@ module.exports = {
     },
     stickyChannels: [
       {
+        id: '1094975726127685726',
+        message: "<a:S_bearheart:1094190497179910225> Type `;feedback` on <@1057167023492300881>'s DMs to submit a feedback."
+      },
+      {
         id: '1081107027054571550',
         message: '<a:nitrowumpus:1078244919623295046> **Nitro stocks dropper**',
         files: ['https://cdn.discordapp.com/attachments/1093391705753002064/1094942394480332820/2023-04-10_19-06-25.mp4']
