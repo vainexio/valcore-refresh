@@ -931,7 +931,9 @@ client.on("messageCreate", async (message) => {
           arrays.push(gotMsg.content);
         });
       });
-
+    let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes('nitro'))
+    if (!foundCat) return message.reply(emojis.x+' Invalid Category: `nitro`')
+    foundCat.status = quan > 0 ? 1 : 3
     stockHolder[0].push(new MessageButton().setCustomId('none').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
     for (let i in arrays) {
       let msg = arrays[i];
