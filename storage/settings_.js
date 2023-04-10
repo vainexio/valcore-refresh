@@ -709,6 +709,10 @@ module.exports = {
     },
     stickyChannels: [
       {
+        id: '1081107027054571550',
+        message: '<a:nitrowumpus:1078244919623295046> **Nitro stocks dropper**\nhttps://cdn.discordapp.com/attachments/1047454194086465538/1081112070403141632/VID_20230303142312.mp4',
+      },
+      {
         id: '1047454193595732049',
         message: '<a:nitroboost:1057999297787985960> __**Server Boost Perks**__\n— ₱5 voucher on next purchase\n— Image/Gif perms in <#1047454193595732055> \n— **Sloopier** role\n— **Sloopiest** role (2x boost)\n— 2x giveaway entries',
       },
