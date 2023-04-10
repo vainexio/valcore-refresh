@@ -6,6 +6,7 @@ const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const moment = require('moment')
 const HttpsProxyAgent = require('https-proxy-agent');
+const url = require('url');
 //
 //Discord
 const Discord = require('discord.js');
@@ -557,10 +558,16 @@ client.on("messageCreate", async (message) => {
               'X-Remote-Addr': ip[ipCount],
             }
         }*/
-        const proxyAgent = new HttpsProxyAgent('http://'+ip[ipCount]);
+        var proxyOpts = url.parse('http://'+ip[ipCount]);
+        proxyOpts.headers = {
+          'Proxy-Authentication': 'Basic ' + new Buffer('ascdds:1254').toString('base64')
+        };
+        const proxyAgent = new HttpsProxyAgent(proxyOpts);
         let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,{ agent: proxyAgent})
         version++
         version >= 11 ? version = 6 : null
+        console.log(res)
+        return;
         res = eCode ? eCode : await res.json()
         if (res.message && res.retry_after) {
           console.log('retry for '+codes[i].code)
