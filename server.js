@@ -525,16 +525,9 @@ client.on("messageCreate", async (message) => {
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let dash = counter % 2 == 0 ? '/' : ''
         let ip = [
-          '185.199.229.156:7492',
-          '185.199.228.220:7300',
-          '185.199.231.45:8382',
-          '188.74.210.207:6286',
-          '188.74.183.10:8279',
-          '188.74.210.21:6100',
-          '45.155.68.129:8133',
-          '154.95.36.199:6893',
-          '45.94.47.66:8110',
-          '144.168.217.88:8780',
+          '190.113.41.165:999',
+          '93.180.222.134:8080',
+          '103.84.159.8:80'
         ]
         ipCount++
         !ip[ipCount] ? ipCount == 0 : null 
@@ -557,12 +550,12 @@ client.on("messageCreate", async (message) => {
               'X-Remote-IP': ip[ipCount],
               'X-Remote-Addr': ip[ipCount],
             }
-        }*/
+        }
         var proxyOpts = url.parse('http://'+ip[ipCount]);
         proxyOpts.headers = {
-          'Proxy-Authentication': 'Basic ' + new Buffer('ascdds:1254').toString('base64')
-        };
-        const proxyAgent = new HttpsProxyAgent(proxyOpts);
+          'Proxy-Authentication': 'Basic ' + new Buffer('ianpaolo:1254').toString('base64')
+        };*/
+        const proxyAgent = new HttpsProxyAgent('http://'+ip[ipCount]);
         let res = eCode ? eCode : await fetch('https://discord.com/api/v'+version+'/entitlements/gift-codes/'+codes[i].code,{ agent: proxyAgent})
         version++
         version >= 11 ? version = 6 : null
