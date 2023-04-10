@@ -5,7 +5,7 @@ let colors = {
   red: "#ea3737",
   blue: "#1200ff",
   green: "#00ff04",
-  yellow: "#fff700",
+  yellow: "#fff4a1",
   orange: "#ff6300",
   purple: "#b200ff",
   pink: "#ff00d6",

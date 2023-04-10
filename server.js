@@ -240,8 +240,8 @@ client.on("messageCreate", async (message) => {
       }
     if (!await hasRole(member,['1077462108381388873'],message.guild)) {
       let embed = new MessageEmbed()
-      .addField('Terms and Conditions','Before proceeding, you must read and accept our terms and conditions.\n\nBy clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail. You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.')
-      .setColor(colors.red)
+      .addField('Terms and Conditions','<:S_letter:1092606891240198154> Before proceeding, you must read and accept our terms and conditions.\n<:S_seperator:1093733778633019492><:S_seperator:1093733778633019492><:S_seperator:1093733778633019492><:S_seperator:1093733778633019492><:S_seperator:1093733778633019492>\nBy clicking the button, you indicate that you have read, understood and accepted the terms stated in <#1055070784843948052> and the rules implied in <#1055883558918561913> for the product you want to avail. You will be held liable for any violation of our rules, for you have accepted the terms and agreed to comply.')
+      .setColor(colors.yellow)
       
       let row = await makeRow('terms','Agree and continue','SECONDARY','📌')
       
@@ -1570,7 +1570,7 @@ client.on('interactionCreate', async inter => {
       let row = new MessageActionRow().addComponents(
           new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
         );
-      inter.update({components: [row]})
+      inter.update({content: 'Terms Accepted', components: [row]})
       inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
     }
     }
