@@ -347,9 +347,9 @@ client.on("messageCreate", async (message) => {
     
     let embed = new MessageEmbed()
     .setTitle('Reseller Application')
-    .setDescription('**Please provide the following information by sending it here**\n\n<:s_hearty:1078837619053576212> Shop Link:\n<:s_hearty:1078837619053576212> Age:\n<:s_hearty:1078837619053576212> Verified GCash number:\n<:s_hearty:1078837619053576212> Joined sloopies since:')
-    .addField('Remarks','– You should be aware that you can still be removed as a reseller, for any reason, with or without notice.\n– Any false information submitted will result in immediate decline of your application.\n– Resellers have a quota of 1 order per week before being removed.\n– You can still re-apply if you were removed as a reseller before. However, your application will not be easily regarded unlike other applicants.')
-    .setColor(colors.white)
+    .setDescription('**Please provide the following information by sending it here**\n\n<:S_dot:1093733278541951078>Shop Link:\n<:S_dot:1093733278541951078>Age:\n<:S_dot:1093733278541951078>Your GCash/Paypal:\n<:S_dot:1093733278541951078>Joined sloopies since:\n<:S_dot:1093733278541951078>Why do you want to become a reseller in sloopies:')
+    .addField('Remarks','<a:S_starspin:1094191195074334720>You should be aware that you can still be removed as a reseller, for any reason, with or without notice.\n\n<a:S_starspin:1094191195074334720>Any false information submitted will result in immediate decline of your application.\n\n<a:S_starspin:1094191195074334720>Resellers have a quota of 1 order per week before being removed.\n\n<a:S_starspin:1094191195074334720>You can still re-apply if you were removed as a reseller before. However, your application will not be easily regarded unlike other applicants.')
+    .setColor(colors.yellow)
     .setThumbnail(message.author.avatarURL())
     
     let botMsg = null
@@ -373,7 +373,7 @@ client.on("messageCreate", async (message) => {
       let embed = new MessageEmbed()
       .setTitle(responseMsg.author.tag)
       .setThumbnail(responseMsg.author.avatarURL())
-      .setColor(colors.white)
+      .setColor(colors.yellow)
       .addField("Application",responseMsg.content)
       .addField("Ping","<@"+responseMsg.author.id+">")
       .setFooter({text: responseMsg.author.id})
@@ -1373,7 +1373,7 @@ client.on('interactionCreate', async inter => {
             let row = comp.components[i]
             row.disabled = true
           }
-        sendUser(emojis.check+" Your application was approved!",user.id,colors.lime)
+        sendUser(emojis.check+" Your application was approved! Your application was approved! You can now access our reseller's pricelist. Please acknowledge that all the pricelists may change constantly.",user.id,colors.lime)
         let member = await getMember(user.id,inter.guild)
         member ? await addRole(member,['resellers'],inter.guild) : null
         inter.reply({content: "Application Accepted", ephemeral: true})
@@ -1393,7 +1393,7 @@ client.on('interactionCreate', async inter => {
             let row = comp.components[i]
             row.disabled = true
           }
-        sendUser(emojis.x+" We're sorry to say this, but your application was declined.",user.id,colors.red)
+        sendUser(emojis.x+" We're sorry to say this, but your application was declined. This could be because the information you provided was not sufficient or you did not pass our standard requirements.",user.id,colors.red)
         inter.reply({content: "Application Declined", ephemeral: true})
         inter.message.edit({components: [comp]})
       } else {
