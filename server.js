@@ -267,7 +267,7 @@ client.on("messageCreate", async (message) => {
      let member = message.mentions.members.first()
      let state = await hasRole(member,["Accepted TOS"]) ? "You have accepted our terms.\n— Therefore, we shall not be liable for any mistakes or excuses made once you've violated our rules." : "We shall not be liable for any mistakes or excuses made once you've violated our rules."
      if (vc.name === 'reports : CLOSED') {
-     message.channel.send(emojis.warning+" **Void Warranty**\nReport was submitted outside reporting hours.\n\n<:07:1069200743959109712> Remarks\n→ Void warranty means no replacement nor refund.\n— "+state)
+     message.channel.send(emojis.warning+" **Void Warranty**\nReport was submitted outside reporting hours.\n\n<:07:1069200743959109712> Remarks\n— Void warranty means no replacement nor refund.\n— "+state)
      await addRole(member,['void'],message.guild)
      } else if (await hasRole(member,['void'],message.guild)) {
        message.channel.send(emojis.warning+' **Void Warranty**\nA recent remark was detected that you violated our terms.\n→ '+state)
@@ -347,7 +347,7 @@ client.on("messageCreate", async (message) => {
     
     let embed = new MessageEmbed()
     .setTitle('Reseller Application')
-    .setDescription('**Please provide the following information by sending it here**\n\n<:S_dot:1093733278541951078>Shop Link:\n<:S_dot:1093733278541951078>Age:\n<:S_dot:1093733278541951078>Your GCash/Paypal:\n<:S_dot:1093733278541951078>Joined sloopies since:\n<:S_dot:1093733278541951078>Why do you want to become a reseller in sloopies:')
+    .setDescription('**Please provide the following information by sending it here**\n\n<:S_dot:1093733278541951078>Shop Link:\n<:S_dot:1093733278541951078>Age:\n<:S_dot:1093733278541951078>Your GCash/Paypal:\n<:S_dot:1093733278541951078>Joined sloopies since:\n<:S_dot:1093733278541951078>Why do you want to become a reseller in sloopies:\n\n')
     .addField('Remarks','<a:S_starspin:1094191195074334720>You should be aware that you can still be removed as a reseller, for any reason, with or without notice.\n\n<a:S_starspin:1094191195074334720>Any false information submitted will result in immediate decline of your application.\n\n<a:S_starspin:1094191195074334720>Resellers have a quota of 1 order per week before being removed.\n\n<a:S_starspin:1094191195074334720>You can still re-apply if you were removed as a reseller before. However, your application will not be easily regarded unlike other applicants.')
     .setColor(colors.yellow)
     .setThumbnail(message.author.avatarURL())
@@ -367,8 +367,8 @@ client.on("messageCreate", async (message) => {
     else if (responseMsg.content.length > 0) {
     let log = await getChannel('1085504963955916810')
     let row = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId('approve-'+responseMsg.author.id).setStyle('SUCCESS').setLabel('Approve').setEmoji(emojis.check),
-      new MessageButton().setCustomId('decline-'+responseMsg.author.id).setStyle('DANGER').setLabel('Decline').setEmoji(emojis.x),
+      new MessageButton().setCustomId('approve-'+responseMsg.author.id).setStyle('SECONDARY').setLabel('Approve').setEmoji(emojis.check),
+      new MessageButton().setCustomId('decline-'+responseMsg.author.id).setStyle('SECONDARY').setLabel('Decline').setEmoji(emojis.x),
     );
       let embed = new MessageEmbed()
       .setTitle(responseMsg.author.tag)
@@ -1393,7 +1393,7 @@ client.on('interactionCreate', async inter => {
             let row = comp.components[i]
             row.disabled = true
           }
-        sendUser(emojis.x+" We're sorry to say this, but your application was declined. This could be because the information you provided was not sufficient or you did not pass our standard requirements.",user.id,colors.red)
+        sendUser(emojis.x+" Due to unfortunate circumstances, your application was declined. This could be because the information you provided was not sufficient or you did not pass our standard requirements.",user.id,colors.red)
         inter.reply({content: "Application Declined", ephemeral: true})
         inter.message.edit({components: [comp]})
       } else {
