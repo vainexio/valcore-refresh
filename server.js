@@ -212,6 +212,7 @@ function makeCode(length) {
     }
     return result;
 }
+let breakChecker = false
 client.on("messageCreate", async (message) => {
   //Ping
   if (message.channel.id === '1047454193197252644') console.log(message)
@@ -542,9 +543,9 @@ client.on("messageCreate", async (message) => {
       scanData = shop.checkers.find(c => c.id === message.author.id)
     }
     let row = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId('scanData-'+message.author.id).setStyle('SECONDARY').setLabel('Check Status').setEmoji('🏷️'),
+      new MessageButton().setLabel("Stop Checking").setEmoji("🛑").setCustomId("breakChecker-").setStyle("SECONDARY")
     );
-    await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading}).then(botMsg => msg = botMsg)
+    await message.channel.send({content: 'Fetching nitro codes ('+codes.length+') '+emojis.loading, components: [row]}).then(botMsg => msg = botMsg)
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
     if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
@@ -558,6 +559,10 @@ client.on("messageCreate", async (message) => {
     }
     
     for (let i in codes) {
+      if (breakChecker) {
+        breakChecker = false
+        break
+      };
       let fetched = false
       let waitingTime = 1000
       while (!fetched) {
@@ -1393,6 +1398,10 @@ client.on('interactionCreate', async inter => {
       } else {
         inter.reply({content: "The queue no longer exist.", ephemeral: true})
       }
+    }
+    else if (id.startsWith('breakChecker-')) {
+      let user = id.replace('breakChecker-','')
+      breakChecker = true
     }
     else if (id.startsWith('live-')) {
       let user = id.replace('live-','')
