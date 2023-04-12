@@ -854,7 +854,7 @@ module.exports = {
     ],
   },
   notices: {
-    n1: "You were temporarily stripped from the **Sloopie** role. We detected a presence activity that is prohibited from our server!\n\n- We do not allow off-server advertisements through custom status.\n- We do not allow NSFW/inap usernames.\n- Other reasons specified in <#1047454193197252643>\n\nIf you removed the said prohibitions, feel free to reclaim your role in <#1047454193197252643>!",
+    n1: "You were temporarily stripped from the **Sloopie** role. We detected a presence activity that is prohibited from our server!\n\n- We do not allow avertisements through custom status.\n- We do not allow NSFW/inap usernames.\n- Other reasons specified in <#1047454193197252643>\n\nIf you removed the said prohibitions, feel free to reclaim your role in <#1047454193197252643>!",
   },
   interExpire: 300000,
   auth: {
