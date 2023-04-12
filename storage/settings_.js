@@ -77,8 +77,6 @@ let keys = [
   'nb',
   'swc',
   'robux',
-  'gc',
-  'gs',
   'pending',
   'prem',
   'comm',

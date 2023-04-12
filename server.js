@@ -1072,50 +1072,15 @@ client.on("messageCreate", async (message) => {
       message.channel.send({content: responder.response ? responder.response : null, files: responder.files ? responder.files : [], components: responder.components ? [responder.components] : []})
     }
   //
-  let userPerms = await getPerms(message.member, 3)
-  //if mod
-  if (!userPerms) {
-    if (isMessage(".rename",message)) {
-      let args = await requireArgs(message,1)
-      if (!args) return;
-      let name = args.slice(1).join(" ")
-      await message.channel.setName(name)
-      message.react(emojis.check)
-    }
-    else if (isMessage(".badge",message)) {
-      message.delete()
-      let embed = new MessageEmbed()
-      .setDescription('**Steps of claiming dev badge**\n— Activate Discord 2FA (Required)\n— Check your gmail for an invite, click **Accept Invite**\n— Join https://discord.gg/ZFc27ktaeg\n— Head to https://discord.com/developers/active-developer to claim the badge\n— Make sure to take a **SCREENSHOT** for proof/vouching!')
-      .setColor(colors.none)
-      
-      message.channel.send({embeds: [embed]})
-      }
-    else if (isMessage(".noted",message)) {
-      message.delete()
-      let row = new MessageActionRow()
-        .addComponents(
-          new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<:rules1:1054722952899342377>').setCustomId('followup'),
-          new MessageButton().setLabel('Mark as Done').setStyle('PRIMARY').setEmoji('📬').setCustomId('done'),
-        )
-      message.channel.send({content: 'You can request for follow up, if you think that your order is taking too long.', components: [row]})
-      }
-  }
-  //if not
-  else if (userPerms) {
-    moderate(message.member);
-    let args = await getArgs(message.content)
-    let moderated = moderate(message.member);
-    if (message.content.toLowerCase() === 'hi') message.channel.send("hello! \:)")
-    if (message.content.toLowerCase().includes('onhand')) message.reply("Hello, there! Please check our most recent <#1071049104001601586> to know about the availability of our products!")
-    if (message.content.toLowerCase().includes('how much') || args[0].toLowerCase() === 'hm') {
+  let args = await getArgs(message.content)
+  if (message.content.toLowerCase().includes('how much') || args[0].toLowerCase() === 'hm') {
       let pricelists = shop.pricelists
       let custom = false
       for (let a in pricelists) {
       let data = pricelists[a]
-      let found = false
-      let args = await getArgs(message.content)
-      if (message.content?.toLowerCase().includes(data.keywords.toLowerCase()) || args.find(a => a.toLowerCase())) {
+      if (data.name.length > 0 && (message.content?.toLowerCase().includes(data.name.toLowerCase()) || args.find(a => data.name.toLowerCase().includes(a.toLowerCase())))) {
         custom = true
+        console.log(data.name)
       if (data.name.length > 0) {
         let embed = new MessageEmbed()
         .setTitle(data.name)
@@ -1146,10 +1111,10 @@ client.on("messageCreate", async (message) => {
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
         await message.reply({content: "Here's our current pricelist for "+data.name,embeds: [embed]})
-        return;
       }
       }
       }
+      console.log(custom)
       if (custom) return;
       //
       let channels = ''
@@ -1160,6 +1125,42 @@ client.on("messageCreate", async (message) => {
     })
       message.reply("Hello, there! You can check our products' pricelists through these channels:\n"+channels)
     }
+  //
+  let userPerms = await getPerms(message.member, 3)
+  //if mod
+  if (userPerms) {
+    if (isMessage(".rename",message)) {
+      let args = await requireArgs(message,1)
+      if (!args) return;
+      let name = args.slice(1).join(" ")
+      await message.channel.setName(name)
+      message.react(emojis.check)
+    }
+    else if (isMessage(".badge",message)) {
+      message.delete()
+      let embed = new MessageEmbed()
+      .setDescription('**Steps of claiming dev badge**\n— Activate Discord 2FA (Required)\n— Check your gmail for an invite, click **Accept Invite**\n— Join https://discord.gg/ZFc27ktaeg\n— Head to https://discord.com/developers/active-developer to claim the badge\n— Make sure to take a **SCREENSHOT** for proof/vouching!')
+      .setColor(colors.none)
+      
+      message.channel.send({embeds: [embed]})
+      }
+    else if (isMessage(".noted",message)) {
+      message.delete()
+      let row = new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<:rules1:1054722952899342377>').setCustomId('followup'),
+          new MessageButton().setLabel('Mark as Done').setStyle('PRIMARY').setEmoji('📬').setCustomId('done'),
+        )
+      message.channel.send({content: 'You can request for follow up, if you think that your order is taking too long.', components: [row]})
+      }
+  }
+  //if not
+  else if (!userPerms) {
+    moderate(message.member);
+    let args = await getArgs(message.content)
+    let moderated = moderate(message.member);
+    if (message.content.toLowerCase() === 'hi') message.channel.send("hello! \:)")
+    if (message.content.toLowerCase().includes('onhand')) message.reply("Hello, there! Please check our most recent <#1071049104001601586> to know about the availability of our products!")
     }
   let chance = false
   if (message.channel.id === '1047454193595732055') {
