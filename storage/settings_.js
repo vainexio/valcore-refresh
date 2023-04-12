@@ -841,7 +841,16 @@ module.exports = {
           new MessageButton().setLabel('Stocks').setStyle('SECONDARY').setEmoji('🔔').setCustomId('roles-Stocks'),
           new MessageButton().setLabel('Shop Status').setStyle('SECONDARY').setEmoji('🔔').setCustomId('roles-Shop_Status')
         ),
-      }
+      },
+      {
+        id: '1047454193197252644',
+        message: '*Pick your language*',
+        comp: new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('Filipino').setStyle('SECONDARY').setEmoji('🇵🇭').setCustomId('roles-Pipino'),
+          new MessageButton().setLabel('English').setStyle('SECONDARY').setEmoji('🌐').setCustomId('roles-English'),
+        ),
+      },
     ],
   },
   notices: {
