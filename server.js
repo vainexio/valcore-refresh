@@ -1108,6 +1108,7 @@ client.on("messageCreate", async (message) => {
     if (message.content.toLowerCase() === 'hi') message.channel.send("hello! \:)")
     if (message.content.toLowerCase().includes('onhand')) message.reply("Hello, there! Please check our most recent <#1071049104001601586> to know about the availability of our products!")
     if (message.content.toLowerCase().includes('how much') || args[0].toLowerCase() === 'hm') {
+      let category = shop.pricelists.find(c => c.name === category)
       let channels = ''
       message.guild.channels.cache.forEach( ch => {
         if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {

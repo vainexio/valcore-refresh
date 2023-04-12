@@ -71,8 +71,10 @@ let emojis = {
 }
 let keys = [
   'netflix',
-  'spotify',
+  'nf',
+  'spoti',
   'nitro',
+  'nb',
   'swc',
   'robux',
   'gc',
@@ -477,7 +479,7 @@ module.exports = {
         name: 'Robux',
         channel: '1054989628765122571',
         rs: '1078710810806853704',
-        status: 4,
+        status: 2,
         image: "https://media.discordapp.net/attachments/1093391705753002064/1094077237839532123/Logopit_1680918693719.png?width=1440&height=360",
         types: [
           //Types
@@ -485,10 +487,10 @@ module.exports = {
             parent: 'Via Gamepass',
             children: [
               //
-              { name: '250 Robux', price: 90, rs: 80 },
-              { name: '500 Robux', price: 150, rs: 130 },
-              { name: '700 Robux', price: 200, rs: 180 },
-              { name: '1000 Robux', price: 300, rs: 260 },
+              { name: '100  Robux', price: 40, rs: 40 },
+              { name: '200 Robux', price: 75, rs: 70 },
+              { name: '500 Robux', price: 150, rs: 140 },
+              { name: '1000 Robux', price: 210, rs: 200 },
               //
             ],
           },
@@ -510,9 +512,9 @@ module.exports = {
               { name: '125 vp', price: 50 },
               { name: '380 vp', price: 150 },
               { name: '790 vp', price: 285 },
-              { name: '1,650 vp', price: 560 },
-              { name: '2,850 vp', price: 910 },
-              { name: '5,800 vp', price: 1880 },
+              { name: '1650 vp', price: 560 },
+              { name: '2850 vp', price: 910 },
+              { name: '5800 vp', price: 1880 },
               //
             ],
           },
@@ -780,7 +782,7 @@ module.exports = {
       {
         id: '1054731483656499290',
         message: 'You can request for follow up, if you think that your order is taking too long.',
-        condition: message => keys.find(k => message.channel.name.includes('iu3rhd3wudn')),
+        condition: message => keys.find(k => message.channel.name.includes(k)),
         comp: new MessageActionRow()
         .addComponents(
           new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<:rules1:1054722952899342377>').setCustomId('followup'),
