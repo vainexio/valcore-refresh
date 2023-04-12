@@ -611,9 +611,9 @@ client.on("messageCreate", async (message) => {
     for (let i in codes) {
       num++
       let data = codes[i]
-      let emoji = data.emoji
-      let state = data.state
-      let user = data.user
+      let emoji = data.emoji ? data.emoji : emojis.warning
+      let state = data.state ? data.state : 'Unchecked'
+      let user = data.user ? data.user : 'Unknown User'
       let expire = data.expire
       if (embed.fields.length < 25) {
       embed = new MessageEmbed(embed)
@@ -1402,6 +1402,7 @@ client.on('interactionCreate', async inter => {
     else if (id.startsWith('breakChecker-')) {
       let user = id.replace('breakChecker-','')
       breakChecker = true
+      inter.reply({content: emojis.check+" Stopped Checking", ephemeral: true})
     }
     else if (id.startsWith('live-')) {
       let user = id.replace('live-','')
