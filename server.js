@@ -1289,11 +1289,8 @@ client.on('interactionCreate', async inter => {
       .setFooter({text: type+' Feedback'})
       .setColor(colors.none)
       .setThumbnail(anon ? 'https://www.freepnglogos.com/uploads/discord-logo-png/discord-logo-logodownload-download-logotipos-1.png' : inter.user.avatarURL())
-      
-      let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('upvote-').setStyle('SECONDARY').setLabel('Upvote').setEmoji(emojis.like),
-      );
-      inter.update({content: 'Feedback sent `('+type+')`',components: []})
+
+      inter.update({content: 'Feedback sent `('+type+')`'})
       feedback.send({embeds: [embed]})
       logs.send({content: '<@'+inter.user.id+'>', embeds: [embed]})
       //inter.reply({content: emojis.check+' Feedback sent `('+type+')`', ephemeral: true})
@@ -1420,14 +1417,6 @@ client.on('interactionCreate', async inter => {
       let user = id.replace('breakChecker-','')
       breakChecker = true
       inter.reply({content: emojis.check+" Stopped Checking", ephemeral: true})
-    }
-    else if (id.startsWith('upvote-')) {
-      let count = id.replace('upvote-','')
-      count = Number(count)
-      count++
-      let comp = inter.message.components[0]
-      comp.components[0].label = "Upvote ("+count+")"
-      inter.update({components: []})
     }
     else if (id.startsWith('reply-')) {
       let reply = id.replace('reply-','')
