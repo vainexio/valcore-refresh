@@ -1074,7 +1074,7 @@ client.on("messageCreate", async (message) => {
   //
   let userPerms = await getPerms(message.member, 3)
   //if mod
-  if (userPerms) {
+  if (!userPerms) {
     if (isMessage(".rename",message)) {
       let args = await requireArgs(message,1)
       if (!args) return;
@@ -1101,14 +1101,57 @@ client.on("messageCreate", async (message) => {
       }
   }
   //if not
-  else if (!userPerms) {
+  else if (userPerms) {
     moderate(message.member);
     let args = await getArgs(message.content)
     let moderated = moderate(message.member);
     if (message.content.toLowerCase() === 'hi') message.channel.send("hello! \:)")
     if (message.content.toLowerCase().includes('onhand')) message.reply("Hello, there! Please check our most recent <#1071049104001601586> to know about the availability of our products!")
     if (message.content.toLowerCase().includes('how much') || args[0].toLowerCase() === 'hm') {
-      let category = shop.pricelists.find(c => c.name === category)
+      let pricelists = shop.pricelists
+      let custom = false
+      for (let a in pricelists) {
+      let data = pricelists[a]
+      let found = false
+      let args = await getArgs(message.content)
+      if (message.content?.toLowerCase().includes(data.keywords.toLowerCase()) || args.find(a => a.toLowerCase())) {
+        custom = true
+      if (data.name.length > 0) {
+        let embed = new MessageEmbed()
+        .setTitle(data.name)
+        .setDescription('\n\n** **')
+        .setColor(colors.none)
+        
+        for (let b in data.types) {
+          let type = data.types[b]
+          let children = ''
+          for (let c in type.children) {
+            let child = type.children[c]
+            let pr = child.price
+            let emoji = '<:S_seperator:1093733778633019492>'
+            children += '> '+emoji+' '+child.name+(pr > 0 ? ' — ₱'+pr : '')+'\n'
+          }
+          let state = b == data.types.length-1 ? '\n<:g1:1056579657828417596><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g2:1056579660353372160><:g3:1056579662572179586>' : ''
+          embed = new MessageEmbed(embed)
+          .addField(type.parent,children)
+          .setImage(data.image ? data.image : '')
+        }
+        let productStatus = [
+            'None',
+            emojis.check+' Available ', //1
+            emojis.check+' Available (Made to Order)', //2
+            emojis.loading+' Restocking ', //3
+            emojis.x+' Not available ' //4
+          ]
+        embed = new MessageEmbed(embed)
+        .addField('Product Status',productStatus[data.status])
+        await message.reply({content: "Here's our current pricelist for "+data.name,embeds: [embed]})
+        return;
+      }
+      }
+      }
+      if (custom) return;
+      //
       let channels = ''
       message.guild.channels.cache.forEach( ch => {
         if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {
