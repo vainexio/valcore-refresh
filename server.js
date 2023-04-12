@@ -1041,7 +1041,7 @@ client.on("messageCreate", async (message) => {
     .setColor(colors.none)
     .setFooter({text: "Robux Covered Tax"})
     
-    message.reply({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
+    await message.channel.send({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
     message.delete();
   }
   else if (isCommand('ar',message)) {
