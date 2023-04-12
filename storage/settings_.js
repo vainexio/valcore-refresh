@@ -372,7 +372,7 @@ module.exports = {
         //Category
         name: 'Disney+',
         channel: '1054989652416798750',
-        status: 1,
+        status: 2,
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236413468672/Logopit_1680918581099.png?width=1440&height=360',
         types: [
           //Types
