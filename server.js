@@ -271,7 +271,8 @@ client.on("messageCreate", async (message) => {
      message.channel.send(emojis.warning+" **Void Warranty**\nReport was submitted outside reporting hours.\n\n<:07:1069200743959109712> Remarks\n— Void warranty means no replacement nor refund.\n— "+state)
      await addRole(member,['void'],message.guild)
      } else if (await hasRole(member,['void'],message.guild)) {
-       message.channel.send(emojis.warning+' **Void Warranty**\nA recent remark was detected that you violated our terms.\n→ '+state)
+       message.channel.send(emojis.warning+' **Void Warranty**\nA recent remark was detected that you violated our terms.\n\n— '+state)
+       await removeRole(member,['void'])
      }
    } 
   }

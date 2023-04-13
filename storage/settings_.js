@@ -280,7 +280,7 @@ module.exports = {
             parent: '\u200b',
             children: [
               //
-              { name: 'Via team invite', price: 0 },
+              { name: 'Via developer team invite', price: 0 },
               //
             ],
           },
@@ -322,7 +322,6 @@ module.exports = {
               //
               { name: 'Uncovered hosting', price: 299 },
               { name: 'Covered hosting', price: 599 },
-              { name: '', price: 0 },
               //
             ],
           },
@@ -383,6 +382,7 @@ module.exports = {
               //
             ],
           },
+          
           //
         ],
       },
@@ -507,6 +507,14 @@ module.exports = {
               { name: '200 Robux', price: 75, rs: 70 },
               { name: '500 Robux', price: 150, rs: 140 },
               { name: '1000 Robux', price: 210, rs: 200 },
+              //
+            ],
+          },
+          {
+            parent: '\u200b',
+            children: [
+              //
+              { name: 'Covered tax', price: 0 },
               //
             ],
           },
