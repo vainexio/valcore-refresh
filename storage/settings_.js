@@ -784,8 +784,8 @@ module.exports = {
         condition: message => keys.find(k => message.channel.name.includes(k)),
         comp: new MessageActionRow()
         .addComponents(
-          new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<:rules1:1054722952899342377>').setCustomId('followup'),
-          new MessageButton().setLabel('Mark as Done').setStyle('PRIMARY').setEmoji('').setCustomId('done'),
+          new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<a:S_arrowright:1095503803761033276>').setCustomId('followup'),
+          new MessageButton().setLabel('Mark as Done').setStyle('SECONDARY').setEmoji('<:S_shootingstar:1095346152968298688>').setCustomId('done'),
         ),
       },
       {
