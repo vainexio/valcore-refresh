@@ -160,6 +160,14 @@ module.exports = {
               //
             ],
           },
+          {
+            parent: '\u200b',
+            children: [
+              //
+              { name: '+₱15 if own account', price: 0 },
+              //
+            ],
+          },
           //
         ],
       },
@@ -264,6 +272,15 @@ module.exports = {
             children: [
               //
               { name: 'Permanent', price: 90, rs: 50 },
+              { name: 'Lifetime warranty until patched', price: 0 },
+              //
+            ],
+          },
+          {
+            parent: '\u200b',
+            children: [
+              //
+              { name: 'Via team invite', price: 0 },
               //
             ],
           },
