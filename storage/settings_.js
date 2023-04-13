@@ -780,12 +780,12 @@ module.exports = {
       },
       {
         id: '1054731483656499290',
-        message: 'You can request for follow up, if you think that your order is taking too long.',
+        message: 'You can request for a follow up, if you think that your order is taking too long.',
         condition: message => keys.find(k => message.channel.name.includes(k)),
         comp: new MessageActionRow()
         .addComponents(
           new MessageButton().setLabel('Request Follow-up').setStyle('SECONDARY').setEmoji('<:rules1:1054722952899342377>').setCustomId('followup'),
-          new MessageButton().setLabel('Mark as Done').setStyle('PRIMARY').setEmoji('📬').setCustomId('done'),
+          new MessageButton().setLabel('Mark as Done').setStyle('PRIMARY').setEmoji('').setCustomId('done'),
         ),
       },
       {
