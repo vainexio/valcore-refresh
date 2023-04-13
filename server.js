@@ -550,7 +550,7 @@ client.on("messageCreate", async (message) => {
       //msg.edit('Fetching nitro codes (Pending - Adding to stocks first) '+emojis.loading)
     //
     if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
-      msg.edit("Fetching nitro codes (adding to stocks / "+codes.length+") " + emojis.loading);
+      msg.edit("Fetching nitro codes (stocking - "+codes.length+") " + emojis.loading);
       for (let i in codes) {
         let stocks = await getChannel('1054929031881035789')
         sleep(1000);
