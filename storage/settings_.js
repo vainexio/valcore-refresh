@@ -748,7 +748,7 @@ module.exports = {
       },
       {
         id: '1047454193595732049',
-        message: '<a:nitroboost:1057999297787985960> __**Server Boost Perks**__\n— ₱5 voucher on next purchase\n— Image/Gif perms in <#1047454193595732055> \n— **Sloopier** role\n— **Sloopiest** role (2x boost)\n— 2x giveaway entries',
+        message: '<a:nitroboost:1057999297787985960> **Server Booster Perks**\n<:S_dot:1093733278541951078> ₱5 discount on certain products\n<:S_dot:1093733278541951078> Image/Gif perms in <#1047454193595732055> \n<:S_dot:1093733278541951078> **Sloopier** role\n<:S_dot:1093733278541951078> **Sloopiest** role (2x boost)\n<:S_dot:1093733278541951078> 2x giveaway entries',
       },
       {
         id: '1054724474659946606',
