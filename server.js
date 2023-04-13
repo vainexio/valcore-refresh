@@ -1083,7 +1083,8 @@ client.on("messageCreate", async (message) => {
       let custom = false
       for (let a in pricelists) {
       let data = pricelists[a]
-      if (data.name.length > 0 && (message.content?.toLowerCase().includes(data.name.toLowerCase()) || args.find(a => data.name.toLowerCase().includes(a.toLowerCase())))) {
+      let dataArgs = await getArgs(data.name)
+      if (data.name.length > 0 && (message.content?.toLowerCase().includes(data.name.toLowerCase()) || args.find(a => dataArgs.find(d => d.toLowerCase() === a.toLowerCase())))) {
         custom = true
         console.log(data.name)
       if (data.name.length > 0) {

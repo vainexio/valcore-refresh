@@ -70,6 +70,7 @@ let emojis = {
   offline: '<:offline_:1004015005282340916>',
 }
 let keys = [
+  'basic',
   'netflix',
   'nf',
   'spoti',
@@ -409,7 +410,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic', price: 80, rs: 70 },
-              { name: 'Nitro Boost', price: 110, rs: 105 },
+              { name: 'Nitro Boost', price: 125, rs: 120 },
               //
             ],
           },
