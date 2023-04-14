@@ -509,7 +509,7 @@ module.exports = {
         name: 'Robux',
         channel: '1054989628765122571',
         rs: '1078710810806853704',
-        status: 2,
+        status: 4,
         id: '1096319583121584208',
         image: "https://media.discordapp.net/attachments/1093391705753002064/1094077237839532123/Logopit_1680918693719.png?width=1440&height=360",
         types: [
@@ -699,7 +699,7 @@ module.exports = {
         {
           command: 'gcash',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('PRIMARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
