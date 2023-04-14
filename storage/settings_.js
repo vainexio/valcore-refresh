@@ -119,8 +119,10 @@ module.exports = {
               { name: '1 month', price: 30 },
               { name: '2 months', price: 40 },
               { name: '3 months', price: 50 },
-              { name: '6 months', price: 60 },
-              { name: '12 months', price: 90 },
+              { name: '4 months', price: 70 },
+              { name: '6 months', price: 110 },
+              { name: '8 months', price: 145 },
+              { name: '12 months', price: 120 },
               //
             ],
           },
@@ -679,25 +681,25 @@ module.exports = {
         {
           command: 'gcash4',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0906 412 6440**\n— **LE•••N K•• F.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09064126440').setStyle('PRIMARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09064126440').setStyle('PRIMARY').setEmoji('').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
           command: 'gcash3',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('PRIMARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('PRIMARY').setEmoji('').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
           command: 'gcash2',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 326 3549**\n— **I^^ PA••O I.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('PRIMARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('PRIMARY').setEmoji('').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
           command: 'gcash',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 986 8489**\n— **RA••L I.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<:gcash:1086081913061646428>').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('PRIMARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
