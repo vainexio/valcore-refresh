@@ -632,12 +632,12 @@ module.exports = {
       responders: [
         {
           command: 'rpremium',
-          response: '<:circley:1072388650337308742>premium purchased:\n<:circley:1072388650337308742>subscription:\n<:circley:1072388650337308742>original email:\n<:circley:1072388650337308742>replacement email:\n<:circley:1072388650337308742>working pass:\n<:circley:1072388650337308742>shared/solo/fh:\n<:circley:1072388650337308742>date availed :\n<:circley:1072388650337308742>date reported:\n<:circley:1072388650337308742>days used:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>price paid:\n<:circley:1072388650337308742>issue & screenshot of issue:\n<:circley:1072388650337308742>screenshot of vouch with proof of login:',
+          response: '• premium purchased:\n• subscription:\n• original email:\n• replacement email:\n• working pass:\n• shared/solo/fh:\n• date availed :\n• date reported:\n• days used:\n• remaining days:\n• price paid:\n• issue & screenshot of issue:\n• screenshot of vouch with proof of login:',
           autoDelete: false,
         },
         {
           command: 'rnitro',
-          response: '<:circley:1072388650337308742>nitro link:\n<:circley:1072388650337308742>user who claimed the nitro:\n<:circley:1072388650337308742>revoked email from discord (click "to me" in the email to confirm that the email is connected with your acc):\n<:circley:1072388650337308742>screenshot of the email connected to your discord account:\n<:circley:1072388650337308742>date availed:\n<:circley:1072388650337308742>remaining days:\n<:circley:1072388650337308742>screenshot/link of vouch:\n<:circley:1072388650337308742>Ref code:',
+          response: '• nitro link:\n• user who claimed the nitro:\n• revoked email from discord (click "to me" in the email to confirm that the email is connected with your acc):\n• screenshot of the email connected to your discord account:\n• date availed:\n• remaining days:\n• screenshot/link of vouch:\n• Ref code:',
           autoDelete: false,
         },
         {
@@ -653,7 +653,7 @@ module.exports = {
         },
         {
           command: 'robux',
-          response: '<:circley:1072388650337308742>Gamepass/Shirt Link:\n<:circley:1072388650337308742>Amount:',
+          response: '• Gamepass/Shirt Link:\n• Amount:',
           autoDelete: true,
         },
         {
