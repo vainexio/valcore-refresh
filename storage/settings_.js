@@ -108,6 +108,7 @@ module.exports = {
         name: 'Spotify',
         channel: '1054989652416798750',
         status: 2,
+        id: '1096319564662448198',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186379624478/Logopit_1680918508558.png?width=1440&height=360',
         types: [
           //Types
@@ -131,6 +132,7 @@ module.exports = {
         name: 'Youtube',
         channel: '1054989652416798750',
         status: 2,
+        id: '1096319565606174800',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077235713028126/Logopit_1680918525501.png?width=1440&height=360',
         types: [
           //Types
@@ -176,6 +178,7 @@ module.exports = {
         name: 'Netflix',
         channel: '1054989652416798750',
         status: 2,
+        id: '1096319566902218813',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077235939512320/Logopit_1680918539369.png?width=1440&height=360',
         types: [
           //Types
@@ -213,6 +216,7 @@ module.exports = {
         name: 'Crunchyroll',
         channel: '1054989652416798750',
         status: 2,
+        id: '1096319567866904646',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236161818664/Logopit_1680918569709.png?width=1440&height=360',
         types: [
           //Types
@@ -253,6 +257,7 @@ module.exports = {
         channel: '1057249812656955514',
         rs: '1078708594188496987',
         status: 1,
+        id: '1096319569771118612',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077237004865556/Logopit_1680918616490.png?width=1440&height=360',
         types: [
           //Types
