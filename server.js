@@ -631,7 +631,7 @@ client.on("messageCreate", async (message) => {
           .setTimestamp()
       }
       embed.addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
-      if (message.content.toLowerCase().includes("stocks") && message.content.toLowerCase().includes('sort')) {
+      if (message.content.toLowerCase().includes('sort')) {
         let stocks = await getChannel('1054929031881035789')
         await stocks.send("https://discord.gift/"+codes[i].code)
       }
