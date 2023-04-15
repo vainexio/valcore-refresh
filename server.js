@@ -778,13 +778,12 @@ client.on("messageCreate", async (message) => {
         let channel = await getChannel(method === 'rs' ? data.rs : data.channel)
         
         if (channel) {
-          /*
         let foundBulked = bulked.find(b => b.channel === channel.id)
-        !foundBulked ? await channel.bulkDelete(10) : null
-        if (!foundBulked) {
+        !foundBulked && method === 'rs' ? await channel.bulkDelete(10) : null
+        if (!foundBulked && method === 'rs') {
           bulked.push({channel: channel.id, messages: []})
           foundBulked = bulked.find(b => b.channel === channel.id)
-        }*/
+        }
         for (let b in data.types) {
           let type = data.types[b]
           let children = ''
@@ -817,7 +816,7 @@ client.on("messageCreate", async (message) => {
         }
       }
     }
-    /*
+    if (method === 'rs') {
     for (let i in bulked) {
       let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
       let holderCount = 0
@@ -846,7 +845,7 @@ client.on("messageCreate", async (message) => {
     }
       await channel.send({components: comps})
     }
-    */
+  }
     message.channel.send(emojis.check+' Successfully updated all the pricelists!')
   }
   else if (isCommand('forceall',message)) {
