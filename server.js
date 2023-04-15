@@ -803,7 +803,7 @@ client.on("messageCreate", async (message) => {
             emojis.check+' Available ', //1
             emojis.check+' Available (Made to Order)', //2
             emojis.loading+' Restocking ', //3
-            emojis.x+' Not available ' //4
+            emojis.x+' Not Available ' //4
           ]
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
