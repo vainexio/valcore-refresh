@@ -809,12 +809,11 @@ client.on("messageCreate", async (message) => {
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
           
-          let foundMsg = await channel.messages.fetch(data.id)
-          if (foundMsg) {
+          await channel.messages.fetch(data.id).then(foundMsg => {
             foundMsg.edit({embeds: [embed]})//.then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
-          } else {
+          }).catch(async err => {
             await channel.send({embeds: [embed]})//.then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
-          }
+          })
         }
       }
     }

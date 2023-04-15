@@ -376,9 +376,9 @@ module.exports = {
             parent: '3 Months',
             children: [
               //
-              { name: '2 server boosts', price: 80, rs: 60 },
-              { name: '8 server boosts', price: 150, rs: 140 },
-              { name: '14 server boosts', price: 220, rs: 200 },
+              { name: '2 server boosts', price: 50, rs: 40 },
+              { name: '8 server boosts', price: 125, rs: 120 },
+              { name: '14 server boosts', price: 190, rs: 185 },
               //
             ],
           },
@@ -386,9 +386,9 @@ module.exports = {
             parent: 'Lifetime Boosts',
             children: [
               //
-              { name: '2 server boosts', price: 600 },
-              { name: '8 server boosts', price: 1600 },
-              { name: '14 server boosts', price: 2200 },
+              { name: '2 server boosts', price: 400, rs: 300 },
+              { name: '8 server boosts', price: 700, rs: 600 },
+              { name: '14 server boosts', price: 1000, rs: 1000 },
               //
             ],
           },
