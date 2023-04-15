@@ -682,23 +682,23 @@ module.exports = {
         {
           command: 'gcash4',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0906 412 6440**\n— **LE•••N K•• F.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09064126440').setStyle('PRIMARY').setEmoji('').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09064126440').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
-          command: 'gcash3',
+          command: 'gcash',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('PRIMARY').setEmoji('').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
           command: 'gcash2',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0945 326 3549**\n— **I^^ PA••O I.**\n\n— Send screenshot of receipt here',
-          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('PRIMARY').setEmoji('').setLabel("Copy Paste")),
+          components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09453263549').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
         },
         {
-          command: 'gcash',
+          command: 'gcash3',
           response: '<a:S_holobutterfly:1095503488710099035> —  **__GCASH INFO__**\n<:S_dot:1093733278541951078>0945 986 8489 | RA^^L I.\n\n<a:S_sparkles:1095303558938767480> :  *Send screenshot of receipt here!*',
           components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
