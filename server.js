@@ -1691,7 +1691,9 @@ client.on('interactionCreate', async inter => {
         return;
       }
       await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
-      inter.reply({content: emojis.check+' Terms Accepted', ephemeral: true})
+      inter.reply({content: '<a:Star:1096986847898521680> Terms Accepted', ephemeral: true})
+      let notice = await getChannel('1047454193755107337')
+      notice.send('<@'+inter.user.id+'> Accepted TOS')
     }
     }
 });

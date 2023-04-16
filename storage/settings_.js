@@ -801,6 +801,14 @@ module.exports = {
         ),
       },
       {
+        id: '1055070784843948052',
+        message: 'Click the button below to access <#1054711675045036033>',
+        comp: new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('Access').setCustomId('terms101').setStyle('SECONDARY').setEmoji('<:S_exclamation:1093734009005158450>')
+        ),
+      },
+      {
         id: '1071049104001601586',
         message: '',
         order: true,
