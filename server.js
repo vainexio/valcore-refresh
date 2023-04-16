@@ -1684,6 +1684,15 @@ client.on('interactionCreate', async inter => {
       inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
       inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
     }
+    else if (id === 'terms101') {
+      let member = inter.member;
+      if (await hasRole(member,['1094909481806205009'])) {
+        inter.deferUpdate();
+        return;
+      }
+      await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
+      inter.reply({content: emojis.check+' Terms Accepted', ephemeral: true})
+    }
     }
 });
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
