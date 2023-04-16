@@ -307,9 +307,9 @@ module.exports = {
             parent: 'Paypal to GCash',
             children: [
               //
-              { name: '₱499 below — 10% fee', price: 0 },
-              { name: '₱500 above — 5% fee', price: 0 },
-              { name: '₱1,000 above — 3% fee', price: 0 },
+              { name: '₱499 below — 10% deduction', price: 0 },
+              { name: '₱500 above — 5% deduction', price: 0 },
+              { name: '₱1,000 above — 3% deduction', price: 0 },
               //
             ],
           },

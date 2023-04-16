@@ -1031,7 +1031,7 @@ client.on("messageCreate", async (message) => {
     if (!args) return;
     if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
     let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.02 : value >= 500 ? 0.05 : value < 500 ? 0.08 : null
+    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.1 : null
     if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
     let fee = value*percentage
     let total = Math.round(value-fee)
