@@ -1295,7 +1295,7 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('feedback')) {
       let feedback = await getChannel('1094975726127685726')
-      let logs = await getChannel('1047454194086465538')
+      let logs = await getChannel('1094941354389409842')
       let anon = false
       if (id === 'feedbackAnon') anon = true
       let type = anon ? 'Anonymous' : 'Public'
