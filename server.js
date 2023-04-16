@@ -244,8 +244,9 @@ client.on("messageCreate", async (message) => {
       let row = await makeRow('terms','Agree and continue','SECONDARY','<a:S_bearheart:1094190497179910225>')
       //
     if (message.author.id === "557628352828014614") {
+      
     let member = message.mentions.members.first()
-    //if (!member) return;
+    if (member) {
     let shopStatus = await getChannel(shop.channels.status);
       if (shopStatus.name === 'shop : CLOSED') {
         message.channel.send("<@"+member.id+"> The shop is currently **CLOSED**, please come back at <t:1677542400:t> to proceed with your order.")
@@ -256,12 +257,13 @@ client.on("messageCreate", async (message) => {
     } else if (await hasRole(member,['1077462108381388873'],message.guild)) {
       message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
     }
+    }
     } else if (!message.author.bot) {
       if (!await hasRole(message.member,['1094909481806205009'])) {
       message.reply({content: "Please make sure that you have accepted the terms before proceeding with your order.", embeds: [embed], components: [row]})
       }
     }
-  } 
+  }
   else if (message.channel.parent?.name.toLowerCase() === 'reports') {
    if (message.author.id === "557628352828014614") {
      let vc = await getChannel("1079713500731015209")
@@ -948,6 +950,11 @@ client.on("messageCreate", async (message) => {
         quan++
       })
     })
+    if (quan > 0) {
+      let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes('nitro'))
+      if (!foundCat) return console.log('Cannot find category')
+      foundCat.status = 1
+    }
     
     let messages2 = await stocks2.messages
       .fetch({ limit: 100 })

@@ -983,11 +983,11 @@ module.exports = {
     },
     {
       Command: "setpr",
-      Template: "",
+      Template: "<type>",
       Alias: [],
       Category: "Misc",
       Desc: 'Updates the pricelist',
-      ex: ['setpr'],
+      ex: ['setpr rs','setpr all'],
       level: 0,
     },
   ],
