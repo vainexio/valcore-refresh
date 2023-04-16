@@ -802,10 +802,10 @@ module.exports = {
       },
       {
         id: '1055070784843948052',
-        message: 'Click the button below to access <#1054711675045036033>',
+        message: "You will no longer need to accept the consent form in your ticket once you click this button.",
         comp: new MessageActionRow()
         .addComponents(
-          new MessageButton().setLabel('Access').setCustomId('terms101').setStyle('SECONDARY').setEmoji('<:S_exclamation:1093734009005158450>')
+          new MessageButton().setLabel('New TOS').setCustomId('terms101').setStyle('SECONDARY').setEmoji('<:S_exclamation:1093734009005158450>')
         ),
       },
       {
