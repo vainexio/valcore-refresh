@@ -259,8 +259,8 @@ client.on("messageCreate", async (message) => {
     }
     }
     } else if (!message.author.bot) {
-      if (!await hasRole(message.member,['1094909481806205009'])) {
-      message.reply({content: "Please make sure that you have accepted the terms before proceeding with your order.", embeds: [embed], components: [row]})
+      //if (!await hasRole(message.member,['1094909481806205009'])) {
+      //message.reply({content: "Please make sure that you have accepted the terms before proceeding with your order.", embeds: [embed], components: [row]})
       }
     }
   }
