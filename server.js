@@ -517,7 +517,7 @@ client.on("messageCreate", async (message) => {
       }
     }
   }
-  else if ((message.channel.name?.includes('nitro-checker') || message.channel.type === 'DM') && !message.author.bot) {
+  else if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
     let args = getArgs(message.content)
     if (args.length === 0) return;
     let codes = []
@@ -558,7 +558,7 @@ client.on("messageCreate", async (message) => {
         sleep(1000);
         await stocks.send("https://discord.gift/"+codes[i].code);
       }
-      msg.edit(emojis.check+" Stocked **"+codes.length+"** nitro boost(s)")
+      msg.edit({content: emojis.check+" Stocked **"+codes.length+"** nitro boost(s)", components: []})
       return;
     }
     
