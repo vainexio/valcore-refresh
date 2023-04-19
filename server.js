@@ -739,11 +739,11 @@ client.on("messageCreate", async (message) => {
     let args = await requireArgs(message,4)
     if (!args) return;
     args = message.content.toLowerCase().replace(';setprice','').trim().split(/,|, /);
-    let category = args[0].toUpperCase()
+    let category = args[0].toLowerCase()
     let parent = args[1].toLowerCase()
     let child = args[2].toLowerCase()
     let price = Number(args[3])
-    let foundCat = shop.pricelists.find(c => c.name === category)
+    let foundCat = shop.pricelists.find(c => c.name.toLowerCase() === category)
     if (!foundCat) return message.reply(emojis.x+' Invalid Category: `'+category+'`')
     let foundParent = foundCat.types.find(c => c.parent.toLowerCase() === parent)
     if (!foundParent) return message.reply(emojis.x+' Invalid Parent: `'+parent+'`')
