@@ -1621,7 +1621,7 @@ client.on('interactionCreate', async inter => {
       let found = shop.deleteChannels.find(c => c === channelId)
       if (found) {
         shop.deleteChannels.splice(shop.deleteChannels.indexOf(channelId),1)
-        inter.update({content: emojis.check+" Channel deletion was cancelled.", components: []})
+        inter.update({content: emojis.check+" Channel deletion was cancelled by "+inter.user.tag+"", components: []})
       } else {
         inter.reply({content: emojis.warning+' This channel is no longer up for deletion.', ephemeral: true})
       }
