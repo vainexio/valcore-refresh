@@ -1078,6 +1078,22 @@ client.on("messageCreate", async (message) => {
     
     message.channel.send({embeds: [embed]})
   }
+  else if (isCommand('delete',message)) {
+    if (!await getPerms(message.member,4)) return;
+    let args = await requireArgs(message,1)
+    if (!args || (args && isNaN(args[1]))) return console.log('a');
+    
+    let second = args[1]
+    let countdown = args[1]+'000';
+    countdown = Number(countdown)
+    
+    message.reply(emojis.check+' Deleting this channel in **'+second+'** seconds.')
+    await shop.deleteChannels.push(message.channel.id)
+    setTimeout(function() {
+      let found = shop.deleteChannels.find(c => c === )
+        message.channel.delete();
+      },countdown)
+  }
   //
   if (message.channel.id === shop.channels.vouch) {
     if (message.attachments.size === 0) return message.reply('⚠️ Invalid form of vouch! Please attach an image file that shows the product you ordered!')

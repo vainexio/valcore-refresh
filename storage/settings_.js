@@ -101,6 +101,7 @@ module.exports = {
     model: "gpt-3.5-turbo"//  
   },
   shop: {
+    deleteChannels: [],
     checkers: [],
     pricelists: [
       {
