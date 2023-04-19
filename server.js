@@ -1087,11 +1087,21 @@ client.on("messageCreate", async (message) => {
     let countdown = args[1]+'000';
     countdown = Number(countdown)
     
-    message.reply(emojis.check+' Deleting this channel in **'+second+'** seconds.')
-    await shop.deleteChannels.push(message.channel.id)
+    let channelId = message.channel.id
+    await shop.deleteChannels.push(channelId)
+    
+    let row = new MessageActionRow().addComponents(
+      new MessageButton()
+      .setCustomId('channelDelete-'+channelId)
+      .setStyle('DANGER')
+      .setLabel("Cancel Deletion")
+    )
+    message.reply({content: emojis.loading+' Deleting this channel in **'+second+'** seconds.', components: [row]})
+    
     setTimeout(function() {
-      let found = shop.deleteChannels.find(c => c === )
-        message.channel.delete();
+      let found = shop.deleteChannels.find(c => c === channelId)
+      if (found) message.channel.delete();
+      else console.log('Channel deletion was cancelled.') 
       },countdown)
   }
   //
@@ -1605,6 +1615,16 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('none')) {
       inter.deferUpdate();
+    }
+    else if (id.startsWith('channelDelete-')) {
+      let channelId = id.replace('channelDelete-','')
+      let found = shop.deleteChannels.find(c => c === channelId)
+      if (found) {
+        shop.deleteChannels.splice(shop.deleteChannels.indexOf(channelId),1)
+        inter.update({content: emojis.check+" Channel deletion was cancelled.", components: []})
+      } else {
+        inter.reply({content: emojis.warning+' This channel is no longer up for deletion.', ephemeral: true})
+      }
     }
     else if (id.startsWith('prVerify')) {
       let member = inter.member
