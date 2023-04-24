@@ -1083,8 +1083,15 @@ client.on("messageCreate", async (message) => {
     let args = await requireArgs(message,1)
     if (!args || (args && isNaN(args[1]))) return console.log('a');
     
-    let second = args[1]
-    let countdown = args[1]+'000';
+    let num = args[1].toLowerCase().replace(/s|m|h/g,'')
+    num = Number(num)
+    if (isNaN(num)) return message.reply(emojis.warning+' Invalid duration.')
+    let type = args[1].charAt(args[1].length-1)
+    if (type !== 'm' && type !== 'h' && type !== 's') return message.reply(emojis.warning+' Invalid length.');
+    let countdown = 0//args[1]+'000';
+    if (type === 'h') countdown = num*3600000
+    else if (type === 'm') countdown = num*60000
+    else if (type === 's') countdown = num*1000
     countdown = Number(countdown)
     
     let channelId = message.channel.id
@@ -1096,7 +1103,7 @@ client.on("messageCreate", async (message) => {
       .setStyle('DANGER')
       .setLabel("Cancel Deletion")
     )
-    message.reply({content: emojis.loading+' Deleting this channel in **'+second+'** seconds.', components: [row]})
+    message.reply({content: emojis.loading+' Deleting this channel in **'+args[1]+'**', components: [row]})
     
     setTimeout(function() {
       let found = shop.deleteChannels.find(c => c === channelId)
