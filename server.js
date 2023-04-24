@@ -1081,7 +1081,7 @@ client.on("messageCreate", async (message) => {
   else if (isCommand('delete',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,1)
-    if (!args || (args && isNaN(args[1]))) return console.log('a');
+    if (!args) return console.log('a');
     
     let num = args[1].toLowerCase().replace(/s|m|h/g,'')
     num = Number(num)
@@ -1103,7 +1103,7 @@ client.on("messageCreate", async (message) => {
       .setStyle('DANGER')
       .setLabel("Cancel Deletion")
     )
-    message.reply({content: emojis.loading+' Deleting this channel in **'+args[1]+'**', components: [row]})
+    message.reply({content: emojis.loading+' Deleting this channel in **'+args[1]+'** `('+countdown+'ms)`', components: [row]})
     
     setTimeout(function() {
       let found = shop.deleteChannels.find(c => c === channelId)
