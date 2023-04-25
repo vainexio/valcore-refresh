@@ -736,16 +736,94 @@ client.on("messageCreate", async (message) => {
   }
   if (isCommand('finance',message)) {
     
-    let profit
+    let finance = {
+      incoming: {array: [], total: 0},
+      outgoing: {array: [], total: 0},
+      expenses: {array: [], total: 0},
+      lendings: {array: [], total: 0},
+      gcash: {array: [], total: 0},
+      paypal: {array: [], total: 0},
+    }
+    
+    const filter = m => m.author.id === message.author.id;
+    let msg
+    let args
+    //Fetch incoming
+    message.channel.send(emojis.loading+' Incoming Amounts')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.incoming.total += Number(args[i])
+      finance.incoming.push(args[i])
+    }
+    msg = null
+    //
+    //Fetch outgoing
+    message.channel.send(emojis.loading+' Outgoing Amounts')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.outgoing.total += Number(args[i])
+      finance.outgoing.push(args[i])
+    }
+    msg = null
+    //
+    //Fetch expenses
+    message.channel.send(emojis.loading+' Expenses')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.expenses.total += Number(args[i])
+      finance.expenses.push(args[i])
+    }
+    msg = null
+    //
+    //Fetch expenses
+    message.channel.send(emojis.loading+' Lendings')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.lendings.total += Number(args[i])
+      finance.lendings.push(args[i])
+    }
+    msg = null
+    //
+    //Fetch gcash bal
+    message.channel.send(emojis.loading+' GCash Balance')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.gcash.total += Number(args[i])
+      finance.gcash.push(args[i])
+    }
+    msg = null
+    //
+    //Fetch paypal bal
+    message.channel.send(emojis.loading+' GCash Balance')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.paypal.total += Number(args[i])
+      finance.paypal.push(args[i])
+    }
+    msg = null
+    //
+    
     let embed = new MessageEmbed()
     .setTitle('Finance Log')
-    
-    message.channel.send(emojis.loading+' Incoming Amounts')
-    const filter = m => m.author.id === message.author.id;
-    let msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg1 = msg1.first()
-    console.log(msg1, msg1.content)
+    .addField('')
   }
   else if (isCommand('setprice',message)) {
     if (!await getPerms(message.member,4)) return;
