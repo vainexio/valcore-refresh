@@ -758,7 +758,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.incoming.total += Number(args[i])
-      finance.incoming.array += '\n'+args[i]
+      finance.incoming.array += args[i]+'\n'
     }
     msg = null
     //
@@ -770,7 +770,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.outgoing.total += Number(args[i])
-      finance.outgoing.array += '\n'+args[i]
+      finance.outgoing.array += args[i]+'\n'
     }
     msg = null
     //
@@ -782,7 +782,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.expenses.total += Number(args[i])
-      finance.expenses.array += '\n'+args[i]
+      finance.expenses.array += args[i]+'\n'
     }
     msg = null
     //
@@ -794,7 +794,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.lendings.total += Number(args[i])
-      finance.lendings.array += '\n'+args[i]
+      finance.lendings.array += args[i]+'\n'
     }
     msg = null
     //
@@ -806,7 +806,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.gcash.total += Number(args[i])
-      finance.gcash.array += '\n'+args[i]
+      finance.gcash.array += args[i]+'\n'
     }
     msg = null
     //
@@ -818,7 +818,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.paypal.total += Number(args[i])
-      finance.paypal.array += '\n'+args[i]
+      finance.paypal.array += +args[i]+'\n'
     }
     msg = null
     //
@@ -830,21 +830,29 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.otherBal.total += Number(args[i])
-      finance.otherBal.array += '\n'+args[i]
+      finance.otherBal.array += args[i]
     }
     msg = null
     //
     let profit = finance.incoming.total-finance.outgoing.total
     let totalBal = finance.paypal.total+finance.gcash.total+finance.otherBal.total+profit+finance.lendings.total
+    
+    finance.incoming.array.startsWith(finance.incoming.total.toString()) ? finance.incoming.array = '' : ''
+    finance.outgoing.array.startsWith(finance.outgoing.total.toString()) ? finance.outgoing.array = '' : ''
+    finance.expenses.array.startsWith(finance.expenses.total.toString()) ? finance.expenses.array = '' : ''
+    finance.lendings.array.startsWith(finance.lendings.total.toString()) ? finance.lendings.array = '' : ''
+    finance.gcash.array.startsWith(finance.gcash.total.toString()) ? finance.gcash.array = '' : ''
+    finance.paypal.array.startsWith(finance.paypal.total.toString()) ? finance.paypal.array = '' : ''
+    
     let embed = new MessageEmbed()
     .setTitle('Finance Log')
-    .addField('⬇️ Incoming','```yaml\n'+finance.incoming.total+'```\n'+finance.incoming.array,true)
-    .addField('⬆️ Outgoing','```yaml\n'+finance.outgoing.total+'```\n'+finance.outgoing.array,true)
-    .addField('Expenses','```yaml\n'+finance.expenses.total+'```\n'+finance.expenses.array,true)
-    .addField('Lendings','```yaml\n'+finance.lendings.total+'```\n'+finance.lendings.array,true)
-    .addField('GCash Balance','```yaml\n'+finance.gcash.total+'```\n'+finance.gcash.array,true)
-    .addField('Paypal Balance','```yaml\n'+finance.paypal.total+'```\n'+finance.paypal.array,true)
-    .addField('Financial Statement','\u200b')
+    .addField('⬇️ Incoming','```yaml\n'+finance.incoming.total+'```'+finance.incoming.array,true)
+    .addField('⬆️ Outgoing','```yaml\n'+finance.outgoing.total+'```'+finance.outgoing.array,true)
+    .addField('Expenses','```yaml\n'+finance.expenses.total+'```'+finance.expenses.array,true)
+    .addField('Lendings','```yaml\n'+finance.lendings.total+'```'+finance.lendings.array,true)
+    .addField('GCash Balance','```yaml\n'+finance.gcash.total+'```'+finance.gcash.array,true)
+    .addField('Paypal Balance','```yaml\n'+finance.paypal.total+'```'+finance.paypal.array,true)
+    .addField('\u200b','**Financial Statement**')
     .addField('📥 Profit','```yaml\n'+profit+'```',true)
     .addField('📤 Loss','```yaml\n'+finance.expenses.total+'```',true)
     .addField('Current Balance','```yaml\n'+(finance.paypal.total+finance.gcash.total)+'```',true)
