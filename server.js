@@ -756,7 +756,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.incoming.total += Number(args[i])
-      finance.incoming.push(args[i])
+      finance.incoming.array.push(args[i])
     }
     msg = null
     //
@@ -768,7 +768,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.outgoing.total += Number(args[i])
-      finance.outgoing.push(args[i])
+      finance.outgoing.array.push(args[i])
     }
     msg = null
     //
@@ -780,7 +780,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.expenses.total += Number(args[i])
-      finance.expenses.push(args[i])
+      finance.expenses.array.push(args[i])
     }
     msg = null
     //
@@ -792,7 +792,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.lendings.total += Number(args[i])
-      finance.lendings.push(args[i])
+      finance.lendings.array.push(args[i])
     }
     msg = null
     //
@@ -804,7 +804,7 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.gcash.total += Number(args[i])
-      finance.gcash.push(args[i])
+      finance.gcash.array.push(args[i])
     }
     msg = null
     //
@@ -816,15 +816,36 @@ client.on("messageCreate", async (message) => {
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.paypal.total += Number(args[i])
-      finance.paypal.push(args[i])
+      finance.paypal.array.push(args[i])
     }
     msg = null
     //
-    
+    finance = {
+      incoming: {array: [], total: 0},
+      outgoing: {array: [], total: 0},
+      expenses: {array: [], total: 0},
+      lendings: {array: [], total: 0},
+      gcash: {array: [], total: 0},
+      paypal: {array: [], total: 0},
+    }
+    let profit = finance.incoming-finance.outgoing
+    let totalBal = finance.paypal.total+finance.gcash.total+profit+finance.lendings.total
     let embed = new MessageEmbed()
     .setTitle('Finance Log')
-    .addField('')
-  }
+    .addField('Incoming',finance.incoming.array.toString()+'\nTotal `'+finance.incoming.total+'`',true)
+    .addField('Outgoing',finance.outgoing.array.toString()+'\nTotal `'+finance.outgoing.total+'`',true)
+    .addField('Expenses',finance.expenses.array.toString()+'\nTotal `'+finance.expenses.total+'`',true)
+    .addField('Lendings',finance.lendings.array.toString()+'\nTotal `'+finance.lendings.total+'`',true)
+    .addField('GCash Balance',finance.gcash.array.toString()+'\nTotal Bal `'+finance.gcash.total+'`',true)
+    .addField('Paypal Balance',finance.paypal.array.toString()+'\nTotal Bal `'+finance.paypal.total+'`',true)
+    .addField('\u200b','Financial Statement')
+    .addField('P&L Statement','Profit `'+profit+'`\nLoss `'+finance.expenses.total+'`',true)
+    .addField('Balance','GCash : '+finance.gcash.total+'\nPaypal : '+finance.paypal.total+'\nTotal `'+(finance.paypal.total+finance.gcash.total)+'`Expected Total Balance `'+totalBal+'`')
+    
+    message.channel.send({embeds: [embed]})
+    let log = await getChannel('1100456798932185138')
+    log.send({embeds: [embed]})
+    }
   else if (isCommand('setprice',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,4)
