@@ -734,6 +734,19 @@ client.on("messageCreate", async (message) => {
       sendChannel(template, message.channel.id, theme);
     }
   }
+  if (isCommand('finance',message)) {
+    
+    let profit
+    let embed = new MessageEmbed()
+    .setTitle('Finance Log')
+    
+    message.channel.send(emojis.loading+' Incoming Amounts')
+    const filter = m => m.author.id === message.author.id;
+    let msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg1 = msg1.first()
+    console.log(msg1, msg1.content)
+  }
   else if (isCommand('setprice',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,4)
