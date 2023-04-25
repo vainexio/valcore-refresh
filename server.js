@@ -743,13 +743,15 @@ client.on("messageCreate", async (message) => {
       lendings: {array: [], total: 0},
       gcash: {array: [], total: 0},
       paypal: {array: [], total: 0},
+      otherBal: {array: [], total: 0},
     }
     
     const filter = m => m.author.id === message.author.id;
     let msg
     let args
+    let emoji = emojis.loading
     //Fetch incoming
-    message.channel.send(emojis.loading+' Incoming Amounts')
+    message.channel.send(emoji+' Incoming Amounts')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     if (!msg) return;
     msg = msg.first()
@@ -761,7 +763,7 @@ client.on("messageCreate", async (message) => {
     msg = null
     //
     //Fetch outgoing
-    message.channel.send(emojis.loading+' Outgoing Amounts')
+    message.channel.send(emoji+' Outgoing Amounts')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     if (!msg) return;
     msg = msg.first()
@@ -773,7 +775,7 @@ client.on("messageCreate", async (message) => {
     msg = null
     //
     //Fetch expenses
-    message.channel.send(emojis.loading+' Expenses')
+    message.channel.send(emoji+' Expenses')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     if (!msg) return;
     msg = msg.first()
@@ -785,19 +787,19 @@ client.on("messageCreate", async (message) => {
     msg = null
     //
     //Fetch expenses
-    message.channel.send(emojis.loading+' Lendings')
+    message.channel.send(emoji+' Lendings')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     if (!msg) return;
     msg = msg.first()
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.lendings.total += Number(args[i])
-      finance.lendings.array.push(args[i])
+      finance.lendings.array.push(args[i]+'\n')
     }
     msg = null
     //
     //Fetch gcash bal
-    message.channel.send(emojis.loading+' GCash Balance')
+    message.channel.send(emoji+' GCash Balance')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     if (!msg) return;
     msg = msg.first()
@@ -809,7 +811,7 @@ client.on("messageCreate", async (message) => {
     msg = null
     //
     //Fetch paypal bal
-    message.channel.send(emojis.loading+' GCash Balance')
+    message.channel.send(emoji+' Paypal Balance')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     if (!msg) return;
     msg = msg.first()
@@ -820,16 +822,20 @@ client.on("messageCreate", async (message) => {
     }
     msg = null
     //
-    finance = {
-      incoming: {array: [], total: 0},
-      outgoing: {array: [], total: 0},
-      expenses: {array: [], total: 0},
-      lendings: {array: [], total: 0},
-      gcash: {array: [], total: 0},
-      paypal: {array: [], total: 0},
+    //Fetch paypal bal
+    message.channel.send(emoji+' Other Balances')
+    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    if (!msg) return;
+    msg = msg.first()
+    args = msg.content.trim().split(/,/)
+    for (let i in args) {
+      finance.otherBal.total += Number(args[i])
+      finance.otherBal.array.push(args[i])
     }
-    let profit = finance.incoming-finance.outgoing
-    let totalBal = finance.paypal.total+finance.gcash.total+profit+finance.lendings.total
+    msg = null
+    //
+    let profit = finance.incoming.total-finance.outgoing.total
+    let totalBal = finance.paypal.total+finance.gcash.total+finance.otherBal.total+profit+finance.lendings.total
     let embed = new MessageEmbed()
     .setTitle('Finance Log')
     .addField('Incoming',finance.incoming.array.toString()+'\nTotal `'+finance.incoming.total+'`',true)
@@ -840,7 +846,11 @@ client.on("messageCreate", async (message) => {
     .addField('Paypal Balance',finance.paypal.array.toString()+'\nTotal Bal `'+finance.paypal.total+'`',true)
     .addField('\u200b','Financial Statement')
     .addField('P&L Statement','Profit `'+profit+'`\nLoss `'+finance.expenses.total+'`',true)
-    .addField('Balance','GCash : '+finance.gcash.total+'\nPaypal : '+finance.paypal.total+'\nTotal `'+(finance.paypal.total+finance.gcash.total)+'`Expected Total Balance `'+totalBal+'`')
+    .addField('Balance','GCash : '+finance.gcash.total+'\nPaypal : '+finance.paypal.total+'\nTotal ```yaml\n'+(finance.paypal.total+finance.gcash.total)+'```')
+    .addField('Expected Balance','```yaml\n'+totalBal.toString+'```')
+    .setColor(colors.none)
+    .setFooter({text: 'Author '+message.author.tag})
+    .setTimestamp()
     
     message.channel.send({embeds: [embed]})
     let log = await getChannel('1100456798932185138')
