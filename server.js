@@ -753,8 +753,8 @@ client.on("messageCreate", async (message) => {
     //Fetch incoming
     message.channel.send(emoji+' Incoming Amounts')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.incoming.total += Number(args[i])
@@ -765,8 +765,8 @@ client.on("messageCreate", async (message) => {
     //Fetch outgoing
     message.channel.send(emoji+' Outgoing Amounts')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.outgoing.total += Number(args[i])
@@ -777,8 +777,8 @@ client.on("messageCreate", async (message) => {
     //Fetch expenses
     message.channel.send(emoji+' Expenses')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.expenses.total += Number(args[i])
@@ -789,8 +789,8 @@ client.on("messageCreate", async (message) => {
     //Fetch expenses
     message.channel.send(emoji+' Lendings')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.lendings.total += Number(args[i])
@@ -801,8 +801,8 @@ client.on("messageCreate", async (message) => {
     //Fetch gcash bal
     message.channel.send(emoji+' GCash Balance')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.gcash.total += Number(args[i])
@@ -813,8 +813,8 @@ client.on("messageCreate", async (message) => {
     //Fetch paypal bal
     message.channel.send(emoji+' Paypal Balance')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.paypal.total += Number(args[i])
@@ -825,8 +825,8 @@ client.on("messageCreate", async (message) => {
     //Fetch paypal bal
     message.channel.send(emoji+' Other Balances')
     msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    if (!msg) return;
-    msg = msg.first()
+    msg = msg?.first()
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       finance.otherBal.total += Number(args[i])
@@ -862,7 +862,11 @@ client.on("messageCreate", async (message) => {
     .setFooter({text: 'Author '+message.author.tag})
     .setTimestamp()
     
-    message.channel.send({embeds: [embed]})
+    let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId("saveRecord").setStyle('SECONDARY').setEmoji('♻️').setLabel("Save Record"),
+    );
+    
+    message.channel.send({embeds: [embed], components: [row]})
     let log = await getChannel('1100456798932185138')
     log.send({embeds: [embed]})
     }
@@ -1458,6 +1462,11 @@ client.on('interactionCreate', async inter => {
     } else {
       inter.reply({content: emojis.x+' The voucher was already claimed!', ephemeral: true})
     }
+    }
+    else if (id === 'saveRecord') {
+      let log = await getChannel('1100456798932185138')
+      log.send({embeds: inter.message.embeds})
+      inter.update()
     }
     else if (id.startsWith('feedback')) {
       let feedback = await getChannel('1094975726127685726')
