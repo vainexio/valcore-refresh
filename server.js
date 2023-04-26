@@ -762,7 +762,7 @@ client.on("messageCreate", async (message) => {
     for (let i in args) {
       let newArgs = await getArgs(args[i])
       data.total += Number(newArgs[0])
-      data.array += isNaN(data.total) ? msg.content : args[i].replace(/\n/g,'')+'\n'
+      isNaN(data.total) ? data.array = msg.content : data.array += args[i].replace(/\n/g,'')+'\n'
     }
     msg = null
     }
