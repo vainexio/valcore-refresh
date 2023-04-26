@@ -747,93 +747,31 @@ client.on("messageCreate", async (message) => {
     }
     
     const filter = m => m.author.id === message.author.id;
-    let msg
+    //let msg
     let args
     let emoji = emojis.loading
     //Fetch incoming
-    message.channel.send(emoji+' Incoming Amounts')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+    async function getResponse(content,data) {
+      message.channel.send(content)
+    let msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     msg = msg?.first()
     if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
     args = msg.content.trim().split(/,/)
     for (let i in args) {
-      finance.incoming.total += Number(args[i])
-      finance.incoming.array += args[i]+'\n'
+      let newArgs = await getArgs(args[i])
+      data.total += Number(newArgs[0])
+      data.array += args[i]+'\n'
     }
     msg = null
-    //
-    //Fetch outgoing
-    message.channel.send(emoji+' Outgoing Amounts')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
-    args = msg.content.trim().split(/,/)
-    for (let i in args) {
-      finance.outgoing.total += Number(args[i])
-      finance.outgoing.array += args[i]+'\n'
     }
-    msg = null
-    //
-    //Fetch expenses
-    message.channel.send(emoji+' Expenses')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
-    args = msg.content.trim().split(/,/)
-    for (let i in args) {
-      finance.expenses.total += Number(args[i])
-      finance.expenses.array += args[i]+'\n'
-    }
-    msg = null
-    //
-    //Fetch expenses
-    message.channel.send(emoji+' Lendings')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
-    args = msg.content.trim().split(/,/)
-    for (let i in args) {
-      finance.lendings.total += Number(args[i])
-      finance.lendings.array += args[i]+'\n'
-    }
-    msg = null
-    //
-    //Fetch gcash bal
-    message.channel.send(emoji+' GCash Balance')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
-    args = msg.content.trim().split(/,/)
-    for (let i in args) {
-      finance.gcash.total += Number(args[i])
-      finance.gcash.array += args[i]+'\n'
-    }
-    msg = null
-    //
-    //Fetch paypal bal
-    message.channel.send(emoji+' Paypal Balance')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
-    args = msg.content.trim().split(/,/)
-    for (let i in args) {
-      finance.paypal.total += Number(args[i])
-      finance.paypal.array += +args[i]+'\n'
-    }
-    msg = null
-    //
-    //Fetch paypal bal
-    message.channel.send(emoji+' Other Balances')
-    msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
-    msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
-    args = msg.content.trim().split(/,/)
-    for (let i in args) {
-      finance.otherBal.total += Number(args[i])
-      finance.otherBal.array += args[i]
-    }
-    msg = null
-    //
+    await getResponse(emoji+' Incoming Amounts',finance.incoming)
+    await getResponse(emoji+' Outgoing Amounts',finance.outgoing)
+    await getResponse(emoji+' Expenses',finance.expenses)
+    await getResponse(emoji+' Lendings',finance.lendings)
+    await getResponse(emoji+' GCash Balance',finance.gcash)
+    await getResponse(emoji+' Paypal Balance',finance.paypal)
+    await getResponse(emoji+' Other Balances',finance.otherBal)
+
     let profit = finance.incoming.total-finance.outgoing.total
     let totalBal = finance.paypal.total+finance.gcash.total+finance.otherBal.total+profit+finance.lendings.total
     
@@ -856,7 +794,7 @@ client.on("messageCreate", async (message) => {
     .addField('📥 Profit','```yaml\n'+profit+'```',true)
     .addField('📤 Loss','```yaml\n'+finance.expenses.total+'```',true)
     .addField('Current Balance','```yaml\n'+(finance.paypal.total+finance.gcash.total)+'```',true)
-    .addField('Other Balance','```yaml\n'+finance.otherBal.total+'```',true)
+    .addField('Other Balances','```yaml\n'+finance.otherBal.total+'```',true)
     .addField('Expected Balance','```yaml\n'+totalBal+'```',true)
     .setColor(colors.none)
     .setFooter({text: 'Author '+message.author.tag})
@@ -900,9 +838,8 @@ client.on("messageCreate", async (message) => {
   }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
-    let args = await requireArgs(message,1)
-    if (!args) return
-    let method = args[1].toLowerCase()
+    let args = await getArgs(message.content)
+    let method = args[1] ? args[1].toLowerCase() : 'none'
     let pricelists = shop.pricelists
     let bulked = []
     for (let a in pricelists) {
