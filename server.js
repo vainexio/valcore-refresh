@@ -856,6 +856,7 @@ client.on("messageCreate", async (message) => {
     .addField('📥 Profit','```yaml\n'+profit+'```',true)
     .addField('📤 Loss','```yaml\n'+finance.expenses.total+'```',true)
     .addField('Current Balance','```yaml\n'+(finance.paypal.total+finance.gcash.total)+'```',true)
+    .addField('Other Balance','```yaml\n'+finance.otherBal.total+'```',true)
     .addField('Expected Balance','```yaml\n'+totalBal+'```',true)
     .setColor(colors.none)
     .setFooter({text: 'Author '+message.author.tag})
