@@ -739,11 +739,13 @@ client.on("messageCreate", async (message) => {
     let finance = {
       incoming: {array: [], total: 0, text: emoji+' Incoming Amounts'},
       outgoing: {array: [], total: 0, text: emoji+' Outgoing Amounts'},
+      pending: {array: [], total: 0, text: emoji+' Pending Amounts'},
       expenses: {array: [], total: 0, text: emoji+' Expenses'},
       lendings: {array: [], total: 0, text: emoji+' Lendings'},
       gcash: {array: [], total: 0, text: emoji+' GCash Balances'},
       paypal: {array: [], total: 0, text: emoji+' Paypal Balances'},
       otherBal: {array: [], total: 0, text: emoji+' Other Balances'},
+      notes: {array: [], total: 0, text: emoji+' Note'},
     }
     
     const filter = m => m.author.id === message.author.id;
@@ -775,10 +777,12 @@ client.on("messageCreate", async (message) => {
     
     finance.incoming.array.startsWith(finance.incoming.total.toString()) ? finance.incoming.array = '' : ''
     finance.outgoing.array.startsWith(finance.outgoing.total.toString()) ? finance.outgoing.array = '' : ''
+    finance.pending.array.startsWith(finance.pending.total.toString()) ? finance.pending.array = '' : ''
     finance.expenses.array.startsWith(finance.expenses.total.toString()) ? finance.expenses.array = '' : ''
     finance.lendings.array.startsWith(finance.lendings.total.toString()) ? finance.lendings.array = '' : ''
     finance.gcash.array.startsWith(finance.gcash.total.toString()) ? finance.gcash.array = '' : ''
     finance.paypal.array.startsWith(finance.paypal.total.toString()) ? finance.paypal.array = '' : ''
+    finance.notes.array.startsWith(finance.notes.total.toString()) ? finance.notes.array = '' : ''
     
     let embed = new MessageEmbed()
     .setTitle('Finance Log')
@@ -788,9 +792,10 @@ client.on("messageCreate", async (message) => {
     .addField('Lendings','```yaml\n'+finance.lendings.total+'```'+finance.lendings.array,true)
     .addField('GCash Balance','```yaml\n'+finance.gcash.total+'```'+finance.gcash.array,true)
     .addField('Paypal Balance','```yaml\n'+finance.paypal.total+'```'+finance.paypal.array,true)
-    .addField('\u200b','**Financial Statement**')
+    .addField('Financial Statement',finance.notes.array)
     .addField('📥 Profit','```yaml\n'+profit+'```',true)
     .addField('📤 Loss','```yaml\n'+finance.expenses.total+'```',true)
+    .addField('Pending Balance','```yaml\n'+finance.paypal.total+'```'+finance.paypal.array,true)
     .addField('Current Balance','```yaml\n'+(finance.paypal.total+finance.gcash.total)+'```',true)
     .addField('Other Balances','```yaml\n'+finance.otherBal.total+'```',true)
     .addField('Expected Balance','```yaml\n'+totalBal+'```',true)
