@@ -430,7 +430,7 @@ module.exports = {
         name: 'Discord Nitro',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
-        status: 3,
+        status: 2,
         id: '1096319579787116544',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186127970414/Logopit_1680918484757.png?width=1440&height=360',
         types: [
@@ -439,8 +439,8 @@ module.exports = {
             parent: 'Monthly Subscription',
             children: [
               //
-              { name: 'Nitro Basic', price: 80, rs: 0 },
-              { name: 'Nitro Boost', price: 135, rs: 0 },
+              { name: 'Nitro Basic', price: 85, rs: 0 },
+              { name: 'Nitro Boost', price: 140, rs: 0 },
               //
             ],
           },
@@ -449,7 +449,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic', price: 0 },
-              { name: 'Nitro Boost', price: 850, rs: 800 },
+              { name: 'Nitro Boost', price: 850},
               //
             ],
           },
@@ -510,7 +510,7 @@ module.exports = {
         name: 'Robux',
         channel: '1054989628765122571',
         rs: '1078710810806853704',
-        status: 4,
+        status: 2,
         id: '1096319583121584208',
         image: "https://media.discordapp.net/attachments/1093391705753002064/1094077237839532123/Logopit_1680918693719.png?width=1440&height=360",
         types: [
@@ -521,7 +521,7 @@ module.exports = {
               //
               { name: '100  Robux', price: 60, rs: 0 },
               { name: '200 Robux', price: 100, rs: 0 },
-              { name: '500 Robux', price: 200, rs: 0 },
+              { name: '500 Robux', price: 210, rs: 0 },
               { name: '1000 Robux', price: 300, rs: 0 },
               //
             ],
