@@ -737,15 +737,15 @@ client.on("messageCreate", async (message) => {
   if (isCommand('finance',message)) {
     let emoji = emojis.loading
     let finance = {
-      incoming: {array: [], total: 0, text: emoji+' Incoming Amounts'},
-      outgoing: {array: [], total: 0, text: emoji+' Outgoing Amounts'},
-      pending: {array: [], total: 0, text: emoji+' Pending Amounts'},
-      expenses: {array: [], total: 0, text: emoji+' Expenses'},
-      lendings: {array: [], total: 0, text: emoji+' Lendings'},
-      gcash: {array: [], total: 0, text: emoji+' GCash Balances'},
-      paypal: {array: [], total: 0, text: emoji+' Paypal Balances'},
-      otherBal: {array: [], total: 0, text: emoji+' Other Balances'},
-      notes: {array: [], total: 0, text: emoji+' Note'},
+      incoming: {array: '', total: 0, text: emoji+' Incoming Amounts'},
+      outgoing: {array: '', total: 0, text: emoji+' Outgoing Amounts'},
+      pending: {array: '', total: 0, text: emoji+' Pending Amounts'},
+      expenses: {array: '', total: 0, text: emoji+' Expenses'},
+      lendings: {array: '', total: 0, text: emoji+' Lendings'},
+      gcash: {array: '', total: 0, text: emoji+' GCash Balances'},
+      paypal: {array: '', total: 0, text: emoji+' Paypal Balances'},
+      otherBal: {array: '', total: 0, text: emoji+' Other Balances'},
+      notes: {array: '', total: 0, text: emoji+' Note'},
     }
     
     const filter = m => m.author.id === message.author.id;
@@ -758,11 +758,11 @@ client.on("messageCreate", async (message) => {
     let msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     msg = msg?.first()
     if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*'), cancel = true;
-    args = msg.content.trim().split(/,/)
+    args = msg.content.trim().split(/,|\n/)
     for (let i in args) {
       let newArgs = await getArgs(args[i])
       data.total += Number(newArgs[0])
-      data.array += args[i].replace(/\n/g,'')+'\n'
+      data.array += isNaN(data.total) ? msg.content : args[i].replace(/\n/g,'')+'\n'
     }
     msg = null
     }
@@ -782,10 +782,10 @@ client.on("messageCreate", async (message) => {
     finance.lendings.array.startsWith(finance.lendings.total.toString()) ? finance.lendings.array = '' : ''
     finance.gcash.array.startsWith(finance.gcash.total.toString()) ? finance.gcash.array = '' : ''
     finance.paypal.array.startsWith(finance.paypal.total.toString()) ? finance.paypal.array = '' : ''
-    finance.notes.array.startsWith(finance.notes.total.toString()) ? finance.notes.array = '' : ''
+    //finance.notes.array.startsWith(finance.notes.total.toString()) ? finance.notes.array = '' : ''
     
     let embed = new MessageEmbed()
-    .setTitle('Finance Log')
+    .setTitle('Financial Record')
     .addField('⬇️ Incoming','```yaml\n'+finance.incoming.total+'```'+finance.incoming.array,true)
     .addField('⬆️ Outgoing','```yaml\n'+finance.outgoing.total+'```'+finance.outgoing.array,true)
     .addField('Expenses','```yaml\n'+finance.expenses.total+'```'+finance.expenses.array,true)
@@ -795,7 +795,7 @@ client.on("messageCreate", async (message) => {
     .addField('Financial Statement',finance.notes.array)
     .addField('📥 Profit','```yaml\n'+profit+'```',true)
     .addField('📤 Loss','```yaml\n'+finance.expenses.total+'```',true)
-    .addField('Pending Balance','```yaml\n'+finance.paypal.total+'```'+finance.paypal.array,true)
+    .addField('Pending Balance','```yaml\n'+finance.pending.total+'```'+finance.pending.array,true)
     .addField('Current Balance','```yaml\n'+(finance.paypal.total+finance.gcash.total)+'```',true)
     .addField('Other Balances','```yaml\n'+finance.otherBal.total+'```',true)
     .addField('Expected Balance','```yaml\n'+totalBal+'```',true)
