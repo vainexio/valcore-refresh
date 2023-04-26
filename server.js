@@ -735,42 +735,40 @@ client.on("messageCreate", async (message) => {
     }
   }
   if (isCommand('finance',message)) {
-    
+    let emoji = emojis.loading
     let finance = {
-      incoming: {array: [], total: 0},
-      outgoing: {array: [], total: 0},
-      expenses: {array: [], total: 0},
-      lendings: {array: [], total: 0},
-      gcash: {array: [], total: 0},
-      paypal: {array: [], total: 0},
-      otherBal: {array: [], total: 0},
+      incoming: {array: [], total: 0, text: emoji+' Incoming Amounts'},
+      outgoing: {array: [], total: 0, text: emoji+' Outgoing Amounts'},
+      expenses: {array: [], total: 0, text: emoji+' Expenses'},
+      lendings: {array: [], total: 0, text: emoji+' Lendings'},
+      gcash: {array: [], total: 0, text: emoji+' GCash Balances'},
+      paypal: {array: [], total: 0, text: emoji+' Paypal Balances'},
+      otherBal: {array: [], total: 0, text: emoji+' Other Balances'},
     }
     
     const filter = m => m.author.id === message.author.id;
     //let msg
     let args
-    let emoji = emojis.loading
+    let cancel = false
     //Fetch incoming
     async function getResponse(content,data) {
       message.channel.send(content)
     let msg = await message.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
     msg = msg?.first()
-    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*');
+    if (!msg || msg.content?.toLowerCase().includes('cancel')) return message.channel.send('*Financial record was cancelled.*'), cancel = true;
     args = msg.content.trim().split(/,/)
     for (let i in args) {
       let newArgs = await getArgs(args[i])
       data.total += Number(newArgs[0])
-      data.array += args[i]+'\n'
+      data.array += args[i].replace(/\n/g,'')+'\n'
     }
     msg = null
     }
-    await getResponse(emoji+' Incoming Amounts',finance.incoming)
-    await getResponse(emoji+' Outgoing Amounts',finance.outgoing)
-    await getResponse(emoji+' Expenses',finance.expenses)
-    await getResponse(emoji+' Lendings',finance.lendings)
-    await getResponse(emoji+' GCash Balance',finance.gcash)
-    await getResponse(emoji+' Paypal Balance',finance.paypal)
-    await getResponse(emoji+' Other Balances',finance.otherBal)
+    for (let i in finance) {
+      if (cancel) return;
+      let data = finance[i]
+      await getResponse(data.text,data)
+    }
 
     let profit = finance.incoming.total-finance.outgoing.total
     let totalBal = finance.paypal.total+finance.gcash.total+finance.otherBal.total+profit+finance.lendings.total
