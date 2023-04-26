@@ -867,8 +867,6 @@ client.on("messageCreate", async (message) => {
     );
     
     message.channel.send({embeds: [embed], components: [row]})
-    let log = await getChannel('1100456798932185138')
-    log.send({embeds: [embed]})
     }
   else if (isCommand('setprice',message)) {
     if (!await getPerms(message.member,4)) return;
@@ -1466,7 +1464,12 @@ client.on('interactionCreate', async inter => {
     else if (id === 'saveRecord') {
       let log = await getChannel('1100456798932185138')
       log.send({embeds: inter.message.embeds})
-      inter.update()
+      
+      let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId("saveRecord").setStyle('SECONDARY').setEmoji(emojis.check).setLabel("Record Saved").setDisabled(true),
+    );
+      
+      inter.update({components: [row]})
     }
     else if (id.startsWith('feedback')) {
       let feedback = await getChannel('1094975726127685726')
