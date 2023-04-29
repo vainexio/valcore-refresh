@@ -586,7 +586,9 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 60 },
-              { name: '12 months', price: 190 },
+              { name: '2 months', price: 85 },
+              { name: '3 months', price: 95 },
+              { name: '12 months', price: 230 },
               //
             ],
           },
@@ -677,7 +679,7 @@ module.exports = {
         },
         {
           command: 'boost',
-          response: '<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.\n— The channel **is not** PUBLICLY visible while the boosts are about to be processed.',
+          response: '<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.\n— The channel **is not** PUBLICLY visible.',
           files: [{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1093391789223850044/image.png?width=1135&height=527',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1093391724249878560/image.png?width=791&height=117',name: 'file.png'}],
           autoDelete: true,
         },
