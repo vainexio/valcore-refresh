@@ -658,7 +658,7 @@ module.exports = {
         },
         {
           command: 'rboost',
-          response: '• Permanent invite link (The one you sent in your order):\n• How many boosts:\n• Vouch link/screenshot:\n• Issue & proof of issue:',
+          response: '• Permanent invite link (The one you sent in your order):\n• How many boosts:\n• Date bought:\n• Days used:\n• Vouch link/screenshot:\n• Issue & proof of issue:',
           autoDelete: false,
         },
         {
