@@ -379,8 +379,8 @@ module.exports = {
             parent: '3 Months',
             children: [
               //
-              { name: '2 server boosts', price: 50, rs: 40 },
-              { name: '8 server boosts', price: 125, rs: 120 },
+              { name: '2 server boosts', price: 55, rs: 50 },
+              { name: '8 server boosts', price: 130, rs: 125 },
               { name: '14 server boosts', price: 190, rs: 185 },
               //
             ],
@@ -432,7 +432,7 @@ module.exports = {
         name: 'Discord Nitro',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
-        status: 2,
+        status: 3,
         id: '1096319579787116544',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186127970414/Logopit_1680918484757.png?width=1440&height=360',
         types: [
@@ -521,10 +521,10 @@ module.exports = {
             parent: 'Via Gamepass',
             children: [
               //
-              { name: '100  Robux', price: 60, rs: 0 },
-              { name: '200 Robux', price: 100, rs: 0 },
-              { name: '500 Robux', price: 210, rs: 0 },
-              { name: '1000 Robux', price: 300, rs: 0 },
+              { name: '100  Robux', price: 0, rs: 0 },
+              { name: '200 Robux', price: 0, rs: 0 },
+              { name: '500 Robux', price: 0, rs: 0 },
+              { name: '1000 Robux', price: 310, rs: 0 },
               //
             ],
           },
