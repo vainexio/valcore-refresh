@@ -856,8 +856,8 @@ client.on("messageCreate", async (message) => {
         
         if (channel) {
         let foundBulked = bulked.find(b => b.channel === channel.id)
-        !foundBulked && method === 'rs' ? await channel.bulkDelete(10) : null
-        if (!foundBulked && method === 'rs') {
+        !foundBulked ? await channel.bulkDelete(10) : null
+        if (!foundBulked) {
           bulked.push({channel: channel.id, messages: []})
           foundBulked = bulked.find(b => b.channel === channel.id)
         }
@@ -885,15 +885,15 @@ client.on("messageCreate", async (message) => {
         embed = new MessageEmbed(embed)
         .addField('Product Status',productStatus[data.status])
           
-          await channel.messages.fetch(data.id).then(foundMsg => {
-            foundMsg.edit({embeds: [embed]})//.then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
-          }).catch(async err => {
-            await channel.send({embeds: [embed]})//.then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
-          })
+          //await channel.messages.fetch(data.id).then(foundMsg => {
+          //  foundMsg.edit({embeds: [embed]})//.then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
+          //}).catch(async err => {
+            await channel.send({embeds: [embed]}).then(msg => foundBulked.messages.push({name: data.name, url: msg.url, emoji: data.status === 4 ? '<:Pastelred:1094798538220765274>' : data.status === 3 ? emojis.loading : method === 'rs' ? '<a:S_bearheart:1094190497179910225>' : '<a:S_pastelheart:1093737606451298354>'}))
+          //})
         }
       }
     }
-    if (method === 'rs') {
+
     for (let i in bulked) {
       let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
       let holderCount = 0
@@ -922,7 +922,7 @@ client.on("messageCreate", async (message) => {
     }
       await channel.send({components: comps})
     }
-  }
+  
     message.channel.send(emojis.check+' Successfully updated all the pricelists!')
   }
   else if (isCommand('forceall',message)) {

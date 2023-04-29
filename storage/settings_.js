@@ -83,6 +83,8 @@ let keys = [
   'comm',
   'noted',
   'sb',
+  'dev-badge',
+  'db'
 ]
 //const {makeButton} = others
 module.exports = {
@@ -198,7 +200,7 @@ module.exports = {
             parent: 'Solo Profile',
             children: [
               //
-              { name: '1 month', price: 110 },
+              { name: '1 month', price: 120 },
               { name: '3 months', price: 200 },
               //
             ],
@@ -218,7 +220,7 @@ module.exports = {
         //Category
         name: 'Crunchyroll',
         channel: '1054989652416798750',
-        status: 2,
+        status: 4,
         id: '1096319567866904646',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236161818664/Logopit_1680918569709.png?width=1440&height=360',
         types: [
@@ -268,10 +270,10 @@ module.exports = {
             parent: 'Monthly',
             children: [
               //
-              { name: '1 month', price: 10, rs: 5 },
-              { name: '2 months', price: 15, rs: 10 },
-              { name: '3 months', price: 25, rs: 20  },
-              { name: '4 months', price: 30, rs: 25 },
+              { name: '1 month', price: 20, rs: 5 },
+              { name: '2 months', price: 25, rs: 10 },
+              { name: '3 months', price: 30, rs: 20  },
+              { name: '4 months', price: 40, rs: 25 },
               //
             ],
           },
