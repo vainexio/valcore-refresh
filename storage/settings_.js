@@ -656,6 +656,16 @@ module.exports = {
           autoDelete: false,
         },
         {
+          command: 'rboost',
+          respone: '• Permanent invite link (The one you sent in your order):\n• How many boosts:\n• Vouch link/screenshot:\n• Issue & proof of issue:',
+          autoDelete: false,
+        },
+        {
+          command: 'rbadge',
+          respone: '• User who claimed the badge:\n• Duration:\n• Vouch link/screenshot;',
+          autoDelete: false,
+        },
+        {
           command: 'rnitro',
           response: '• nitro link:\n• user who claimed the nitro:\n• revoked email from discord (click "to me" in the email to confirm that the email is connected with your acc):\n• screenshot of the email connected to your discord account:\n• date availed:\n• remaining days:\n• screenshot/link of vouch:\n• Ref code:\n\nMake sure that the screenshot you send is exactly similar (not cropped) to the example below:',
           files: [{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1096677816168353962/Untitled_design_8.png?width=662&height=662',name: 'file.png'}],
@@ -668,7 +678,7 @@ module.exports = {
         },
         {
           command: 'boost',
-          response: '<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.\n— The channel **is not** PUBLICLY visible.',
+          response: '<a:Nitro:1054725579192160306> **Server Boosting**\n— Send **permanent** invite link of the server.\n— The server must have a boost announcement channel (see attachments below)\n— This will be required once you vouch.\n\n**Void warranty if:**\n— Invite link is not permanent or was removed.\n— Did not have a **system messages channel** for boosters.\n— The channel **is not** PUBLICLY visible while the boosts are about to be processed.',
           files: [{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1093391789223850044/image.png?width=1135&height=527',name: 'file.png'},{attachment: 'https://media.discordapp.net/attachments/1093391705753002064/1093391724249878560/image.png?width=791&height=117',name: 'file.png'}],
           autoDelete: true,
         },
