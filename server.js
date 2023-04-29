@@ -183,9 +183,9 @@ async function dropVoucher(code,ch,title) {
   );
   //
   let quote = "Oop, I can't think of a quote right now."
-  let context = ['cats','life','dogs','panko','love','baguette','stupidity','anything']
+  let context = ['cats','life','dogs',,'love','stupidity','anything']
   let chosenContext = context[getRandom(0,context.length)]
-  let data = await chatAI("write a random inspirational quote")
+  let data = await chatAI("write a random inspirational quote about "+chosenContext)
     if (data.response.error) console.log('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
     else if (data.chosenAPI === AI.chatAPI) {
       let msg = data.response.choices[0].message.content
@@ -1348,9 +1348,9 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId('design5').setStyle('SECONDARY').setEmoji('<a:TC_Wumpus_Party:1083357617478447124>'),
         );
         let quote = "Oop, I can't think of a quote right now."
-        let context = ['cats','life','dogs','panko','love','baguette','stupidity']
+        let context = ['cats','life','dogs','love','stupidity','anything']
         let chosenContext = context[getRandom(0,context.length)]
-        let data = await chatAI("write a random inspirational quote")
+        let data = await chatAI("write a random inspirational quote about "+chosenContext)
         if (data.response.error) console.log('⚠️ An unexpected error occurred `'+data.response.error.message+'`')
         else if (data.chosenAPI === AI.chatAPI) {
           let msg = data.response.choices[0].message.content

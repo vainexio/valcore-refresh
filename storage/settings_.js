@@ -192,7 +192,7 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 90 },
-              { name: '3 months', price: 145 },
+              { name: '3 months', price: 180 },
               //
             ],
           },
@@ -201,7 +201,7 @@ module.exports = {
             children: [
               //
               { name: '1 month', price: 120 },
-              { name: '3 months', price: 200 },
+              { name: '3 months', price: 210 },
               //
             ],
           },
@@ -209,7 +209,8 @@ module.exports = {
             parent: 'Solo Account',
             children: [
               //
-              { name: '1 month', price: 380 },
+              { name: '1 month', price: 395 },
+              { name: '3 months', price: 830 },
               //
             ],
           },
@@ -225,7 +226,7 @@ module.exports = {
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236161818664/Logopit_1680918569709.png?width=1440&height=360',
         types: [
           //Types
-          {
+          /*{
             parent: 'Fan',
             children: [
               //
@@ -238,18 +239,16 @@ module.exports = {
               { name: '12 months', price: 160 },
               //
             ],
-          },
+          },*/
           {
             parent: 'Mega Fan',
             children: [
               //
               { name: '1 month', price: 60 },
-              { name: '2 months', price: 70 },
-              { name: '3 months', price: 80 },
-              { name: '4 months', price: 95 },
-              { name: '5 months', price: 115 },
-              { name: '6 months', price: 135 },
-              { name: '12 months', price: 180 },
+              { name: '3 months', price: 100 },
+              { name: '6 months', price: 140 },
+              { name: '8 months', price: 180 },
+              { name: '12 months', price: 200 },
               //
             ],
           },
@@ -270,10 +269,10 @@ module.exports = {
             parent: 'Monthly',
             children: [
               //
-              { name: '1 month', price: 20, rs: 5 },
-              { name: '2 months', price: 25, rs: 10 },
-              { name: '3 months', price: 30, rs: 20  },
-              { name: '4 months', price: 40, rs: 25 },
+              { name: '1 month', price: 20, rs: 15 },
+              { name: '2 months', price: 25, rs: 20 },
+              { name: '3 months', price: 30, rs: 25  },
+              { name: '4 months', price: 40, rs: 35 },
               //
             ],
           },
@@ -281,7 +280,7 @@ module.exports = {
             parent: 'Permanent',
             children: [
               //
-              { name: 'Permanent', price: 90, rs: 50 },
+              { name: 'Permanent', price: 80, rs: 70 },
               { name: 'Lifetime warranty until patched', price: 0 },
               //
             ],
