@@ -441,7 +441,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic', price: 85, rs: 0 },
-              { name: 'Nitro Boost', price: 140, rs: 0 },
+              { name: 'Nitro Boost', price: 160, rs: 0 },
               //
             ],
           },
@@ -658,12 +658,12 @@ module.exports = {
         },
         {
           command: 'rboost',
-          respone: '• Permanent invite link (The one you sent in your order):\n• How many boosts:\n• Vouch link/screenshot:\n• Issue & proof of issue:',
+          response: '• Permanent invite link (The one you sent in your order):\n• How many boosts:\n• Vouch link/screenshot:\n• Issue & proof of issue:',
           autoDelete: false,
         },
         {
           command: 'rbadge',
-          respone: '• User who claimed the badge:\n• Duration:\n• Vouch link/screenshot;',
+          response: '• User who claimed the badge:\n• Duration:\n• Vouch link/screenshot;',
           autoDelete: false,
         },
         {
