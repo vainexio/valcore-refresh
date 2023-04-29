@@ -332,7 +332,7 @@ module.exports = {
             children: [
               //
               { name: 'Uncovered hosting', price: 299 },
-              { name: 'Covered hosting', price: 599 },
+              { name: 'Covered hosting', price: 499 },
               //
             ],
           },
