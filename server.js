@@ -287,7 +287,7 @@ client.on("messageCreate", async (message) => {
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
     const options = { limit: 10 };
     //
-    if (message.channel.id === '1054731027240726528' || message.channel.id === '1055030500508569620') {
+    if (message.channel.id === '1054731027240726528' || message.channel.id === '1101833714704601168') {
       let member = message.mentions.members.first()
       if (member) {
       await addRole(member,['pending','buyer'],message.guild)
