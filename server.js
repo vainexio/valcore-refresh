@@ -751,6 +751,9 @@ client.on("messageCreate", async (message) => {
     })
     message.reply('Renamed '+cc+' channels with the border '+f2)
       }
+  else if (isCommand('stocks',message)) {
+    message.reply('We recently converted this command to slash command. Please use </stocks:1102433613116616734> instead!')
+  }
   else if (isCommand('use',message)) {
     console.log(message.channel.parent.name)
     if (!message.channel.parent.name.toLowerCase().includes('orders')) return message.reply('This command can only be used in a ticket! You must purchase a product, If you wish to use your voucher.\n\n<#1054711675045036033>')
@@ -1004,7 +1007,7 @@ client.on('interactionCreate', async inter => {
     }
     //Stocks
     else if (inter.commandName == 'stocks') {
-      if (inter.channel.id !== '1047454193595732058' && !await getPerms(inter.member,4)) return inter.reply({content: 'This command only works in <#1047454193595732058>\nPlease head there to use the command.', ephemeral: true})
+      //if (inter.channel.id !== '1047454193595732058' && !await getPerms(inter.member,4)) return inter.reply({content: 'This command only works in <#1047454193595732058>\nPlease head there to use the command.', ephemeral: true})
       
       let stocks = await getChannel(shop.stocks)
       let stocks2 = await getChannel(shop.otherStocks);
