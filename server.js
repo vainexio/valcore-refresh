@@ -79,7 +79,10 @@ let json = {
       },
       {
         "name": 'price',
-        "description: 
+        "description": "Price Paid",
+        "type": 10,
+        "required": true,
+      }
     ]
   }
 
@@ -1446,7 +1449,7 @@ client.on('interactionCreate', async inter => {
       }
     }
     //Stocks
-    if (inter.commandName == 'stocks') {
+    else if (inter.commandName == 'stocks') {
       if (inter.channel.id !== '1047454193595732058' && !await getPerms(inter.member,4)) return inter.reply({content: 'This command only works in <#1047454193595732058>\nPlease head there to use the command.', ephemeral: true})
       
       let stocks = await getChannel("1054929031881035789")
@@ -1498,7 +1501,14 @@ client.on('interactionCreate', async inter => {
       }
       inter.reply({components: comps})
     }
-  } else if (inter.isButton()) {
+    //Queue
+    else if (inter.commandName === 'queue') {
+      if (!await getPerms(inter.member,4)) return inter.reply({ content: emojis.warning+" Insufficient Permission"});
+      let options = inter.options._hoistedOptions
+    }
+  } 
+  //BUTTONS
+  else if (inter.isButton()) {
     let id = inter.customId
     if (id.startsWith('voucher-')) {
       let code = id.replace('voucher-','').replace(/_/g,' ')
