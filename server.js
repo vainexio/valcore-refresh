@@ -31,44 +31,58 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = false
+let cmd = t
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1102518364020154438"
   let json = {
-    "name": "calculate",
+    "name": "drop",
     "type": 1,
-    "description": "Calculate fee based on given amount",
+    "description": "Drops a product to a user",
     "options": [
       {
-        "name": 'type',
-        "description": 'Type of transaction',
-        "type": 3,
+        "name": 'user',
+        "description": 'Recipient',
+        "type": 6,
         "required": true,
-        "choices": [
-          {
-            "name": 'Paypal Rate',
-            "value": 'paypalrate'
-          },
-          {
-            "name": 'E-wallet Exchange',
-            "value": 'exchange'
-          },
-          {
-            "name": 'Robux Gamepass',
-            "value": 'robux'
-          },
-        ]
       },
       {
-        "name": 'amount',
-        "description": 'Amount to calculate',
+        "name": 'quantity',
+        "description": 'Amount to send',
         "type": 10,
         "required": true,
       },
-      ],
+      {
+        "name": 'price',
+        "description": 'Price Paid',
+        "type": 10,
+        "required": true,
+      },
+      {
+        "name": 'item',
+        "description": 'Item Name',
+        "type": 3,
+        "required": false,
+      },
+      {
+        "name": 'mop',
+        "description": 'Payment Method',
+        "type": 3,
+        "choices": [
+          {
+            "name": 'GCash',
+            "value": 'gcash'
+          },
+          {
+            "name": 'Paypal',
+            "value": 'paypal'
+          }
+        ],
+        "required": false,
+      },
+    ]
   }
   
   let headers = {
@@ -958,9 +972,9 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let user = options.find(a => a.name === 'user')
-      let product = options.find(a => a.name === 'product')
       let quan = options.find(a => a.name === 'quantity')
       let price = options.find(a => a.name === 'price')
+      let product = options.find(a => a.name === 'product')
       let mop = options.find(a => a.name === 'mop')
       //Send prompt
       try {
@@ -978,7 +992,7 @@ client.on('interactionCreate', async inter => {
         })
         //Returns
         if (links === "") return inter.reply({content: emojis.x+" No stocks left.", ephemeral: true})
-        if (quan.value > index) return inter.reply({content: emojis.warning+" Insufficient stocks. **"+index+"** "+product.value+" remaining.", ephemeral: true})
+        if (quan.value > index) return inter.reply({content: emojis.warning+" Insufficient stocks. **"+index+"** "+(product ? product.value : 'nitro boost(s)')+" remaining.", ephemeral: true})
         await addRole(await getMember(user.user.id,inter.guild),["Buyer","Pending"],inter.guild)
         stocks.bulkDelete(quan.value)
         let row = new MessageActionRow().addComponents(
@@ -986,14 +1000,14 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
         );
         //Send prompt
-        inter.reply("<:S_exclamation:1093734009005158450> <@"+user.user.id+"> Sending **"+quan.value+"** "+product.value+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
+        inter.reply("<:S_exclamation:1093734009005158450> <@"+user.user.id+"> Sending **"+quan.value+"** "+(product ? product.value : 'nitro boost(s)')+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
         inter.user.send({content: links, components: [row]})
         //Send auto queue
         let orders = await getChannel(shop.channels.orders)
         let template = await getChannel(shop.channels.templates)
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
-        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
+        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',(product ? product.value : 'nitro boost')).replace('{mop}',mop ? mop.value : 'gcash')
         orders.send(content).then(async msg => {
           await msg.react("<:g1:1056579657828417596>")
           await msg.react("<:g2:1056579660353372160>")
