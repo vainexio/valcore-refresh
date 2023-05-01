@@ -17,7 +17,6 @@ module.exports = {
         .setThumbnail(icon)
     }
     if (row) {
-      console.log('roww')
       let newRow = new MessageActionRow()
       for (let i in row) {
         newRow = new MessageActionRow(newRow)

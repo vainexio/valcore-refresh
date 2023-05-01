@@ -19,51 +19,10 @@ let emojis = {
   gude_cheer: '<:gude_cheer:1056588910794387466>',
   gude_smile: '<:gude_smile:1056580031536697424>',
   //
-  bk: '<:BK:1009051859052408934>',
-  troop: '<:barbarian:1009052124044341318>',
-  ragedTroop: '<:ragedbarbarian:316157730735915009>',
-  superTroop: '<:superpekka:316157731302146050>',
-  spell: '<:haste:1009052232395796510>',
-  clanLvl: '<:clanlvl:1009008695964872785>',
-  xp: '<:xp:1008993739831771228>',
-  capital: '<:capitalgold:1008993244383821874>',
-  castle: '<:clancastle:1008981082047250462>',
-  empty1: '<:first_empty:997879999174549514>',
-  empty2: '<:middle_empty:997879976093294622>',
-  empty3: '<:last_empty:997880276363526294> ',
-  half1: '<:first_half:997879008517705738>',
-  half2: '<:middle_half:997879179603365971>',
-  half3: '<:last_half:997879147856662548>',
-  full1: '<:first_full:997879046560034906>',
-  full2 : '<:middle_full:997879113522090064>',
-  full3: '<:last_full:997879088553414736>',
-  valorant: '<:VALORANT:993795757738045530>',
-  eye: '👁️',
-  like: '<:like:979589193653166080>',
-  like2: '<:like2:1007978935411298305>',
-  like3: '<:like3:1007979257772916877>',
-  like4: '<:like4:1007978969208979466>',
-  like5: '<:like5:1007978989903687832>',
-  like6: '<:like6:1007979036607266897>',
-  valcore: '<:valcore:977737649794195456>',
   check: '<a:check:969936488739512340>',
   x: '<a:Xmark:969401924736651284>',
   loading: '<a:loading:968743431528669210>',
-  prefix: '\\❕',
   warning: '⚠️',
-  lock: '🔒',
-  scale: '⚖️',
-  unlock: '🔓',
-  badge3: '<:badge3:1007991213649051678>',
-  badge2: '<:badge2:1007991209664454677>',
-  badge: '<:badge:1007990502546743336> ',
-  topBadge: '\\🎗️',
-  redBox: '\\🟥',
-  blueBox: '\\🟦',
-  greenBox: '\\🟩',
-  blueCircle: '\\🔵',
-  redCircle: '\\🔴',
-  greenCircle: '\\🟢',
   online: '<:online_:1004014930959286342>',
   idle: '<:Idle_:1004014897417424938>',
   dnd: '<:dnd_:1004017480613773422>',
@@ -86,22 +45,8 @@ let keys = [
   'dev-badge',
   'db'
 ]
-//const {makeButton} = others
 module.exports = {
-  filteredWords: [],
-  AI: {
-    filter: function(string) {
-      //string = string.replace('as an ai language model, ','')
-      string = string.replace('As an AI language model, ','')
-      string = string.replace(' As an AI language model, ','')
-      string = string.replace('an AI language model','gudetama')
-      string = string.replace('OpenAI','Sloopies')
-      return string;
-    },
-    chatAPI: 'https://api.openai.com/v1/chat/completions',
-    imageAPI: 'https://api.openai.com/v1/images/generations',
-    model: "gpt-3.5-turbo"//  
-  },
+  
   shop: {
     channels: {
       announcements: '1102417073642164274',
@@ -121,8 +66,6 @@ module.exports = {
       alerts: '1047454193755107337',
       apps: '1085504963955916810',
     },
-    deleteChannels: [],
-    checkers: [],
     pricelists: [
       {
         //Category
@@ -752,14 +695,12 @@ module.exports = {
         },
       ]
     },
-    followUps: [],
     customRoles: [
       {
         user: '482603796371865603', //mimi
         role: '1070267838922752060',
       },
     ],
-    scanner: [],
     randomVouchers: {
       amount: [1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,6,7,8,9,10],
       type: [
@@ -770,7 +711,6 @@ module.exports = {
         "nitro",
       ]
     },
-    vouchers: [],
     stickyChannels: [
       {
         id: '1094975726127685726',
@@ -818,7 +758,7 @@ module.exports = {
         ),
       },
       {
-        id: '1055070784843948052',
+        id: '0',
         message: "You will no longer need to accept the consent form in your ticket once you click this button.",
         comp: new MessageActionRow()
         .addComponents(
@@ -921,9 +861,11 @@ module.exports = {
         ),
       },
     ],
-  },
-  notices: {
-    n1: "You were temporarily stripped from the **Sloopie** role. We detected a presence activity that is prohibited from our server!\n\n- We do not allow avertisements through custom status.\n- We do not allow NSFW/inap usernames.\n- Other reasons specified in <#1047454193197252643>\n\nIf you removed the said prohibitions, feel free to reclaim your role in <#1047454193197252643>!",
+    deleteChannels: [],
+    checkers: [],
+    vouchers: [],
+    scanner: [],
+    followUps: [],
   },
   interExpire: 300000,
   auth: {
@@ -1017,14 +959,14 @@ module.exports = {
     },
   ],
   permissions: [
-  {
-    id: "920903240617451581", //collateral
-    level: 5,
-  },
-  {
-    id: "1047454193184682040", //collateral
-    level: 3,
-  },
+    {
+      id: "920903240617451581", //collateral
+      level: 5,
+    },
+    {
+      id: "1047454193184682040", //collateral
+      level: 3,
+    },
     {
       id: "1047454193184682040", //sloopie mod
       level: 4,
@@ -1037,14 +979,22 @@ module.exports = {
       id: '1060780494909870230',
       level: 5
     }
-],
+  ],
   botlog: '901759430457167872',
   prefix: ';',
-  status: {
-  enabled: true,
-  valorant: true,
-  ping: true,
-},
+  filteredWords: [],
+  AI: {
+    filter: function(string) {
+      string = string.replace('As an AI language model, ','')
+      string = string.replace(' As an AI language model, ','')
+      string = string.replace('an AI language model','gudetama')
+      string = string.replace('OpenAI','Sloopies')
+      return string;
+    },
+    chatAPI: 'https://api.openai.com/v1/chat/completions',
+    imageAPI: 'https://api.openai.com/v1/images/generations',
+    model: "gpt-3.5-turbo"//  
+  },
   colors: colors,
   theme: colors.none,
   emojis: emojis,

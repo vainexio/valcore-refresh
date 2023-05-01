@@ -148,7 +148,6 @@ async function getPerms(member, level) {
   if (highestPerms) return highestPerms;
 }
 async function guildPerms(message, perms) {
-  //console.log(Permissions.FLAGS)
   if (message.member.permissions.has(perms)) {
 	return true;
 } else {
@@ -281,7 +280,6 @@ function makeCode(length) {
 let breakChecker = false
 client.on("messageCreate", async (message) => {
   //Ping
-  if (message.channel.id === '1047454193197252644') console.log(message)
   if (message.channel.id === '1047454193595732055' && message.author.id === '968378766260846713') {
     let user = message.mentions.members.first()
     let id = user.id
@@ -458,131 +456,9 @@ client.on("messageCreate", async (message) => {
     sendUser("**[Timed-out]** No response collected. Please rerun the command if you wish to retry.\n",message.author.id,colors.red)
   });
   }
+  //
+  if (message.channel.type === 'DM') return;
   //Nitro checker
-  if (message.channel.name?.includes('cc-checker') && !message.author.bot) {
-    let args = getArgs(message.content)
-    let text = ""
-    let errorText = ""
-    let error = 0
-    let failed = 0
-    let success = 0
-    let botMsg = null
-    let stopper = null
-    let breakLoop = false
-    let scanned = 0
-     async function readAttachments() {
-      const file = message.attachments.first()?.url;
-      if (!file) console.log('No attached file found')
-      else {
-        let response = await fetch(file);
-        if (response.ok) {
-          let text = await response.text();
-          let textArgs = getArgs(text)
-          for (let i in textArgs) {
-            if (textArgs[i].includes('|')) data.cc.push(textArgs[i])
-          }
-        }
-      }
-    }
-    //Data
-    let data = shop.scanner.find(s => s.id === message.author.id)
-    if (data) {
-      for (let i in args) {
-        if (args[i].includes('|')) data.cc.push(args[i])
-      }
-      await readAttachments()
-      return;
-    } else {
-      await shop.scanner.push({id: message.author.id, cc: [], live: "", breakLoop: false})
-      data = shop.scanner.find(s => s.id === message.author.id)
-      
-      for (let i in args) {
-        if (args[i].includes('|')) data.cc.push(args[i])
-      }
-      await readAttachments()
-    }
-    
-    if (data.cc.length === 0) {
-      for (let i in shop.scanner) {
-        if (shop.scanner[i].id === message.author.id) {
-          shop.scanner.splice(i,1)
-        }
-      }
-      return;
-    }
-    let row = new MessageActionRow()//await makeRow('endLoop',"Stop","SECONDARY","🛑")
-    .addComponents(
-      new MessageButton().setLabel("Show Live").setEmoji("💳").setCustomId("live-"+message.author.id).setStyle("SECONDARY"),
-      new MessageButton().setLabel("Stop").setEmoji("🛑").setCustomId("stop-"+message.author.id).setStyle("SECONDARY")
-    );
-    await message.channel.send({content: "Scanning "+data.cc.length+" cards "+emojis.loading, components: [row]}).then(msg => botMsg = msg)
-    let live = false
-    let index = 0
-    let filter = 'Please consider making a donation or we will be forced to shutdown the xchecker.cc service, thanks you.\nDonations: bc1qlfu2atqvwnw4mlwv3f3wggpwtnvyhpxw3hyl30'
-    for (let i = 0; i < data.cc.length; i++) {
-      if (data.breakLoop) break;
-      index++
-      let cc = data.cc[i]
-      let url = "https://www.xchecker.cc/api.php?cc="+cc
-      let response = await fetch(url)
-      response = await response.json()
-      console.log(cc+": "+response.status)
-      console.log(response)
-      scanned++
-      let embed = new MessageEmbed()
-      .addField('CC','```'+cc+'```')
-      .addField('Bank Name','```yaml\n'+response.bankName+'```')
-      let left = data.cc.length-scanned
-      if (response.status === "Live" && !response.error) {
-        success++
-        live = true
-        embed = new MessageEmbed(embed)
-        .setTitle('Live Bin')
-        .setColor(colors.green)
-        .addField('Status','```diff\n+ '+response.status+'```')
-      }
-      else if (response.status !== "Dead" && !response.error) {
-        error++
-        embed = new MessageEmbed(embed)
-        .setTitle('Unknown Status')
-        .setColor(colors.orange)
-        .addField('Status','```diff\n- '+response.status+'```')
-        .addField('Error Code','```diff\n- '+response.details.replace(filter,'')+'```')
-      }
-      else if (!response.error) {
-        failed++
-        embed = new MessageEmbed(embed)
-        .setTitle('Dead')
-        .setColor(colors.red)
-        .addField('Card Declined','```diff\n- '+response.details.replace(filter,'')+'```')
-        
-      } else {
-        error++
-        embed = new MessageEmbed(embed)
-        .setTitle('Error')
-        .setColor(colors.orange)
-        .addField('Error Code','```diff\n- '+response.error.replace(filter,'')+'```')
-        
-        errorText += !errorText.includes(response.error) ? "\n"+response.error : ""
-      }
-      await message.channel.send({embeds: [embed], content: live ? index+'. <@'+message.author.id+'>' : index+'.', components: [row]})
-      //botMsg.edit("Scanning "+left+" cards "+emojis.loading+'\n'+emojis.check+" Live: "+success.toString()+'\n'+emojis.x+" Dead: "+failed.toString())
-    }
-    let embed = new MessageEmbed()
-      .addField("Live",emojis.check+" "+success.toString()+"\n"+data.live)
-      .addField("Dead",emojis.x+" "+failed.toString())
-      .addField("Error",emojis.warning+" "+error.toString()+"\n"+errorText)
-      .setColor(colors.none)
-    
-    botMsg.delete();
-    message.channel.send({embeds: [embed]})
-    
-    for (let i in shop.scanner) {
-      if (shop.scanner[i].id === message.author.id) {
-        shop.scanner.splice(i,1)
-      }
-    }
-  }
   else if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
     let args = getArgs(message.content)
     if (args.length === 0) return;
@@ -708,96 +584,10 @@ client.on("messageCreate", async (message) => {
     msg.delete();
     message.channel.send({embeds: embeds.length > 0 ? embeds : [embed]})
   }
-  //
-  if (message.channel.type === 'DM') return;
   //Sticky
   let filter = filteredWords.find(w => message.content?.toLowerCase().includes(w))
-  if (filter) {
-    message.delete();
-  }
-  
+  if (filter) message.delete();
   //Commands
-  if (isCommand("cmds", message)) {
-    let args = await getArgs(message.content);
-    let clearFilter = args[1] && args[1].toLowerCase() === "clear";
-    if (!args[1] || clearFilter) {
-      let botMsg = null;
-      let current = "desc";
-      async function displayHelp(type) {
-        let known = [];
-        let embed = null;
-
-        embed = new MessageEmbed()
-          .setDescription(
-            "`<>` = Required Arguments\n `[]` = Optional Arguments\n**•** Type the commands without the `<>` or `[]`"
-          )
-          .setColor(colors.none)
-          .setTimestamp();
-        for (let i in commands) {
-          if (
-            (await getPerms(message.member, commands[i].level)) ||
-            commands[i].level === 0
-          ) {
-            let foundCmd = await known.find((a) => a === commands[i].Category);
-            if (!foundCmd) {
-              known.push(commands[i].Category);
-              embed = new MessageEmbed(embed).addField(
-                commands[i].Category,
-                "[_]"
-              );
-            }
-          }
-        }
-
-        for (let i in commands) {
-          if (
-            (await getPerms(message.member, commands[i].level)) ||
-            commands[i].level === 0
-          ) {
-            let field = embed.fields.find(
-              (field) => field.name === commands[i].Category
-            );
-
-            if (field) {
-              let template =
-                commands[i].Template.length > 0
-                  ? " `" + commands[i].Template + "`"
-                  : "";
-              let desc =
-                commands[i].Desc.length > 0
-                  ? " – " + commands[i].Desc + ""
-                  : "";
-              let fieldValue = field.value.replace("[_]", "");
-              embed.fields[embed.fields.indexOf(field)] = {
-                name: commands[i].Category,
-                value:
-                  fieldValue +
-                  (type === "desc"
-                    ? "`" + prefix + commands[i].Command + "`" + desc
-                    : prefix + commands[i].Command + template) +
-                  "\n",
-              };
-            } else {
-              console.log("Invalid Category: " + commands[i].Category);
-            }
-          }
-        }
-        if (botMsg) return embed;
-        !botMsg
-          ? await message.channel
-              .send({ embeds: [embed] })
-              .then((msg) => (botMsg = msg))
-          : null;
-      }
-      await displayHelp("desc");
-    } else {
-      let template = await getTemplate(
-        prefix + args[1],
-        await getPerms(message.member, 0)
-      );
-      sendChannel(template, message.channel.id, theme);
-    }
-  }
   if (isCommand('finance',message)) {
     let emoji = emojis.loading
     let finance = {
@@ -872,37 +662,7 @@ client.on("messageCreate", async (message) => {
     );
     
     message.channel.send({embeds: [embed], components: [row]})
-    }
-  else if (isCommand('setprice',message)) {
-    if (!await getPerms(message.member,4)) return;
-    let args = await requireArgs(message,4)
-    if (!args) return;
-    args = message.content.toLowerCase().replace(';setprice','').trim().split(/,|, /);
-    let category = args[0].toLowerCase()
-    let parent = args[1].toLowerCase()
-    let child = args[2].toLowerCase()
-    let price = Number(args[3])
-    let foundCat = shop.pricelists.find(c => c.name.toLowerCase() === category)
-    if (!foundCat) return message.reply(emojis.x+' Invalid Category: `'+category+'`')
-    let foundParent = foundCat.types.find(c => c.parent.toLowerCase() === parent)
-    if (!foundParent) return message.reply(emojis.x+' Invalid Parent: `'+parent+'`')
-    let foundChild = foundParent.children.find(c => c.name.toLowerCase() === child)
-    if (!foundChild) return message.reply(emojis.x+' Invalid Child: `'+child+'`')
-    
-    foundChild.price = price
-    message.channel.send(emojis.check+' Successfully updated: '+child+"'s price to: `"+price+"`")
-  } 
-  else if (isCommand('stat',message)) {
-    if (!await getPerms(message.member,4)) return;
-    let args = await requireArgs(message,2)
-    if (!args) return;
-    let category = args[1].toLowerCase()
-    let toggle = Number(args[2])
-    let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes(category))
-    if (!foundCat) return message.reply(emojis.x+' Invalid Category: `'+category+'`')
-    foundCat.status = Number(toggle)
-    message.channel.send(emojis.check+' Successfully updated: '+foundCat.name+"'s availability to: `"+toggle+"`")
-  }
+    } 
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await getArgs(message.content)
@@ -1005,16 +765,6 @@ client.on("messageCreate", async (message) => {
     })
     message.reply('Renamed '+cc+' channels with the border '+f2)
       }
-  else if (isCommand('shutdown',message)) {
-    if (!await getPerms(message.member,4)) return;
-    let botMsg = null
-    await message.reply("Shutting down... "+emojis.loading).then(msg => botMsg = msg)
-    sleep(4000)
-    await botMsg.delete()
-    await message.channel.send(emojis.check+" Bot has been shutdown.")
-    //process.exit()
-    client.destroy()
-  }
   else if (isCommand('use',message)) {
     console.log(message.channel.parent.name)
     if (!message.channel.parent.name.toLowerCase().includes('orders')) return message.reply('This command can only be used in a ticket! You must purchase a product, If you wish to use your voucher.\n\n<#1054711675045036033>')
@@ -1098,18 +848,6 @@ client.on("messageCreate", async (message) => {
     
     await message.channel.send({embeds: [embed]})
     message.delete();
-  }
-  else if (isCommand('ar',message)) {
-    let string = ''
-    for (let i in shop.ar.responders) {
-      let responder = shop.ar.responders[i]
-      if (responder.command) string += shop.ar.prefix+responder.command+'\n'
-    }
-    let embed = new MessageEmbed()
-    .addField('Auto Responders List',string)
-    .setColor(colors.none)
-    
-    message.channel.send({embeds: [embed]})
   }
   else if (isCommand('delete',message)) {
     if (!await getPerms(message.member,4)) return;
@@ -1415,11 +1153,62 @@ client.on('interactionCreate', async inter => {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
       }
     }
+    //
+    else if (inter.commandName === 'calculate') {
+      let options = inter.options._hoistedOptions
+      let type = options.find(a => a.name === 'type')
+      console.l
+      if (type === 'paypalrate') {
+        
+      }
+      let args = await requireArgs(message,1)
+    if (!args) return;
+    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
+    let value = Number(args[1])
+    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
+    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
+    let fee = value*percentage
+    let total = Math.round(value+fee)
+    
+    let embed = new MessageEmbed()
+    .addField('Total Amount','```yaml\n'+total+'```')
+    .addField('Base Amount','₱'+value,true)
+    .addField('Fee','x'+percentage,true)
+    .setColor(colors.none)
+    .setFooter({text: "Paypal Rate"})
+    
+    await message.channel.send({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
+    message.delete();
+    }
   } 
+  
   //BUTTONS
   else if (inter.isButton()) {
     let id = inter.customId
-    if (id.startsWith('voucher-')) {
+    if (id === 'terms') {
+      let member = inter.member;
+      await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
+      let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
+        );
+      inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
+      inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
+    }
+    else if (id === 'cancel') {
+      inter.reply({content: 'Interaction cancelled.', ephemeral: true})
+      inter.message.edit({components: []})
+    }
+    else if (id === 'saveRecord') {
+      let log = await getChannel(shop.channels.financeLogs)
+      log.send({embeds: inter.message.embeds})
+      
+      let row = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId("saveRecord").setStyle('SECONDARY').setEmoji(emojis.check).setLabel("Record Saved").setDisabled(true),
+    );
+      
+      inter.update({components: [row]})
+    }
+    else if (id.startsWith('voucher-')) {
       let code = id.replace('voucher-','').replace(/_/g,' ')
       if (!vrDebounce && claimer === null) {
         !claimer ? claimer = inter.user.id : null
@@ -1488,16 +1277,6 @@ client.on('interactionCreate', async inter => {
       inter.reply({content: emojis.x+' The voucher was already claimed!', ephemeral: true})
     }
     }
-    else if (id === 'saveRecord') {
-      let log = await getChannel(shop.channels.financeLogs)
-      log.send({embeds: inter.message.embeds})
-      
-      let row = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId("saveRecord").setStyle('SECONDARY').setEmoji(emojis.check).setLabel("Record Saved").setDisabled(true),
-    );
-      
-      inter.update({components: [row]})
-    }
     else if (id.startsWith('feedback')) {
       let feedback = await getChannel(shop.channels.feedbacks)
       let logs = await getChannel(shop.channels.logs)
@@ -1515,28 +1294,6 @@ client.on('interactionCreate', async inter => {
       inter.update({content: 'Feedback sent `('+type+')`', components: []})
       feedback.send({embeds: [embed]})
       logs.send({content: '<@'+inter.user.id+'>', embeds: [embed]})
-      //inter.reply({content: emojis.check+' Feedback sent `('+type+')`', ephemeral: true})
-    } 
-    else if (id === 'cancel') {
-      inter.reply({content: 'Interaction cancelled.', ephemeral: true})
-      inter.message.edit({components: []})
-    }
-    else if (id.startsWith('scanData-')) {
-      let userId = id.replace('scanData-','')
-      let user = await getUser(userId)
-      let scanData = shop.checkers.find(c => c.id === userId)
-      if (scanData) {
-      let embed = new MessageEmbed()
-      .addField('Claimable Links',emojis.check+' '+scanData.valid)
-      .addField('Claimed Links',emojis.x+' '+scanData.claimed)
-      .addField('Invalid Links',emojis.warning+' '+scanData.invalid)
-      .addField('Scanned By',user.tag)
-      .setColor(colors.none)
-      .setThumbnail(user.avatarURL())
-      inter.reply({embeds: [embed], ephemeral: true})
-    } else {
-      inter.reply({content: emojis.x+" No checker in queue", ephemeral: true})
-    }
     }
     else if (id.startsWith('roles-')) {
     let role = id.replace('roles-','').replace(/_/g,' ')
@@ -1572,8 +1329,6 @@ client.on('interactionCreate', async inter => {
         );
         inter.update({content: code+"\n"+inter.message.content, components: [row]})
       })
-      //inter.reply("Successful sent to "+user.tag)
-      //inter.message.edit({components: []})
     }
     else if (id.startsWith('returnLinks')) {
       let content = inter.message.content
@@ -1593,7 +1348,7 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('copyLinks')) {
       
-      let content = inter.message.content//.replace(msg.content,'').replace(/\||Ref code:/g,'')
+      let content = inter.message.content
       let args = await getArgs(content)
       let count = 0
       let string = ''
@@ -1603,29 +1358,11 @@ client.on('interactionCreate', async inter => {
           string += count+'. '+args[i]+'\n'
         }
       }
-      //filter = filter.replace(args[0],'')
       if (count === 0) {
         inter.reply({content: emojis.x+' No links found.', ephemeral: true})
       } else {
       inter.reply({content: string, ephemeral: true})
       }
-    }
-    else if (id.startsWith('stop-')) {
-      let user = id.replace('stop-','')
-      let data = shop.scanner.find(s => s.id === user)
-      if (data) {
-        await inter.reply({content: "Stopping...", ephemeral: true})
-        data.breakLoop = true;
-        sleep(2000)
-        await inter.channel.send({content: emojis.check+" Stopped Scanning\nAuthor: `"+inter.user.tag+"`", ephemeral: true})
-      } else {
-        inter.reply({content: "The queue no longer exist.", ephemeral: true})
-      }
-    }
-    else if (id.startsWith('breakChecker-')) {
-      let user = id.replace('breakChecker-','')
-      breakChecker = true
-      inter.reply({content: emojis.check+" Stopped Checking", ephemeral: true})
     }
     else if (id.startsWith('breakChecker-')) {
       let user = id.replace('breakChecker-','')
@@ -1673,76 +1410,6 @@ client.on('interactionCreate', async inter => {
       } else {
         inter.reply({content: "User not found.", ephemeral: true})
       }
-    }
-    else if (id.startsWith('design')) {
-      if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
-      animation = true
-      let comp = inter.message.components[0]
-      let types = [
-        'DANGER',
-        'PRIMARY',
-        'SUCCESS',
-        'DANGER',
-        'PRIMARY',
-        'SUCCESS',
-      ]
-      let usern = inter.user.username.replace(/ /g,'')
-      let randomizer = [
-        usern+' is a cute catto',
-        usern+' likes eating a siopao',
-        usern+' is jumpy cute froggo',
-        usern+' eat eggs a lot',
-        usern+' is a fat catto',
-        usern+' is a hungry monster',
-        usern+' is a fast eater',
-        usern+' likes cattos very much',
-        usern+' has pet dinosor ror',
-        usern+" is gudetama's favorite person",
-        usern+" secretely likes someone's pet",
-        usern+' sleeps longer than u',
-        usern+' sucks at playing valorant',
-        usern+' likes an eggless omelete',
-        usern+' almost fell on cliff',
-      ]
-      let args = getArgs(randomizer[getRandom(0,randomizer.length)])
-      
-      async function changeRow(state,type,disabled) {
-        if (state === 'start') {
-          for (let i in comp.components) {
-            let row = comp.components[i]
-            row.style = type
-            row.disabled = disabled
-          }
-        }
-        else if (state === 'mix') {
-          for (let i in comp.components) {
-            let row = comp.components[i]
-            row.style = types[i] ? types[i] : types[0]
-            row.label = args[i] ? args[i] : args[0]
-            await inter.message.edit({components: [comp]})
-            sleep(delay)
-          }
-        }
-    }
-      let delay = 1500
-      await changeRow('start','DANGER',true)
-      inter.deferUpdate()
-      await inter.message.edit({components: [comp]})
-      sleep(delay)
-      await changeRow('start','PRIMARY',true)
-      await inter.message.edit({components: [comp]})
-      sleep(delay)
-      await changeRow('start','SUCCESS',true)
-      await inter.message.edit({components: [comp]})
-      sleep(delay)
-      await changeRow('start','SECONDARY',true)
-      inter.message.edit({components: [comp]})
-      sleep(delay)
-      await changeRow('mix','DANGER',true)
-      inter.message.edit({components: [comp]})
-      await changeRow('start','SECONDARY',true)
-      inter.message.edit({components: [comp]})
-      animation = false
     }
     else if (id.startsWith('followup')) {
       let user = inter.user
@@ -1867,25 +1534,75 @@ client.on('interactionCreate', async inter => {
       let notice = await getChannel(shop.channels.alerts)
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
-    else if (id === 'terms') {
-      let member = inter.member;
-      await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
-      let row = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
-        );
-      inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
-      inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
+    else if (id.startsWith('design')) {
+      if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
+      animation = true
+      let comp = inter.message.components[0]
+      let types = [
+        'DANGER',
+        'PRIMARY',
+        'SUCCESS',
+        'DANGER',
+        'PRIMARY',
+        'SUCCESS',
+      ]
+      let usern = inter.user.username.replace(/ /g,'')
+      let randomizer = [
+        usern+' is a cute catto',
+        usern+' likes eating a siopao',
+        usern+' is jumpy cute froggo',
+        usern+' eat eggs a lot',
+        usern+' is a fat catto',
+        usern+' is a hungry monster',
+        usern+' is a fast eater',
+        usern+' likes cattos very much',
+        usern+' has pet dinosor ror',
+        usern+" is gudetama's favorite person",
+        usern+" secretely likes someone's pet",
+        usern+' sleeps longer than u',
+        usern+' sucks at playing valorant',
+        usern+' likes an eggless omelete',
+        usern+' almost fell on cliff',
+      ]
+      let args = getArgs(randomizer[getRandom(0,randomizer.length)])
+      
+      async function changeRow(state,type,disabled) {
+        if (state === 'start') {
+          for (let i in comp.components) {
+            let row = comp.components[i]
+            row.style = type
+            row.disabled = disabled
+          }
+        }
+        else if (state === 'mix') {
+          for (let i in comp.components) {
+            let row = comp.components[i]
+            row.style = types[i] ? types[i] : types[0]
+            row.label = args[i] ? args[i] : args[0]
+            await inter.message.edit({components: [comp]})
+            sleep(delay)
+          }
+        }
     }
-    else if (id === 'terms101') {
-      let member = inter.member;
-      if (await hasRole(member,['1094909481806205009'])) {
-        inter.deferUpdate();
-        return;
-      }
-      await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
-      inter.reply({content: '<a:Star:1096986847898521680> Terms Accepted', ephemeral: true})
-      let notice = await getChannel(shop.channels.alerts)
-      notice.send('<@'+inter.user.id+'> Accepted TOS')
+      let delay = 1500
+      await changeRow('start','DANGER',true)
+      inter.deferUpdate()
+      await inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('start','PRIMARY',true)
+      await inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('start','SUCCESS',true)
+      await inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('start','SECONDARY',true)
+      inter.message.edit({components: [comp]})
+      sleep(delay)
+      await changeRow('mix','DANGER',true)
+      inter.message.edit({components: [comp]})
+      await changeRow('start','SECONDARY',true)
+      inter.message.edit({components: [comp]})
+      animation = false
     }
     }
 });
@@ -1905,10 +1622,6 @@ client.on('presenceUpdate', async (pres) => {
   if (!mem) return;
   let perms = await getPerms(mem, 3)
   let moderated = moderate(mem,perms);
-  if (moderated && hasRole(mem,'sloopies',mem.guild)) {
-    //await removeRole(mem,['sloopie','games','art','entertainment'],mem.guild)
-    //mem.user.send(notices.n1)
-  }
 })
 process.on('unhandledRejection', async error => {
   ++errors
@@ -1948,8 +1661,6 @@ const interval = setInterval(async function() {
         let generatedVoucher = "₱"+amount[getRandom(0,amount.length)]+" "+type[getRandom(0,type.length)]+" voucher"
         let template = await getChannel(shop.channels.templates)
         let annc = await getChannel(shop.channels.shopStatus)
-        //console.log(today.getHours(), today.getMinutes(),'time check')
-        //annc.send({files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})
       if (time === '11:11') {
         let voucher = {
           code: makeCode(10),
