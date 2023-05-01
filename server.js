@@ -31,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = true
+let cmd = false
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -776,65 +776,6 @@ client.on("messageCreate", async (message) => {
     vr.send(voucher.code+' - '+voucher.perks)
     await dropVoucher(voucher.code,args[1],voucher.perks+' drop')
   }
-  else if (isCommand('rate',message)) {
-    let args = await requireArgs(message,1)
-    if (!args) return;
-    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
-    let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
-    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
-    let fee = value*percentage
-    let total = Math.round(value+fee)
-    
-    let embed = new MessageEmbed()
-    .addField('Total Amount','```yaml\n'+total+'```')
-    .addField('Base Amount','₱'+value,true)
-    .addField('Fee','x'+percentage,true)
-    .setColor(colors.none)
-    .setFooter({text: "Paypal Rate"})
-    
-    await message.channel.send({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
-    message.delete();
-  }
-  else if (isCommand('exchange',message)) {
-    let args = await requireArgs(message,1)
-    if (!args) return;
-    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
-    let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.1 : null
-    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
-    let fee = value*percentage
-    let total = Math.round(value-fee)
-    
-    let embed = new MessageEmbed()
-    .addField('You Will Receive','```yaml\n'+total+'```')
-    .addField('Base Amount','₱'+value,true)
-    .addField('Fee','x'+percentage,true)
-    .setColor(colors.none)
-    .setFooter({text: "Money Exchange"})
-    
-    await message.channel.send({embeds: [embed]})
-    message.delete();
-  }
-  else if (isCommand('robux',message)) {
-    let args = await requireArgs(message,1)
-    if (!args) return;
-    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
-    let value = Number(args[1])
-    let percentage = .4286
-    let fee = value*percentage
-    let total = Math.round(value+fee)
-    
-    let embed = new MessageEmbed()
-    .addField('Expected Gamepass Price','```yaml\n'+total+'```')
-    .addField('Base Amount','₱'+value,true)
-    .addField('Roblox Fee','x'+percentage,true)
-    .setColor(colors.none)
-    .setFooter({text: "Robux Covered Tax"})
-    
-    await message.channel.send({embeds: [embed]})
-    message.delete();
-  }
   else if (isCommand('delete',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,1)
@@ -1161,14 +1102,14 @@ client.on('interactionCreate', async inter => {
       else if (type.value === 'exchange') {
         title = 'You Will Receive'
         footer = 'E-wallet Exchange'
-         percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.1 : null
+        percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.1 : null
         let fee = value*percentage
         total = Math.round(value-fee)
       }
       else if (type.value === 'robux') {
         title = 'Expected Gamepass Price'
         footer = 'Robux Covered Tax'
-        let percentage = .4286
+        percentage = .4286
         let fee = value*percentage
         total = Math.round(value+fee)
       }
