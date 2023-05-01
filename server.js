@@ -31,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = false
+let cmd = true
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -1080,7 +1080,7 @@ client.on("messageCreate", async (message) => {
     .setColor(colors.none)
     .setFooter({text: "Money Exchange"})
     
-    await message.channel.send({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
+    await message.channel.send({embeds: [embed]})
     message.delete();
   }
   else if (isCommand('robux',message)) {
@@ -1099,7 +1099,7 @@ client.on("messageCreate", async (message) => {
     .setColor(colors.none)
     .setFooter({text: "Robux Covered Tax"})
     
-    await message.channel.send({embeds: [embed]}) //content: 'You will receive **₱'+total+'**',
+    await message.channel.send({embeds: [embed]})
     message.delete();
   }
   else if (isCommand('ar',message)) {
@@ -1303,6 +1303,9 @@ client.on('interactionCreate', async inter => {
       let quan = options.find(a => a.name === 'quantity')
       quan = quan.value
       //
+      let price = options.find(a => a.name === 'price')
+      price = price.value
+      //
       let mop = options.find(a => a.name === 'mop')
       //Send prompt
       try {
@@ -1335,7 +1338,7 @@ client.on('interactionCreate', async inter => {
         let template = await getChannel("1079712339122720768")
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
-        content = content.replace('{user}','<@'+user.id+'>').replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
+        content = content.replace('{user}','<@'+user.id+'>').replace('{price}',price.toString()).replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
         orders.send(content).then(async msg => {
           await msg.react("<:g1:1056579657828417596>")
           await msg.react("<:g2:1056579660353372160>")
