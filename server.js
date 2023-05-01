@@ -1278,8 +1278,6 @@ client.on("messageCreate", async (message) => {
       await message.reply(filtered)
     }
   }
-  //Neither
-  if (message.content.toLowerCase() === '.sloopies') message.reply('https://discord.gg/sloopies');
 });//END MESSAGE CREATE
 
 let ondutyChannel = '977736253908848711'
@@ -1295,17 +1293,9 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let user = options.find(a => a.name === 'user')
-      user = user.user
-      //
       let product = options.find(a => a.name === 'product')
-      product = product.value
-      //
       let quan = options.find(a => a.name === 'quantity')
-      quan = quan.value
-      //
       let price = options.find(a => a.name === 'price')
-      price = price.value
-      //
       let mop = options.find(a => a.name === 'mop')
       //Send prompt
       try {
@@ -1314,7 +1304,7 @@ client.on('interactionCreate', async inter => {
         let links = ""
         let index = ""
         let msgs = []
-        let messages = await stocks.messages.fetch({limit: quan}).then(async messages => {
+        let messages = await stocks.messages.fetch({limit: quan.value}).then(async messages => {
           messages.forEach(async (gotMsg) => {
             index++
             links += "\n"+index+". "+gotMsg.content
@@ -1323,22 +1313,22 @@ client.on('interactionCreate', async inter => {
         })
         //Returns
         if (links === "") return inter.reply({content: emojis.x+" No stocks left.", ephemeral: true})
-        if (quan > index) return inter.reply({content: emojis.warning+" Insufficient stocks. **"+index+"** "+product+" remaining.", ephemeral: true})
-        await addRole(await getMember(user.id,inter.guild),["Buyer","Pending"],inter.guild)
-        stocks.bulkDelete(quan)
+        if (quan.value > index) return inter.reply({content: emojis.warning+" Insufficient stocks. **"+index+"** "+product.value+" remaining.", ephemeral: true})
+        await addRole(await getMember(user.user.id,inter.guild),["Buyer","Pending"],inter.guild)
+        stocks.bulkDelete(quan.value)
         let row = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId("nitro-"+user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.tag),
+          new MessageButton().setCustomId("nitro-"+user.user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.user.tag),
           new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
         );
         //Send prompt
-        inter.reply("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan+"** "+product+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
+        inter.reply("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan.value+"** "+product.value+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
         inter.user.send({content: links, components: [row]})
         //Send auto queue
         let orders = await getChannel("1054731027240726528")
         let template = await getChannel("1079712339122720768")
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
-        content = content.replace('{user}','<@'+user.id+'>').replace('{price}',price.toString()).replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
+        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
         orders.send(content).then(async msg => {
           await msg.react("<:g1:1056579657828417596>")
           await msg.react("<:g2:1056579660353372160>")
