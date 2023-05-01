@@ -39,24 +39,23 @@ client.on("ready", async () => {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   
   let json = {
-    "name": "yeet",
+    "name": "drop",
     "type": 1,
-    "description": "To keep dev badge alive.",
+    "description": "Test Slash",
     "options": [
       {
-        "name": "Animal",
-        "description": "Amount to send",
+        "name": 'Product',
+        "description": 'Product Name',
         "type": 3,
         "required": true,
-        //"choices": []
-        },
-        {
-            "name": "only_smol",
-            "description": "Whether to show only baby animals",
-            "type": 5,
-            "required": false
-        }
-               ]
+      },
+      {
+        "name": 'Quantity',
+        "description": 'Amount to send',
+        "type": 10,
+        "required": true,
+      },
+    ]
   }
 
   let headers = {
