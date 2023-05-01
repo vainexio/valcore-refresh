@@ -31,16 +31,56 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = true
+let cmd = false
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   
-  let json = {
-    "name": "stocks",
+  
+let json = {
+    "name": "queue",
     "type": 1,
-    "description": "Shows available stocks",
+    "description": "Add an order to queue",
+    "options": [
+      {
+        "name": 'User',
+        "description": 'Recipient',
+        "type": 6,
+        "required": true,
+      },
+      {
+        "name": 'product',
+        "description": 'Product Name',
+        "type": 3,
+        "required": true,
+      },
+      {
+        "name": 'quantity',
+        "description": 'Amount',
+        "type": 10,
+        "required": true,
+      },
+      {
+        "name": 'mop',
+        "description": 'Payment Method',
+        "type": 3,
+        "choices": [
+          {
+            "name": 'GCash',
+            "value": 'gcash'
+          },
+          {
+            "name": 'Paypal',
+            "value": 'paypal'
+          },
+        ],
+        "required": true,
+      },
+      {
+        "name": 'price',
+        "description: 
+    ]
   }
 
   let headers = {
