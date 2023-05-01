@@ -38,9 +38,9 @@ client.on("ready", async () => {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1102518364020154438"
   let json = {
-    "name": "order",
+    "name": "drop",
     "type": 1,
-    "description": "Add an order to queue",
+    "description": "Drops a product to a user",
     "options": [
       {
         "name": 'user',
@@ -56,7 +56,13 @@ client.on("ready", async () => {
       },
       {
         "name": 'quantity',
-        "description": 'Amount',
+        "description": 'Amount to send',
+        "type": 10,
+        "required": true,
+      },
+      {
+        "name": 'price',
+        "description": 'Price Paid',
         "type": 10,
         "required": true,
       },
@@ -72,16 +78,10 @@ client.on("ready", async () => {
           {
             "name": 'Paypal',
             "value": 'paypal'
-          },
+          }
         ],
-        "required": true,
+        "required": false,
       },
-      {
-        "name": 'price',
-        "description": "Price Paid",
-        "type": 10,
-        "required": true,
-      }
     ]
   }
   
@@ -1030,111 +1030,6 @@ client.on("messageCreate", async (message) => {
     sendChannel(emojis.check+' <@'+message.author.id+'> used a **'+voucher.perks+'**!\nCode: `'+code+'`',message.channel.id,colors.none)
     let use = await useVoucher(voucher.code)
   }
-  /*else if (isCommand('nitro',message)) {
-    if (!await getPerms(message.member,4)) return;
-    let stocks = await getChannel("1054929031881035789")
-    let args = await requireArgs(message,2)
-    if (!args) return;
-    let user = await getUser(args[1])
-    let quan = Number(args[2])
-    let method = args[3]
-    let item = args.slice(4).join(" ")
-    
-    let links = ""
-    let index = ""
-    let msgs = []
-    let messages = await stocks.messages.fetch({limit: quan}).then(async messages => {
-      messages.forEach(async (gotMsg) => {
-        index++
-        links += "\n"+index+". "+gotMsg.content
-        msgs.push(gotMsg)
-      })
-    })
-    await addRole(await getMember(user.id,message.guild),["Buyer","Pending"],message.guild)
-    if (links === "") return message.reply(emojis.x+" No stocks left.")
-    if (quan > index) return message.reply(emojis.warning+" Insufficient stocks. **"+index+"** nitro boost(s) remaining.")
-    stocks.bulkDelete(quan)
-    let row = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId("nitro-"+user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.tag),
-      new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
-    );
-    message.channel.send("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
-    message.author.send({content: links, components: [row]})
-    let orders = await getChannel("1054731027240726528")
-    let template = await getChannel("1079712339122720768")
-    let msg = await template.messages.fetch("1093800287002693702")
-    let content = msg.content
-    content = content.replace('{user}','<@'+user.id+'>').replace('{quan}',quan.toString()).replace('{product}',item ? item : "nitro boost").replace('{mop}',method ? method : "gcash")
-    orders.send(content).then(async msg => {
-      await msg.react("<:g1:1056579657828417596>")
-      await msg.react("<:g2:1056579660353372160>")
-      await msg.react("<:g3:1056579662572179586>")
-    })
-  }*/
-  /*else if (isCommand('stocks',message)) {
-    if (message.channel.id !== '1047454193595732058' && !await getPerms(message.member,4)) {
-      let botMsg = null
-      await message.reply('This command only works in <#1047454193595732058>\nPlease head there to use the command.')
-      setTimeout(function() {
-        botMsg.delete();
-      },7200000)
-      return;
-    }
-    let stocks = await getChannel("1054929031881035789")
-    let stocks2 = await getChannel("1080087813032263690");
-    let quan = 0;
-    
-    let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
-    let holderCount = 0
-    let arrays = []
-    let messages = await stocks.messages.fetch({limit: 100}).then(async messages => {
-      messages.forEach(async (gotMsg) => {
-        quan++
-      })
-    })
-    if (quan > 0) {
-      let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes('nitro'))
-      if (!foundCat) return console.log('Cannot find category')
-      foundCat.status = 1
-    }
-    
-    let messages2 = await stocks2.messages
-      .fetch({ limit: 100 })
-      .then(async (messages) => {
-        messages.forEach(async (gotMsg) => {
-          arrays.push(gotMsg.content);
-        });
-      });
-    let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes('nitro'))
-    if (!foundCat) return message.reply(emojis.x+' Invalid Category: `nitro`')
-    foundCat.status = quan > 0 ? 1 : 3
-    stockHolder[0].push(new MessageButton().setCustomId('none').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
-    for (let i in arrays) {
-      let msg = arrays[i];
-      if (arrays.length > 0) {
-        let args = await getArgs(msg);
-        let text = args.slice(1).join(" ");
-        if (stockHolder[holderCount].length === 5) holderCount++
-        stockHolder[holderCount].push(
-          new MessageButton()
-            .setCustomId("none"+getRandom(1,10000))
-            .setStyle("SECONDARY")
-            .setLabel(text)
-            .setEmoji(args[0])
-        );
-      }
-    }
-    
-    let comps = []
-    for (let i in stockHolder) {
-      if (stockHolder[i].length !== 0) {
-        let row = new MessageActionRow();
-        row.components = stockHolder[i];
-        comps.push(row)
-      }
-    }
-    message.reply({components: comps}) //content: "Click the buttons to display more info about the product.", 
-  }*/
   else if (isCommand('drop',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,2)
