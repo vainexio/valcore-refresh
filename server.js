@@ -1384,9 +1384,62 @@ let claimer = null
 let animation = false
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
+    //Nitro dropper
     if (inter.commandName == 'drop') {
-      console.log(inter.options._hoistedOptions[0])
-      inter.reply({content: 'Hi'})
+      let options = inter.options._hoistedOptions
+      //
+      let user = options.find(a => a.name === 'user')
+      user = user.user
+      //
+      let product = options.find(a => a.name === 'product')
+      product = product.value
+      //
+      let quan = options.find(a => a.name === 'quantity')
+      quan = quan.value
+      //
+      let mop = options.find(a => a.name === 'mop')
+      //Send prompt
+      try {
+        if (!await getPerms(inter.member,4)) return;
+        let stocks = await getChannel("1054929031881035789")
+        
+        let links = ""
+        let index = ""
+        let msgs = []
+        let messages = await stocks.messages.fetch({limit: quan}).then(async messages => {
+          messages.forEach(async (gotMsg) => {
+            index++
+            links += "\n"+index+". "+gotMsg.content
+            msgs.push(gotMsg)
+          })
+        })
+        await addRole(await getMember(user.id,inter.guild),["Buyer","Pending"],inter.guild)
+        if (links === "") return inter.reply({content: emojis.x+" No stocks left.", ephemeral: true})
+        if (quan > index) return inter.reply({content: emojis.warning+" Insufficient stocks. **"+index+"** "+product+" remaining.", ephemeral: true})
+        stocks.bulkDelete(quan)
+        let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId("nitro-"+user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.tag),
+          new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
+        );
+    inter.channel.send("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan+"** nitro boost(s).\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
+    message.author.send({content: links, components: [row]})
+    let orders = await getChannel("1054731027240726528")
+    let template = await getChannel("1079712339122720768")
+    let msg = await template.messages.fetch("1093800287002693702")
+    let content = msg.content
+    content = content.replace('{user}','<@'+user.id+'>').replace('{quan}',quan.toString()).replace('{product}',item ? item : "nitro boost").replace('{mop}',method ? method : "gcash")
+    orders.send(content).then(async msg => {
+      await msg.react("<:g1:1056579657828417596>")
+      await msg.react("<:g2:1056579660353372160>")
+      await msg.react("<:g3:1056579662572179586>")
+    })
+      } catch (err) {
+        inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
+      }
+    }
+    //Stocks
+    if (inter.commandName == 'stocks') {
+      
     }
   } else if (inter.isButton()) {
     let id = inter.customId
