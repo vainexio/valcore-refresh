@@ -31,15 +31,14 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = true
+let cmd = false
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
-  
-  
-let json = {
-    "name": "queue",
+  let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1102518364020154438"
+  let json = {
+    "name": "order",
     "type": 1,
     "description": "Add an order to queue",
     "options": [
@@ -85,18 +84,22 @@ let json = {
       }
     ]
   }
-
+  
   let headers = {
     "Authorization": "Bot "+token,
     'Content-Type': 'application/json'
-}
+  }
   let response = await fetch(discordUrl, {
-        method: 'post',
-        body: JSON.stringify(json),
-        headers: headers
-    });
-  response = await response.json();
-    console.log(response)
+    method: 'post',
+    body: JSON.stringify(json),
+    headers: headers
+  });
+    let deleteRes = await fetch(deleteUrl, {
+      method: 'delete',
+      headers: headers
+    })
+    //response = await response.json();
+    console.log(deleteRes)
 }
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Sloopies', type: 'WATCHING' }] });
@@ -1503,7 +1506,7 @@ client.on('interactionCreate', async inter => {
       inter.reply({components: comps})
     }
     //Queue
-    else if (inter.commandName === 'queue') {
+    else if (inter.commandName === 'order') {
       if (!await getPerms(inter.member,4)) return inter.reply({ content: emojis.warning+" Insufficient Permission"});
       let options = inter.options._hoistedOptions
       //
@@ -1517,15 +1520,21 @@ client.on('interactionCreate', async inter => {
       quan = quan.value
       //
       let mop = options.find(a => a.name === 'mop')
+      mop.value
+      //
+      let price = options.find(a => a.name === 'price')
+      price = price.value
+      //
       try {
         let orders = await getChannel("1054731027240726528")
         let template = await getChannel("1079712339122720768")
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
-        content = content.replace('{user}','<@'+user.id+'>').replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
+        content = content.replace('{user}','<@'+user.id+'>').replace('{price}',price.toString()).replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
         orders.send(content).then(async msg => {
           await msg.react("<:g1:1056579657828417596>")
         })
+        inter.reply({content: emojis.check+' Queue added.'})
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
       }
