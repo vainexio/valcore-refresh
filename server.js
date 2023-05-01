@@ -21,6 +21,7 @@ const token = process.env.SECRET;
 const open_ai = process.env.OPEN_AI
 const mongooseToken = process.env.MONGOOSE;
 
+let cmd = true
 async function startApp() {
     let promise = client.login(token)
     console.log("Starting...");
@@ -34,6 +35,42 @@ startApp();
 
 //When bot is ready
 client.on("ready", async () => {
+  if (cmd) {
+  let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
+  
+  let json = {
+    "name": "yeet",
+    "type": 1,
+    "description": "To keep dev badge alive.",
+    "options": [
+      {
+        "name": "Animal",
+        "description": "Amount to send",
+        "type": 3,
+        "required": true,
+        //"choices": []
+        },
+        {
+            "name": "only_smol",
+            "description": "Whether to show only baby animals",
+            "type": 5,
+            "required": false
+        }
+               ]
+  }
+
+  let headers = {
+    "Authorization": "Bot "+token,
+    'Content-Type': 'application/json'
+}
+  let response = await fetch(discordUrl, {
+        method: 'post',
+        body: JSON.stringify(json),
+        headers: headers
+    });
+  response = await response.json();
+    console.log(response)
+}
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Sloopies', type: 'WATCHING' }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
