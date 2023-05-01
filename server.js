@@ -31,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = true
+let cmd = false
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -196,9 +196,8 @@ const {getRole, addRole, removeRole, hasRole} = roles
 //ON CLIENT MESSAGE
 let errors = 0
 let expCodes = []
-let vrChannel = '1066945318060556378'
 async function setVouchers() {
-  let channel = await getChannel(vrChannel)
+  let channel = await getChannel(shop.vouchers)
   shop.vouchers = []
   const options = { limit: 100 };
   
@@ -221,7 +220,7 @@ async function setVouchers() {
     })
 }
 async function useVoucher(code) {
-  let channel = await getChannel(vrChannel)
+  let channel = await getChannel(shop.vouchers)
   const options = { limit: 100 };
   
   let messages = await channel.messages.fetch(options).then(async messages => {
@@ -333,7 +332,7 @@ client.on("messageCreate", async (message) => {
   }
   else if (message.channel.parent?.name.toLowerCase() === 'reports') {
    if (message.author.id === "557628352828014614") {
-     let vc = await getChannel("1079713500731015209")
+     let vc = await getChannel(shop.channels.reportsVc)
      let member = message.mentions.members.first()
      let state = await hasRole(member,["Accepted TOS"]) ? "You have accepted our terms.\n— Therefore, we shall not be liable for any mistakes or excuses made once you've violated our rules." : "We shall not be liable for any mistakes or excuses made once you've violated our rules."
      if (vc.name === 'reports : CLOSED') {
@@ -354,7 +353,7 @@ client.on("messageCreate", async (message) => {
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
     const options = { limit: 10 };
     //
-    if (message.channel.id === shop.channels.orderChannel || message.channel.id === '1101833714704601168') {
+    if (message.channel.id === shop.channels.orders || message.channel.id === '1101833714704601168') {
       let member = message.mentions.members.first()
       if (member) {
       await addRole(member,['pending','buyer'],message.guild)
@@ -436,7 +435,7 @@ client.on("messageCreate", async (message) => {
       sendUser(emojis.check+" Verification cancelled! Please rerun the command if you wish to retry.",responseMsg.author.id,colors.lime,true)
     }
     else if (responseMsg.content.length > 0) {
-    let log = await getChannel('1085504963955916810')
+    let log = await getChannel(shop.channels.apps)
     let row = new MessageActionRow().addComponents(
       new MessageButton().setCustomId('approve-'+responseMsg.author.id).setStyle('SECONDARY').setLabel('Approve').setEmoji(emojis.check),
       new MessageButton().setCustomId('decline-'+responseMsg.author.id).setStyle('SECONDARY').setLabel('Decline').setEmoji(emojis.x),
@@ -621,7 +620,7 @@ client.on("messageCreate", async (message) => {
     if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
       msg.edit("Fetching nitro codes (stocking - "+codes.length+") " + emojis.loading);
       for (let i in codes) {
-        let stocks = await getChannel('1054929031881035789')
+        let stocks = await getChannel(shop.channels.stocks)
         sleep(1000);
         await stocks.send("https://discord.gift/"+codes[i].code);
       }
@@ -702,13 +701,11 @@ client.on("messageCreate", async (message) => {
       }
       embed.addField(num+". "+codes[i].code,emoji+' **'+state+'**\n'+user+'\n '+(!expire ? '`Expired`' : 'Expires in <t:'+expire+':f>')+'\n\u200b')
       if (message.content.toLowerCase().includes('sort')) {
-        let stocks = await getChannel('1054929031881035789')
+        let stocks = await getChannel(shop.channels.stocks)
         await stocks.send("https://discord.gift/"+codes[i].code)
       }
     }
     msg.delete();
-    let logs = await getChannel('1060786672201105419')
-    logs.send({embeds: [embed]})
     message.channel.send({embeds: embeds.length > 0 ? embeds : [embed]})
   }
   //
@@ -1039,7 +1036,7 @@ client.on("messageCreate", async (message) => {
       code: makeCode(10),
       perks: perks
     }
-    let vr = await getChannel(vrChannel)
+    let vr = await getChannel(shop.vouchers)
     vr.send(voucher.code+' - '+voucher.perks)
     await dropVoucher(voucher.code,args[1],voucher.perks+' drop')
   }
@@ -1300,7 +1297,7 @@ client.on('interactionCreate', async inter => {
       //Send prompt
       try {
         //Get stocks
-        let stocks = await getChannel(shop.channels.stocksChannel)
+        let stocks = await getChannel(shop.channels.stocks)
         let links = ""
         let index = ""
         let msgs = []
@@ -1324,8 +1321,8 @@ client.on('interactionCreate', async inter => {
         inter.reply("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan.value+"** "+product.value+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
         inter.user.send({content: links, components: [row]})
         //Send auto queue
-        let orders = await getChannel(shop.channels.orderChannel) //1054731027240726528
-        let template = await getChannel(shop.channels.templatesChannel)
+        let orders = await getChannel(shop.channels.orders)
+        let template = await getChannel(shop.channels.templates)
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
         content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
@@ -1344,8 +1341,8 @@ client.on('interactionCreate', async inter => {
     else if (inter.commandName == 'stocks') {
       if (inter.channel.id !== '1047454193595732058' && !await getPerms(inter.member,4)) return inter.reply({content: 'This command only works in <#1047454193595732058>\nPlease head there to use the command.', ephemeral: true})
       
-      let stocks = await getChannel("1054929031881035789")
-      let stocks2 = await getChannel("1080087813032263690");
+      let stocks = await getChannel(shop.stocks)
+      let stocks2 = await getChannel(shop.otherStocks);
       let quan = 0;
       
       let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
@@ -1405,8 +1402,8 @@ client.on('interactionCreate', async inter => {
       let price = options.find(a => a.name === 'price')
       //
       try {
-        let orders = await getChannel(shop.channels.orderChannel)
-        let template = await getChannel("1079712339122720768")
+        let orders = await getChannel(shop.channels.orders)
+        let template = await getChannel(shop.channels.templates)
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
         content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
@@ -1492,7 +1489,7 @@ client.on('interactionCreate', async inter => {
     }
     }
     else if (id === 'saveRecord') {
-      let log = await getChannel('1100456798932185138')
+      let log = await getChannel(shop.channels.financeLogs)
       log.send({embeds: inter.message.embeds})
       
       let row = new MessageActionRow().addComponents(
@@ -1502,8 +1499,8 @@ client.on('interactionCreate', async inter => {
       inter.update({components: [row]})
     }
     else if (id.startsWith('feedback')) {
-      let feedback = await getChannel('1094975726127685726')
-      let logs = await getChannel('1094941354389409842')
+      let feedback = await getChannel(shop.channels.feedbacks)
+      let logs = await getChannel(shop.channels.logs)
       let anon = false
       if (id === 'feedbackAnon') anon = true
       let type = anon ? 'Anonymous' : 'Public'
@@ -1555,7 +1552,7 @@ client.on('interactionCreate', async inter => {
       let user = id.replace('nitro-','')
       user = await getUser(user)
       if (!user) return inter.reply("Invalid user.")
-      let template = await getChannel("1075782410509226095")
+      let template = await getChannel(shop.channels.dmTemplate)
       
       let msg = await template.messages.fetch("1075782458970214480")
       let error = false;
@@ -1580,7 +1577,7 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('returnLinks')) {
       let content = inter.message.content
-      let stocks = await getChannel(shop.channels.stocksChannel)
+      let stocks = await getChannel(shop.channels.stocks)
       let args = await getArgs(content)
       let returned = 0
       
@@ -1677,21 +1674,6 @@ client.on('interactionCreate', async inter => {
         inter.reply({content: "User not found.", ephemeral: true})
       }
     }
-    else if (id.startsWith('title-')) {
-      let name = id.replace('title-','').toLowerCase()
-      let template = await getChannel('1075782410509226095')
-      let data = [
-        {name: 'nitro boost',id: '1080344427589017710'},
-        {name: 'nitro basic',id: '1080344427589017710'},
-        {name: 'developer badge',id: '1080345129614852106'},
-        {name: 'server boost',id: '1080345981024993382'},
-        {name: 'robux',id: '1080347049922408520'},
-      ]
-      let found = data.find(d => d.name === name)
-      if (!found) return inter.deferUpdate();
-      let msg = await template.messages.fetch(found.id)
-      inter.reply({content: msg.content, ephemeral: true})
-    }
     else if (id.startsWith('design')) {
       if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
       animation = true
@@ -1769,7 +1751,7 @@ client.on('interactionCreate', async inter => {
       if (found) return inter.reply({content: "Please wait for at least 2 hours before requesting another follow up!", ephemeral: true})
       shop.followUps.push(inter.user.id)
       let channelName = inter.channel.name
-      let template = await getChannel('1079712339122720768')
+      let template = await getChannel(shop.channels.templates)
       if (channelName.includes('ticket')) messageId = '1086505068351721472'
       else if (channelName.includes('done')) messageId = '1086503830105104444'
       else messageId = '1086504594860937256'
@@ -1841,7 +1823,7 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setURL(botMsg.url).setStyle('LINK').setLabel('Proceed'),
         );
         inter.reply({content: emojis.loading+' Verification prompt was sent in your DMs!', components: [linker], ephemeral: true})
-        let notice = await getChannel('1047454193755107337')
+        let notice = await getChannel(shop.channels.alerts)
         notice.send('<@'+inter.user.id+'> '+emojis.loading)
       }
     }
@@ -1866,7 +1848,7 @@ client.on('interactionCreate', async inter => {
           }
         })
         inter.reply({content: emojis.check+' <:S_seperator:1093733778633019492> You now have access to our pricelists! You can view them through these channels: \n'+channels, ephemeral: true})
-        let notice = await getChannel('1047454193755107337')
+        let notice = await getChannel(shop.channels.alerts)
         notice.send('<@'+inter.user.id+'> '+emojis.check)
       } else {
         inter.reply({content: emojis.warning+' Unexpected error occured.', ephemeral: true})
@@ -1882,7 +1864,7 @@ client.on('interactionCreate', async inter => {
         }
       inter.reply({content: emojis.x+" Code did not match. Please try again by clicking the access button.", ephemeral: true})
       inter.message.edit({components: [comp]})
-      let notice = await getChannel('1047454193755107337')
+      let notice = await getChannel(shop.channels.alerts)
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
     else if (id === 'terms') {
@@ -1902,7 +1884,7 @@ client.on('interactionCreate', async inter => {
       }
       await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
       inter.reply({content: '<a:Star:1096986847898521680> Terms Accepted', ephemeral: true})
-      let notice = await getChannel('1047454193755107337')
+      let notice = await getChannel(shop.channels.alerts)
       notice.send('<@'+inter.user.id+'> Accepted TOS')
     }
     }
@@ -1964,7 +1946,7 @@ const interval = setInterval(async function() {
         let amount = shop.randomVouchers.amount
         let type = shop.randomVouchers.type
         let generatedVoucher = "₱"+amount[getRandom(0,amount.length)]+" "+type[getRandom(0,type.length)]+" voucher"
-        let template = await getChannel('1079712339122720768')
+        let template = await getChannel(shop.channels.templates)
         let annc = await getChannel(shop.channels.shopStatus)
         //console.log(today.getHours(), today.getMinutes(),'time check')
         //annc.send({files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})
@@ -1973,7 +1955,7 @@ const interval = setInterval(async function() {
           code: makeCode(10),
           perks: generatedVoucher
         }
-        let vr = await getChannel(vrChannel)
+        let vr = await getChannel(shop.vouchers)
         vr.send(voucher.code+' - '+voucher.perks)
         await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
       }
@@ -1984,7 +1966,7 @@ const interval = setInterval(async function() {
           }
           randomTime = null
           
-          let vr = await getChannel(vrChannel)
+          let vr = await getChannel(shop.vouchers)
         vr.send(voucher.code+' - '+voucher.perks)
         await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
         }
@@ -2004,14 +1986,14 @@ const interval = setInterval(async function() {
       }  
         else if (today.getHours() === 11 && today.getMinutes() === 0) {
           let msg = await template.messages.fetch("1079712404084117524")
-          let vc = await getChannel("1079713500731015209")
+          let vc = await getChannel(shop.channels.reportsVc)
           if (vc.name === 'reports : OPEN') return;
           vc.setName('reports : OPEN')
           annc.send({content: msg.content, files: ['https://media.tenor.com/H6H2hhidRhIAAAAC/chick-pio.gif']})
         }
         else if (today.getHours() === 20 && today.getMinutes() === 0) {
           let msg = await template.messages.fetch("1079715633123557496")
-          let vc = await getChannel("1079713500731015209")
+          let vc = await getChannel(shop.channels.reportsVc)
           if (vc.name === 'reports : CLOSED') return;
           vc.setName('reports : CLOSED')
           annc.send({content: msg.content, files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})

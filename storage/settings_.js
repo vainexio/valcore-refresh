@@ -106,11 +106,20 @@ module.exports = {
     channels: {
       announcements: '1102417073642164274',
       status: '1054766857552396419', //vc
+      reportsVc: '1079713500731015209', //c
       vouch: '1054724474659946606',
-      stocksChannel: '1054929031881035789',
-      orderChannel: '1054731027240726528',
-      templatesChannel: '1079712339122720768',
+      stocks: '1054929031881035789',
+      otherStocks: '1080087813032263690',
+      orders: '1054731027240726528',
+      templates: '1079712339122720768',
       shopStatus: '1102416143152578681',
+      vouchers: '1066945318060556378',
+      financeLogs: '1100456798932185138',
+      feedbacks: '1094975726127685726',
+      logs: '1060786672201105419',
+      dmTemplate: '1075782410509226095',
+      alerts: '1047454193755107337',
+      apps: '1085504963955916810',
     },
     deleteChannels: [],
     checkers: [],
