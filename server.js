@@ -31,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = false
+let cmd = true
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -44,7 +44,7 @@ let json = {
     "description": "Add an order to queue",
     "options": [
       {
-        "name": 'User',
+        "name": 'user',
         "description": 'Recipient',
         "type": 6,
         "required": true,
@@ -1443,6 +1443,7 @@ client.on('interactionCreate', async inter => {
           await msg.react("<:g2:1056579660353372160>")
           await msg.react("<:g3:1056579662572179586>")
         })
+        inter.reply({content: emojis.check+' Queue added.'})
         //
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
@@ -1505,6 +1506,29 @@ client.on('interactionCreate', async inter => {
     else if (inter.commandName === 'queue') {
       if (!await getPerms(inter.member,4)) return inter.reply({ content: emojis.warning+" Insufficient Permission"});
       let options = inter.options._hoistedOptions
+      //
+      let user = options.find(a => a.name === 'user')
+      user = user.user
+      //
+      let product = options.find(a => a.name === 'product')
+      product = product.value
+      //
+      let quan = options.find(a => a.name === 'quantity')
+      quan = quan.value
+      //
+      let mop = options.find(a => a.name === 'mop')
+      try {
+        let orders = await getChannel("1054731027240726528")
+        let template = await getChannel("1079712339122720768")
+        let msg = await template.messages.fetch("1093800287002693702")
+        let content = msg.content
+        content = content.replace('{user}','<@'+user.id+'>').replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
+        orders.send(content).then(async msg => {
+          await msg.react("<:g1:1056579657828417596>")
+        })
+      } catch (err) {
+        inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
+      }
     }
   } 
   //BUTTONS
