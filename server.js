@@ -983,7 +983,7 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
         );
         //Send prompt
-        inter.reply("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan.value+"** "+product.value+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
+        inter.reply("<:S_exclamation:1093734009005158450> <@"+user.user.id+"> Sending **"+quan.value+"** "+product.value+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
         inter.user.send({content: links, components: [row]})
         //Send auto queue
         let orders = await getChannel(shop.channels.orders)
