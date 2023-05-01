@@ -763,10 +763,11 @@ module.exports = {
       },
     ],
     channels: {
-      announcements: '1071049104001601586',
+      announcements: '1102417073642164274',
       status: '1054766857552396419',
       vouch: '1054724474659946606',
-      stocks: '1054929031881035789'
+      stocks: '1054929031881035789',
+      shopStatus: '1102416143152578681',
     },
     stickyChannels: [
       {
@@ -823,7 +824,7 @@ module.exports = {
         ),
       },
       {
-        id: '1071049104001601586',
+        id: '1102417073642164274',
         message: '',
         order: true,
         comp: new MessageActionRow()

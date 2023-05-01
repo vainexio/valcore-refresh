@@ -1883,7 +1883,7 @@ const interval = setInterval(async function() {
         let type = shop.randomVouchers.type
         let generatedVoucher = "₱"+amount[getRandom(0,amount.length)]+" "+type[getRandom(0,type.length)]+" voucher"
         let template = await getChannel('1079712339122720768')
-        let annc = await getChannel(shop.channels.announcements)
+        let annc = await getChannel(shop.channels.shopStatus)
         //console.log(today.getHours(), today.getMinutes(),'time check')
         //annc.send({files: ['https://media.tenor.com/7mmiOB9yyRUAAAAC/chick-pio.gif']})
       if (time === '11:11') {
