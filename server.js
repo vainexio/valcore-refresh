@@ -1636,11 +1636,12 @@ client.on('interactionCreate', async inter => {
       .setColor(colors.none)
       .setThumbnail(anon ? 'https://www.freepnglogos.com/uploads/discord-logo-png/discord-logo-logodownload-download-logotipos-1.png' : inter.user.avatarURL())
 
-      inter.update({content: 'Feedback sent `('+type+')`'})
+      inter.update({content: 'Feedback sent `('+type+')`', components: []})
       feedback.send({embeds: [embed]})
       logs.send({content: '<@'+inter.user.id+'>', embeds: [embed]})
       //inter.reply({content: emojis.check+' Feedback sent `('+type+')`', ephemeral: true})
-    } else if (id === 'cancel') {
+    } 
+    else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})
       inter.message.edit({components: []})
     }
@@ -1749,15 +1750,6 @@ client.on('interactionCreate', async inter => {
       let user = id.replace('breakChecker-','')
       breakChecker = true
       inter.reply({content: emojis.check+" Stopped Checking", ephemeral: true})
-    }
-    else if (id.startsWith('live-')) {
-      let user = id.replace('live-','')
-      let data = shop.scanner.find(s => s.id === user)
-      if (data) {
-        inter.reply({content: data.live !== "" ? data.live : "No live cards are found yet.", ephemeral: true})
-      } else {
-        inter.reply({content: "The queue no longer exist.", ephemeral: true})
-      }
     }
     else if (id.startsWith('breakChecker-')) {
       let user = id.replace('breakChecker-','')
