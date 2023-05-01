@@ -21,7 +21,6 @@ const token = process.env.SECRET;
 const open_ai = process.env.OPEN_AI
 const mongooseToken = process.env.MONGOOSE;
 
-let cmd = true
 async function startApp() {
     let promise = client.login(token)
     console.log("Starting...");
@@ -32,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-
+let cmd = false
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -44,16 +43,38 @@ client.on("ready", async () => {
     "description": "Test Slash",
     "options": [
       {
-        "name": 'Product',
+        "name": 'user',
+        "description": 'Recipient',
+        "type": 6,
+        "required": true,
+      },
+      {
+        "name": 'product',
         "description": 'Product Name',
         "type": 3,
         "required": true,
       },
       {
-        "name": 'Quantity',
+        "name": 'quantity',
         "description": 'Amount to send',
         "type": 10,
         "required": true,
+      },
+      {
+        "name": 'mop',
+        "description": 'Payment Method',
+        "type": 3,
+        "choices": [
+          {
+            "name": 'GCash',
+            "value": 'gcash'
+          },
+          {
+            "name": 'Paypal',
+            "value": 'paypal'
+          }
+        ],
+        "required": false,
       },
     ]
   }
@@ -1363,8 +1384,9 @@ let claimer = null
 let animation = false
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
-    if (inter.commandName == 'slash') {
-      inter.reply({content: '||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​|| _ _ _ _ _ _https://discord.gift/vhnuzE2YkNCZ7sfYHHKebKXB'})
+    if (inter.commandName == 'drop') {
+      console.log(inter.options._hoistedOptions[0])
+      inter.reply({content: 'Hi'})
     }
   } else if (inter.isButton()) {
     let id = inter.customId
