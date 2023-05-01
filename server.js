@@ -31,58 +31,44 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = false
+let cmd = true
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1102518364020154438"
   let json = {
-    "name": "drop",
+    "name": "calculate",
     "type": 1,
-    "description": "Drops a product to a user",
+    "description": "Calculate fee based on given amount",
     "options": [
       {
-        "name": 'user',
-        "description": 'Recipient',
-        "type": 6,
-        "required": true,
-      },
-      {
-        "name": 'product',
-        "description": 'Product Name',
+        "name": 'type',
+        "description": 'Type of transaction',
         "type": 3,
         "required": true,
-      },
-      {
-        "name": 'quantity',
-        "description": 'Amount to send',
-        "type": 10,
-        "required": true,
-      },
-      {
-        "name": 'price',
-        "description": 'Price Paid',
-        "type": 10,
-        "required": true,
-      },
-      {
-        "name": 'mop',
-        "description": 'Payment Method',
-        "type": 3,
         "choices": [
           {
-            "name": 'GCash',
-            "value": 'gcash'
+            "name": 'Paypal Rate',
+            "value": 'paypalrate'
           },
           {
-            "name": 'Paypal',
-            "value": 'paypal'
-          }
-        ],
-        "required": false,
+            "name": 'E-wallet Exchange',
+            "value": 'exchange'
+          },
+          {
+            "name": 'Robux Gamepass',
+            "value": 'robux'
+          },
+        ]
       },
-    ]
+      {
+        "name": 'amount',
+        "description": 'Amount to calculate',
+        "type": 10,
+        "required": true,
+      },
+      ],
   }
   
   let headers = {
@@ -94,12 +80,12 @@ client.on("ready", async () => {
     body: JSON.stringify(json),
     headers: headers
   });
-    let deleteRes = await fetch(deleteUrl, {
+    /*let deleteRes = await fetch(deleteUrl, {
       method: 'delete',
       headers: headers
-    })
-    //response = await response.json();
-    console.log(deleteRes)
+    })*/
+    response = await response.json();
+    console.log(response)
 }
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Sloopies', type: 'WATCHING' }] });
@@ -1157,30 +1143,46 @@ client.on('interactionCreate', async inter => {
     else if (inter.commandName === 'calculate') {
       let options = inter.options._hoistedOptions
       let type = options.find(a => a.name === 'type')
-      console.l
-      if (type === 'paypalrate') {
-        
+      let amount = options.find(a => a.name === 'amount')
+      let value = amount.value
+      
+      let title = ''
+      let footer = ''
+      let percentage 
+      let total
+      
+      if (type.value === 'paypalrate') {
+        title = 'Expected Payment'
+        footer = 'Paypal Rate'
+        percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
+        let fee = value*percentage
+        total = Math.round(value+fee)
       }
-      let args = await requireArgs(message,1)
-    if (!args) return;
-    if (isNaN(args[1])) return message.reply(emojis.x+' Invalid amount: '+args[1])
-    let value = Number(args[1])
-    let percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
-    if (!percentage) return message.reply(emojis.warning+' Invalid fee was calculated.')
-    let fee = value*percentage
-    let total = Math.round(value+fee)
-    
-    let embed = new MessageEmbed()
-    .addField('Total Amount','```yaml\n'+total+'```')
-    .addField('Base Amount','₱'+value,true)
-    .addField('Fee','x'+percentage,true)
-    .setColor(colors.none)
-    .setFooter({text: "Paypal Rate"})
-    
-    await message.channel.send({embeds: [embed]}) //content: 'Total amount w/ fee: **₱'+total+'**'
-    message.delete();
+      else if (type.value === 'exchange') {
+        title = 'You Will Receive'
+        footer = 'E-wallet Exchange'
+         percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.1 : null
+        let fee = value*percentage
+        total = Math.round(value-fee)
+      }
+      else if (type.value === 'robux') {
+        title = 'Expected Gamepass Price'
+        footer = 'Robux Covered Tax'
+        let percentage = .4286
+        let fee = value*percentage
+        total = Math.round(value+fee)
+      }
+      
+        let embed = new MessageEmbed()
+        .addField(title,'```yaml\n'+total+'```')
+        .addField('Base Amount','₱'+amount.value,true)
+        .addField('Fee','x'+percentage,true)
+        .setColor(colors.none)
+        .setFooter({text: footer})
+        
+        await inter.reply({embeds: [embed]})
     }
-  } 
+  }
   
   //BUTTONS
   else if (inter.isButton()) {
