@@ -1023,8 +1023,8 @@ client.on('interactionCreate', async inter => {
     else if (inter.commandName == 'stocks') {
       //if (inter.channel.id !== '1047454193595732058' && !await getPerms(inter.member,4)) return inter.reply({content: 'This command only works in <#1047454193595732058>\nPlease head there to use the command.', ephemeral: true})
       
-      let stocks = await getChannel(shop.stocks)
-      let stocks2 = await getChannel(shop.otherStocks);
+      let stocks = await getChannel(shop.channels.stocks)
+      let stocks2 = await getChannel(shop.channels.otherStocks);
       let quan = 0;
       
       let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
