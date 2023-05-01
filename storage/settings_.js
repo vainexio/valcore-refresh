@@ -103,6 +103,15 @@ module.exports = {
     model: "gpt-3.5-turbo"//  
   },
   shop: {
+    channels: {
+      announcements: '1102417073642164274',
+      status: '1054766857552396419', //vc
+      vouch: '1054724474659946606',
+      stocksChannel: '1054929031881035789',
+      orderChannel: '1054731027240726528',
+      templatesChannel: '1079712339122720768',
+      shopStatus: '1102416143152578681',
+    },
     deleteChannels: [],
     checkers: [],
     pricelists: [
@@ -752,23 +761,7 @@ module.exports = {
         "nitro",
       ]
     },
-    vouchers: [
-      {
-        code: 'kjsansuH82edLDKEn2',
-        perks: '₱5 voucher',
-      },
-      {
-        code: 'KJCNAEIixdfe93289djc',
-        perks: 'Free dev badge on next purchase',
-      },
-    ],
-    channels: {
-      announcements: '1102417073642164274',
-      status: '1054766857552396419',
-      vouch: '1054724474659946606',
-      stocks: '1054929031881035789',
-      shopStatus: '1102416143152578681',
-    },
+    vouchers: [],
     stickyChannels: [
       {
         id: '1094975726127685726',

@@ -354,7 +354,7 @@ client.on("messageCreate", async (message) => {
   if (sticky.id === message.channel.id || sticky.id === message.channel.parent?.id) {
     const options = { limit: 10 };
     //
-    if (message.channel.id === '1054731027240726528' || message.channel.id === '1101833714704601168') {
+    if (message.channel.id === shop.channels.orderChannel || message.channel.id === '1101833714704601168') {
       let member = message.mentions.members.first()
       if (member) {
       await addRole(member,['pending','buyer'],message.guild)
@@ -1300,7 +1300,7 @@ client.on('interactionCreate', async inter => {
       //Send prompt
       try {
         //Get stocks
-        let stocks = await getChannel("1054929031881035789")
+        let stocks = await getChannel(shop.channels.stocksChannel)
         let links = ""
         let index = ""
         let msgs = []
@@ -1324,8 +1324,8 @@ client.on('interactionCreate', async inter => {
         inter.reply("<:S_exclamation:1093734009005158450> <@"+user.id+"> Sending **"+quan.value+"** "+product.value+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.")
         inter.user.send({content: links, components: [row]})
         //Send auto queue
-        let orders = await getChannel("1054731027240726528")
-        let template = await getChannel("1079712339122720768")
+        let orders = await getChannel(shop.channels.orderChannel) //1054731027240726528
+        let template = await getChannel(shop.channels.templatesChannel)
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
         content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
@@ -1399,26 +1399,17 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let user = options.find(a => a.name === 'user')
-      user = user.user
-      //
       let product = options.find(a => a.name === 'product')
-      product = product.value
-      //
       let quan = options.find(a => a.name === 'quantity')
-      quan = quan.value
-      //
       let mop = options.find(a => a.name === 'mop')
-      mop.value
-      //
       let price = options.find(a => a.name === 'price')
-      price = price.value
       //
       try {
-        let orders = await getChannel("1054731027240726528")
+        let orders = await getChannel(shop.channels.orderChannel)
         let template = await getChannel("1079712339122720768")
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
-        content = content.replace('{user}','<@'+user.id+'>').replace('{price}',price.toString()).replace('{quan}',quan.toString()).replace('{product}',product).replace('{mop}',mop ? mop.value : 'gcash')
+        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
         orders.send(content).then(async msg => {
           await msg.react("<:g1:1056579657828417596>")
         })
@@ -1589,7 +1580,7 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('returnLinks')) {
       let content = inter.message.content
-      let stocks = await getChannel(shop.channels.stocks)
+      let stocks = await getChannel(shop.channels.stocksChannel)
       let args = await getArgs(content)
       let returned = 0
       
