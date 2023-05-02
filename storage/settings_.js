@@ -718,8 +718,8 @@ module.exports = {
       },
       {
         id: '1081107027054571550',
-        message: '<a:nitrowumpus:1078244919623295046> **Nitro stocks dropper**',
-        files: ['https://cdn.discordapp.com/attachments/1093391705753002064/1094942394480332820/2023-04-10_19-06-25.mp4']
+        message: '<:S_letter:1092606891240198154> **Stocks dropper showcase**',
+        files: ['https://cdn.discordapp.com/attachments/1101501538293252136/1102772107424833536/2023-05-02_09-39-15.mp4']
       },
       {
         id: '1047454193595732049',
