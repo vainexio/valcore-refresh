@@ -31,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = false
+let cmd = true
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -80,6 +80,12 @@ client.on("ready", async () => {
             "value": 'paypal'
           }
         ],
+        "required": false,
+      },
+      {
+        "name": 'note',
+        "description": 'Extra notes',
+        "type": 3,
         "required": false,
       },
     ]
@@ -976,6 +982,7 @@ client.on('interactionCreate', async inter => {
       let price = options.find(a => a.name === 'price')
       let item = options.find(a => a.name === 'item')
       let mop = options.find(a => a.name === 'mop')
+      let note = options.find(a => a.name === 'note')
       //Send prompt
       try {
         //Get stocks
@@ -998,7 +1005,7 @@ client.on('interactionCreate', async inter => {
         //Send prompt
         let drops = await getChannel(shop.channels.drops)
         let dropMsg
-        await drops.send({content: links}).then(msg => dropMsg = msg)
+        await drops.send({content: (note ? note.value : '')+links}).then(msg => dropMsg = msg)
         //
         let row = new MessageActionRow().addComponents(
           new MessageButton().setCustomId("drop-"+dropMsg.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Release to "+user.user.tag),
