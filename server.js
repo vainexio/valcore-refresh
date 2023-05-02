@@ -31,7 +31,7 @@ async function startApp() {
     });
 }
 startApp();
-let cmd = true
+let cmd = false
 //When bot is ready
 client.on("ready", async () => {
   if (cmd) {
@@ -391,7 +391,7 @@ client.on("messageCreate", async (message) => {
   if (isCommand('feedback',message)) {
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
     
-    let botMsg = message.channel.send("<:S_seperator:1093733778633019492> Please send your feedback after this message.\n<:S_seperator:1093733778633019492> Don't worry, your feedback won't automatically send, if in any cases that you changed your mind.")
+    let botMsg = message.channel.send("<:S_seperator:1093733778633019492> Please type and send your feedback here!")
     const filter = m => m.author.id === message.author.id;
     message.channel.awaitMessages({filter,max: 1,time: 900000 ,errors: ['time']})
     .then(async responseMsg => {
