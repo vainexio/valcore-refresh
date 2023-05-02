@@ -474,8 +474,19 @@ client.on("messageCreate", async (message) => {
   }
   //
   if (message.channel.type === 'DM') return;
+  //
+  let doc = await userModel.findOne({ id: message.author.id });
+  if (doc && message.channel.id === '1047454193595732055') {
+    doc.chatCount++
+    await doc.save()
+  } else if (message.channel.id === '1047454193595732055') {
+    doc = await userModel(userSchema)
+    doc.id = message.author.id
+    doc.chatCount = 1
+    await doc.save()
+  }
   //Nitro checker
-  else if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
+  if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
     let args = getArgs(message.content)
     if (args.length === 0) return;
     let codes = []
@@ -841,6 +852,10 @@ client.on("messageCreate", async (message) => {
       if (found) message.channel.delete();
       else console.log('Channel deletion was cancelled.') 
       },countdown)
+  }
+  else if (isCommand('chat',message)) {
+    doc = await userModel.findOne({ id: message.author.id });
+    message.reply('You sent **'+doc.chatCount+'** messages in <#1047454193595732055> as of 02/05/2023.')
   }
   //
   if (message.channel.id === shop.channels.vouch) {
