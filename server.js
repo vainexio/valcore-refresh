@@ -1017,7 +1017,6 @@ client.on('interactionCreate', async inter => {
           await msg.react("<:g2:1056579660353372160>")
           await msg.react("<:g3:1056579662572179586>")
         })
-        inter.reply({content: emojis.check+' Queue added.'})
         //
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
