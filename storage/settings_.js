@@ -288,11 +288,12 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'Auto nitro stocks dropper',
+            parent: 'Stocks dropper',
             children: [
               //
               { name: 'Uncovered hosting', price: 299 },
               { name: 'Covered hosting', price: 499 },
+              { name: 'Features:\n+ </drop:1102423261914091530> command\n+ </stocks:1102433613116616734> command\n+ auto queue\n+ nitro links checker\n+ can do different item drops'}
               //
             ],
           },
@@ -300,7 +301,7 @@ module.exports = {
             parent: 'Custom Commission',
             children: [
               //
-              { name: 'This type of commission allows you to choose freely from anything you want your bot function. The price may range depending on the proposed functionality.', price: 0 },
+              { name: 'Allows you to choose freely from anything you want your bot function. The price may range depending on the proposed functionality.', price: 0 },
               //
             ],
           },
@@ -329,7 +330,7 @@ module.exports = {
         name: 'Server Boosting',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
-        status: 2,
+        status: 4,
         id: '1096319576331014155',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185905676309/Logopit_1680918458337.png?width=1440&height=360',
         types: [

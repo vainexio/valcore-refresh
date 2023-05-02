@@ -766,7 +766,7 @@ client.on("messageCreate", async (message) => {
     message.reply('Renamed '+cc+' channels with the border '+f2)
       }
   else if (isCommand('stocks',message)) {
-    message.reply('We recently converted this command to slash command. Please use </stocks:1102433613116616734> instead!')
+    message.reply('We recently converted this command to a slash command. Please use </stocks:1102433613116616734> instead!')
   }
   else if (isCommand('use',message)) {
     console.log(message.channel.parent.name)
