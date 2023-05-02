@@ -330,7 +330,7 @@ module.exports = {
         name: 'Server Boosting',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
-        status: 4,
+        status: 2,
         id: '1096319576331014155',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185905676309/Logopit_1680918458337.png?width=1440&height=360',
         types: [
@@ -339,9 +339,9 @@ module.exports = {
             parent: '3 Months',
             children: [
               //
-              { name: '2 server boosts', price: 55, rs: 50 },
-              { name: '8 server boosts', price: 130, rs: 125 },
-              { name: '14 server boosts', price: 190, rs: 185 },
+              { name: '2 server boosts', price: 55, rs: 0 },
+              { name: '8 server boosts', price: 130, rs: 0 },
+              { name: '14 server boosts', price: 200, rs: 0 },
               //
             ],
           },
