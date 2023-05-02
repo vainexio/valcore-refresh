@@ -32,8 +32,18 @@ async function startApp() {
 }
 startApp();
 let cmd = false
+
+let userSchema
+let userModel
 //When bot is ready
 client.on("ready", async () => {
+  await mongoose.connect(mongooseToken,{keepAlive: true});
+  
+  userSchema = new mongoose.Schema({
+    id: String,
+    chatCount: Number,
+  })
+  userModel = mongoose.model("SloopieUser_Model", userSchema);
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1102518364020154438"
