@@ -995,14 +995,15 @@ client.on('interactionCreate', async inter => {
         if (quan.value > index) return inter.reply({content: emojis.warning+" Insufficient stocks. **"+index+"** "+(item ? item.value : 'nitro boost(s)')+" remaining.", ephemeral: true})
         await addRole(await getMember(user.user.id,inter.guild),["Buyer","Pending"],inter.guild)
         stocks.bulkDelete(quan.value)
-        let row = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId("nitro-"+user.user.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Send to "+user.user.tag),
-          new MessageButton().setCustomId("returnLinks").setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
-        );
         //Send prompt
         let drops = await getChannel(shop.channels.drops)
-        drops.send({content: links, components: [row]})
-        
+        let dropMsg
+        await drops.send({content: links}).then(msg => dropMsg = msg)
+        //
+        let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId("drop-"+dropMsg.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Release to "+user.user.tag),
+          new MessageButton().setCustomId("returnLinks-"+dropMsg.id).setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
+        );
         inter.reply({content: "<:S_exclamation:1093734009005158450> <@"+user.user.id+"> Sending **"+quan.value+"** "+(item ? item.value : 'nitro boost(s)')+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.", components: [row]})
         //Send auto queue
         let orders = await getChannel(shop.channels.orders)
@@ -1267,10 +1268,13 @@ client.on('interactionCreate', async inter => {
     await inter.reply({ content: emojis.check+' Added **'+role+'** role.', ephemeral: true });
     }
   }
-    else if (id.startsWith('nitro-')) {
-      let user = id.replace('nitro-','')
-      user = await getUser(user)
-      if (!user) return inter.reply("Invalid user.")
+    else if (id.startsWith('drop-')) {
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let msgId = id.replace('drop-','')
+      let drops = await getChannel(shop.channels.drops)
+      let dropMsg = await drops.messages.fetch(msgId)
+      let user = inter.message.mentions.members.first()
+      if (!user) return inter.reply(emojis.x+" Invalid User")
       let template = await getChannel(shop.channels.dmTemplate)
       
       let msg = await template.messages.fetch("1075782458970214480")
@@ -1280,7 +1284,7 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<a:S_pastelheart:1093737606451298354>'),
         new MessageButton().setLabel('Vouch Here').setURL('https://discord.com/channels/1047454193159503904/1054724474659946606').setStyle('LINK').setEmoji('<:S_letter:1092606891240198154>')
         );
-      await user.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+inter.message.content+" ||", components: [copy]}).catch((err) => {
+      await user.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+dropMsg.content+" ||", components: [copy]}).catch((err) => {
         error = true
         inter.reply({content: emojis.x+" Failed to process delivery.\n\n```diff\n- "+err+"```", ephemeral: true})})
       .then(async (msg) => {
@@ -1289,16 +1293,22 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId('sent').setStyle('SUCCESS').setLabel('Sent to '+user.tag).setDisabled(true),
           new MessageButton().setCustomId('code').setStyle('SECONDARY').setLabel(code).setDisabled(true),
         );
-        inter.update({content: code+"\n"+inter.message.content, components: [row]})
+        inter.update({components: [row]})
+        dropMsg.edit({content: code+"\n"+dropMsg.content, components: [row]})
       })
     }
-    else if (id.startsWith('returnLinks')) {
-      let content = inter.message.content
+    else if (id.startsWith('returnLinks-')) {
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let msgId = id.replace('returnLinks-','')
+      let drops = await getChannel(shop.channels.drops)
+      let dropMsg = await drops.messages.fetch(msgId)
+      
+      let content = dropMsg.content
       let stocks = await getChannel(shop.channels.stocks)
       let args = await getArgs(content)
       let returned = 0
       
-      inter.update({content: 'Returned\n'+content, components: []})
+      dropMsg.edit({content: 'Returned\n'+content, components: []})
       
       for (let i = args.length - 1; i >= 0; i--) {
         if (args[i].includes('https://discord.gift/')) {
@@ -1306,6 +1316,7 @@ client.on('interactionCreate', async inter => {
           returned++
         }
       }
+      inter.update({components: []})
       inter.message.reply({content: emojis.check+' Returned '+returned+' links to stocks.'})
     }
     else if (id.startsWith('copyLinks')) {
