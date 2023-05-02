@@ -1002,6 +1002,7 @@ client.on('interactionCreate', async inter => {
         //
         let row = new MessageActionRow().addComponents(
           new MessageButton().setCustomId("drop-"+dropMsg.id).setStyle('SECONDARY').setEmoji('📤').setLabel("Release to "+user.user.tag),
+          new MessageButton().setCustomId("showDrop-"+dropMsg.id).setStyle('SECONDARY').setEmoji('❔').setLabel('Show Drop'),
           new MessageButton().setCustomId("returnLinks-"+dropMsg.id).setStyle('SECONDARY').setEmoji('♻️').setLabel('Return Links')
         );
         inter.reply({content: "<:S_exclamation:1093734009005158450> <@"+user.user.id+"> Sending **"+quan.value+"** "+(item ? item.value : 'nitro boost(s)')+".\n<:S_dot:1093733278541951078> Make sure to open your DMs.\n<:S_dot:1093733278541951078> The message may appear as **direct or request** message.", components: [row]})
@@ -1273,8 +1274,8 @@ client.on('interactionCreate', async inter => {
       let msgId = id.replace('drop-','')
       let drops = await getChannel(shop.channels.drops)
       let dropMsg = await drops.messages.fetch(msgId)
-      let user = inter.message.mentions.members.first()
-      if (!user) return inter.reply(emojis.x+" Invalid User")
+      let member = inter.message.mentions.members.first()
+      if (!member) return inter.reply(emojis.x+" Invalid User")
       let template = await getChannel(shop.channels.dmTemplate)
       
       let msg = await template.messages.fetch("1075782458970214480")
@@ -1284,13 +1285,13 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<a:S_pastelheart:1093737606451298354>'),
         new MessageButton().setLabel('Vouch Here').setURL('https://discord.com/channels/1047454193159503904/1054724474659946606').setStyle('LINK').setEmoji('<:S_letter:1092606891240198154>')
         );
-      await user.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+dropMsg.content+" ||", components: [copy]}).catch((err) => {
+      await member.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+dropMsg.content+" ||", components: [copy]}).catch((err) => {
         error = true
         inter.reply({content: emojis.x+" Failed to process delivery.\n\n```diff\n- "+err+"```", ephemeral: true})})
       .then(async (msg) => {
         if (error) return;
         let row = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('sent').setStyle('SUCCESS').setLabel('Sent to '+user.tag).setDisabled(true),
+          new MessageButton().setCustomId('sent').setStyle('SUCCESS').setLabel('Sent to '+member.user.tag).setDisabled(true),
           new MessageButton().setCustomId('code').setStyle('SECONDARY').setLabel(code).setDisabled(true),
         );
         inter.update({components: [row]})
@@ -1318,6 +1319,15 @@ client.on('interactionCreate', async inter => {
       }
       inter.update({components: []})
       inter.message.reply({content: emojis.check+' Returned '+returned+' links to stocks.'})
+    }
+    else if (id.startsWith('showDrop-')) {
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let msgId = id.replace('showDrop-','')
+      let drops = await getChannel(shop.channels.drops)
+      let dropMsg = await drops.messages.fetch(msgId)
+      
+      let content = dropMsg.content
+      inter.reply({content: content, ephemeral: true})
     }
     else if (id.startsWith('copyLinks')) {
       
