@@ -1668,7 +1668,6 @@ const interval = setInterval(async function() {
   }
       //Get info
       if (ready) {
-        ready = false
         
         let amount = shop.randomVouchers.amount
         let type = shop.randomVouchers.type
@@ -1676,6 +1675,7 @@ const interval = setInterval(async function() {
         let template = await getChannel(shop.channels.templates)
         let annc = await getChannel(shop.channels.shopStatus)
       if (time === '11:11') {
+        ready = false
         let voucher = {
           code: makeCode(10),
           perks: generatedVoucher
@@ -1685,6 +1685,7 @@ const interval = setInterval(async function() {
         await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
       }
         else if (time === randomTime) {
+          ready = false
           let voucher = {
           code: makeCode(10),
           perks: generatedVoucher
@@ -1696,6 +1697,7 @@ const interval = setInterval(async function() {
         await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
         }
         else if (today.getHours() === 0 && today.getMinutes() === 0) {
+          ready = false
           let msg = await template.messages.fetch("1079716277528039468")
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : CLOSED') return;
@@ -1703,6 +1705,7 @@ const interval = setInterval(async function() {
         annc.send({content: msg.content, files: ['https://i.pinimg.com/originals/72/7b/24/727b247bc2d09404b67a7ed275b8d85d.gif']})
         } 
         else if (today.getHours() === 8 && today.getMinutes() === 0) {
+          ready = false
           let msg = await template.messages.fetch("1079715999097552956")
         let vc = await getChannel(shop.channels.status)
         if (vc.name === 'shop : OPEN') return;
@@ -1710,6 +1713,7 @@ const interval = setInterval(async function() {
         annc.send({content: msg.content, files: ['https://i.pinimg.com/originals/1e/ed/c4/1eedc43a10e28ce98b9bd0ad2384c905.gif']})
       }  
         else if (today.getHours() === 11 && today.getMinutes() === 0) {
+          ready = false
           let msg = await template.messages.fetch("1079712404084117524")
           let vc = await getChannel(shop.channels.reportsVc)
           if (vc.name === 'reports : OPEN') return;
@@ -1717,6 +1721,7 @@ const interval = setInterval(async function() {
           annc.send({content: msg.content, files: ['https://media.tenor.com/H6H2hhidRhIAAAAC/chick-pio.gif']})
         }
         else if (today.getHours() === 20 && today.getMinutes() === 0) {
+          ready = false
           let msg = await template.messages.fetch("1079715633123557496")
           let vc = await getChannel(shop.channels.reportsVc)
           if (vc.name === 'reports : CLOSED') return;
@@ -1726,7 +1731,7 @@ const interval = setInterval(async function() {
         if (!ready) {
         setTimeout(function() {
           ready = true;
-        },50000)
+        },60000)
         }
       }
   
