@@ -46,7 +46,7 @@ client.on("ready", async () => {
   userModel = mongoose.model("SloopieUser_Model", userSchema);
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
-  let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1102518364020154438"
+  let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1101808643143389204"
   let json = {
     "name": "drop",
     "type": 1,
