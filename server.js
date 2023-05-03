@@ -1680,7 +1680,7 @@ const interval = setInterval(async function() {
           code: makeCode(10),
           perks: generatedVoucher
         }
-        let vr = await getChannel(shop.vouchers)
+        let vr = await getChannel(shop.channels.vouchers)
         vr.send(voucher.code+' - '+voucher.perks)
         await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
       }
@@ -1692,7 +1692,7 @@ const interval = setInterval(async function() {
           }
           randomTime = null
           
-          let vr = await getChannel(shop.vouchers)
+          let vr = await getChannel(shop.channels.vouchers)
         vr.send(voucher.code+' - '+voucher.perks)
         await dropVoucher(voucher.code,'1047454193595732055',voucher.perks+' drop')
         }
