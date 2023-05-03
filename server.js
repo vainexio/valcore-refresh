@@ -212,7 +212,7 @@ const {getRole, addRole, removeRole, hasRole} = roles
 let errors = 0
 let expCodes = []
 async function setVouchers() {
-  let channel = await getChannel(shop.vouchers)
+  let channel = await getChannel(shop.channels.vouchers)
   shop.vouchers = []
   const options = { limit: 100 };
   
