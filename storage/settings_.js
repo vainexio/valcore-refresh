@@ -331,7 +331,7 @@ module.exports = {
         name: 'Server Boosting',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
-        status: 2,
+        status: 4,
         id: '1096319576331014155',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185905676309/Logopit_1680918458337.png?width=1440&height=360',
         types: [
