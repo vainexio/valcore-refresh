@@ -523,6 +523,10 @@ client.on("messageCreate", async (message) => {
     if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
       msg.edit("Fetching nitro codes (stocking - "+codes.length+") " + emojis.loading);
       for (let i in codes) {
+        if (breakChecker) {
+          breakChecker = false
+          break
+        };
         let stocks = await getChannel(shop.channels.stocks)
         sleep(1000);
         await stocks.send("https://discord.gift/"+codes[i].code);
@@ -588,7 +592,7 @@ client.on("messageCreate", async (message) => {
       let state = data.state ? data.state : 'Unchecked'
       let user = data.user ? data.user : 'Unknown User'
       let expire = data.expire
-      if (embed.fields.length < 25) {
+      if (embed.fields.length <= 24) {
       embed = new MessageEmbed(embed)
         .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
         .setTimestamp()
