@@ -266,6 +266,7 @@ function makeCode(length) {
     return result;
 }
 let breakChecker = false
+let truck = false
 client.on("messageCreate", async (message) => {
   //Ping
   if (message.channel.id === '1047454193595732055' && message.author.id === '968378766260846713') {
@@ -441,29 +442,34 @@ client.on("messageCreate", async (message) => {
   });
   }
   else if (message.content.toLowerCase() === 'truck') {
+    if (truck) return message.reply('A truck animation is currently in progress.')
+    truck = true
     let botMsg
     let waitingTime = 1000
-    await message.channel.send('** **        <:trucked_runner:1103701285091422288>               ** **:truck:').then(msg => botMsg = msg)
+    await message.channel.send('** **               <:trucked_runner:1103701285091422288>               ** **:truck:').then(msg => botMsg = msg)
     sleep(waitingTime)
-    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>             ** **:truck:')
+    await botMsg.edit('** **               <:trucked_runner:1103701285091422288>             ** **:truck:')
     sleep(waitingTime)
-    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>          ** **:truck:')
+    await botMsg.edit('** **               <:trucked_runner:1103701285091422288>          ** **:truck:')
     sleep(waitingTime)
-    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>       ** **:truck:')
+    await botMsg.edit('** **               <:trucked_runner:1103701285091422288>       ** **:truck:')
     sleep(waitingTime)
-    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>    ** **:truck:')
+    await botMsg.edit('** **               <:trucked_runner:1103701285091422288>    ** **:truck:')
     sleep(waitingTime)
-    await botMsg.edit('** **        <:trucked_runner:1103701285091422288> ** **:truck:')
+    await botMsg.edit('** **               <:trucked_runner:1103701285091422288> ** **:truck:')
     sleep(waitingTime)
-    await botMsg.edit('** **        <:truck_runner:1103701244331167815>')
+    await botMsg.edit('** **               <:trucked_runner:1103701285091422288>:truck:')
     sleep(waitingTime)
-    await botMsg.edit('** **      :truck:<:trucked_runner:1103701285091422288>')
+    await botMsg.edit('** **               <:truck_runner:1103701244331167815>')
     sleep(waitingTime)
-    botMsg.edit('** **    :truck: <:trucked_runner:1103701285091422288>')
+    await botMsg.edit('** **        :truck:<:trucked_runner:1103701285091422288>')
     sleep(waitingTime)
-    await botMsg.edit('** **    :truck:  <:trucked_runner:1103701285091422288>')
+    await botMsg.edit('** **      :truck:  <:trucked_runner:1103701285091422288>')
     sleep(waitingTime)
-    await botMsg.edit('** **   :truck:  <:trucked_runner:1103701285091422288>')
+    await botMsg.edit('** **   :truck:     <:trucked_runner:1103701285091422288>')
+    sleep(waitingTime)
+    await botMsg.edit('** ** :truck:       <:trucked_runner:1103701285091422288>')
+    truck = false
   }
   //
   if (message.channel.type === 'DM') return;
