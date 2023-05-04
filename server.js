@@ -48,57 +48,29 @@ client.on("ready", async () => {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/1101808643143389204"
   let json = {
-    "name": "drop",
+    "name": "refund",
     "type": 1,
-    "description": "Drops a product to a user",
+    "description": "Calculate the amount to refund",
     "options": [
       {
-        "name": 'user',
-        "description": 'Recipient',
-        "type": 6,
-        "required": true,
-      },
-      {
-        "name": 'quantity',
-        "description": 'Amount to send',
-        "type": 10,
-        "required": true,
-      },
-      {
         "name": 'price',
-        "description": 'Price Paid',
+        "description": 'Price paid',
         "type": 10,
         "required": true,
       },
       {
-        "name": 'item',
-        "description": 'Item Name',
-        "type": 3,
-        "required": false,
+        "name": 'subscription',
+        "description": 'Subscription days',
+        "type": 10,
+        "required": true,
       },
       {
-        "name": 'mop',
-        "description": 'Payment Method',
-        "type": 3,
-        "choices": [
-          {
-            "name": 'GCash',
-            "value": 'gcash'
-          },
-          {
-            "name": 'Paypal',
-            "value": 'paypal'
-          }
-        ],
-        "required": false,
+        "name": 'remaining',
+        "description": 'Remaining days',
+        "type": 10,
+        "required": true,
       },
-      {
-        "name": 'note',
-        "description": 'Extra notes',
-        "type": 3,
-        "required": false,
-      },
-    ]
+      ],
   }
   
   let headers = {
