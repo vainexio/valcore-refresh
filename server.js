@@ -973,8 +973,9 @@ let claimer = null
 let animation = false
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
+    let cname = inter.commandName
     //Nitro dropper
-    if (inter.commandName == 'drop') {
+    if (cname === 'drop') {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission'});
       let options = inter.options._hoistedOptions
       //
@@ -1031,7 +1032,7 @@ client.on('interactionCreate', async inter => {
       }
     }
     //Stocks
-    else if (inter.commandName == 'stocks') {
+    else if (cname === 'stocks') {
       //if (inter.channel.id !== '1047454193595732058' && !await getPerms(inter.member,4)) return inter.reply({content: 'This command only works in <#1047454193595732058>\nPlease head there to use the command.', ephemeral: true})
       
       let stocks = await getChannel(shop.channels.stocks)
@@ -1084,7 +1085,7 @@ client.on('interactionCreate', async inter => {
       inter.reply({components: comps})
     }
     //Queue
-    else if (inter.commandName === 'order') {
+    else if (cname === 'order') {
       if (!await getPerms(inter.member,4)) return inter.reply({ content: emojis.warning+" Insufficient Permission"});
       let options = inter.options._hoistedOptions
       //
@@ -1109,7 +1110,7 @@ client.on('interactionCreate', async inter => {
       }
     }
     //
-    else if (inter.commandName === 'calculate') {
+    else if (cname === 'calculate') {
       let options = inter.options._hoistedOptions
       let type = options.find(a => a.name === 'type')
       let amount = options.find(a => a.name === 'amount')
@@ -1152,7 +1153,7 @@ client.on('interactionCreate', async inter => {
         await inter.reply({embeds: [embed]})
     }
     //Refund
-    else if (inter.commandName === 'refund') {
+    else if (cname === 'refund') {
       let options = inter.options._hoistedOptions
       let price = options.find(a => a.name === 'price')
       let subscription = options.find(a => a.name === 'subscription')
