@@ -86,7 +86,15 @@ module.exports = {
               { name: '4 months', price: 70 },
               { name: '6 months', price: 110 },
               { name: '8 months', price: 145 },
-              { name: '12 months', price: 120 },
+              { name: '12 months', price: 130 },
+              //
+            ],
+          },
+          {
+            parent: '\u200b',
+            children: [
+              //
+              { name: '+₱15 if own account', price: 0 },
               //
             ],
           },
@@ -423,7 +431,7 @@ module.exports = {
         //Category
         name: 'Steam',
         channel: '1054989628765122571',
-        status: 2,
+        status: 4,
         id: '1096319581393535036',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077185125535844/Logopit_1680918431372.png?width=1440&height=360',
         types: [
