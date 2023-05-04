@@ -1151,6 +1151,24 @@ client.on('interactionCreate', async inter => {
         
         await inter.reply({embeds: [embed]})
     }
+    //Refund
+    else if (inter.commandName === 'refund') {
+      let options = inter.options._hoistedOptions
+      let price = options.find(a => a.name === 'price')
+      let subscription = options.find(a => a.name === 'subscription')
+      let remaining = options.find(a => a.name === 'remaining')
+      let service = 0.7
+      let calcu = price.value/subscription*remaining*service
+      
+      let embed = new MessageEmbed()
+      .addField('Refund Amount',calcu.toString())
+      .addField('Price paid',price.value.toString())
+      .addField("Formula","*price paid/subscription days\*remaining days\n*service fee*")
+      .addField("Calculation",price.value+'/'+subscription.value+'\*'+remaining.value+'\*'+service)
+      .setColor(colors.none)
+      
+      inter.reply({embeds: [embed]});
+    }
   }
   
   //BUTTONS
