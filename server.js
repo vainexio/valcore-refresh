@@ -310,10 +310,6 @@ client.on("messageCreate", async (message) => {
       message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
     }
     }
-    } else if (!message.author.bot) {
-      //if (!await hasRole(message.member,['1094909481806205009'])) {
-      //message.reply({content: "Please make sure that you have accepted the terms before proceeding with your order.", embeds: [embed], components: [row]})
-      //}
     }
   }
   else if (message.channel.parent?.name.toLowerCase() === 'reports') {
@@ -569,17 +565,11 @@ client.on("messageCreate", async (message) => {
         .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
         .setTimestamp()
         
-        console.log(num+'='+codes.length)
-        if (num == Number(codes.lengh)) {
-          console.log('push',embeds)
-          embeds.push(embed)
-        } else console.log('no')
+        if (codes.length == num) embeds.push(embed);
       }
       else {
-        console.log('make new')
         embeds.push(embed)
         embed = new MessageEmbed()
-          //.addField('\u200b',ind)
           .setColor(colors.none)
           .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
           .setTimestamp()
@@ -1116,7 +1106,7 @@ client.on('interactionCreate', async inter => {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
       }
     }
-    //
+    //Calculate
     else if (cname === 'calculate') {
       let options = inter.options._hoistedOptions
       let type = options.find(a => a.name === 'type')
@@ -1194,16 +1184,6 @@ client.on('interactionCreate', async inter => {
     else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})
       inter.message.edit({components: []})
-    }
-    else if (id === 'saveRecord') {
-      let log = await getChannel(shop.channels.financeLogs)
-      log.send({embeds: inter.message.embeds})
-      
-      let row = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId("saveRecord").setStyle('SECONDARY').setEmoji(emojis.check).setLabel("Record Saved").setDisabled(true),
-    );
-      
-      inter.update({components: [row]})
     }
     else if (id.startsWith('voucher-')) {
       let code = id.replace('voucher-','').replace(/_/g,' ')
