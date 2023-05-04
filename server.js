@@ -568,9 +568,15 @@ client.on("messageCreate", async (message) => {
       embed = new MessageEmbed(embed)
         .setFooter({ text: 'Sloopies Checker | '+message.author.tag})
         .setTimestamp()
-      } 
+        
+        console.log(num+'='+codes.length)
+        if (num == Number(codes.lengh)) {
+          console.log('push',embeds)
+          embeds.push(embed)
+        } else console.log('no')
+      }
       else {
-        embed = new MessageEmbed(embed)
+        console.log('make new')
         embeds.push(embed)
         embed = new MessageEmbed()
           //.addField('\u200b',ind)
@@ -585,6 +591,7 @@ client.on("messageCreate", async (message) => {
       }
     }
     msg.delete();
+    console.log(embeds.length)
     message.channel.send({embeds: embeds.length > 0 ? embeds : [embed]})
   }
   //Sticky
