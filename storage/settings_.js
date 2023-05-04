@@ -124,7 +124,7 @@ module.exports = {
               //
               { name: '1 month', price: 40 },
               { name: '4 months', price: 60 },
-              { name: '6 months', price: 90 },
+              { name: '6 months', price: 80 },
               //
             ],
           },
