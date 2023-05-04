@@ -440,6 +440,31 @@ client.on("messageCreate", async (message) => {
     sendUser("**[Timed-out]** No response collected. Please rerun the command if you wish to retry.\n",message.author.id,colors.red)
   });
   }
+  else if (message.content.toLowerCase() === 'truck') {
+    let botMsg
+    let waitingTime = 1000
+    await message.channel.send('** **        <:trucked_runner:1103701285091422288>               ** **:truck:').then(msg => botMsg = msg)
+    sleep(waitingTime)
+    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>             ** **:truck:')
+    sleep(waitingTime)
+    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>          ** **:truck:')
+    sleep(waitingTime)
+    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>       ** **:truck:')
+    sleep(waitingTime)
+    await botMsg.edit('** **        <:trucked_runner:1103701285091422288>    ** **:truck:')
+    sleep(waitingTime)
+    await botMsg.edit('** **        <:trucked_runner:1103701285091422288> ** **:truck:')
+    sleep(waitingTime)
+    await botMsg.edit('** **        <:truck_runner:1103701244331167815>')
+    sleep(waitingTime)
+    await botMsg.edit('** **      :truck:<:trucked_runner:1103701285091422288>')
+    sleep(waitingTime)
+    botMsg.edit('** **    :truck: <:trucked_runner:1103701285091422288>')
+    sleep(waitingTime)
+    await botMsg.edit('** **    :truck:  <:trucked_runner:1103701285091422288>')
+    sleep(waitingTime)
+    await botMsg.edit('** **   :truck:  <:trucked_runner:1103701285091422288>')
+  }
   //
   if (message.channel.type === 'DM') return;
   //
