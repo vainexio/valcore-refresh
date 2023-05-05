@@ -402,7 +402,7 @@ module.exports = {
         channel: '1054989652416798750',
         status: 2,
         id: '1096319578482671646',
-        image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236413468672/Logopit_1680918581099.png?width=1440&height=360',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1104012111346151494/Logopit_1683287379481.png?width=1440&height=360',
         types: [
           //Types
           {
