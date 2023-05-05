@@ -475,6 +475,29 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   //
   let doc = await userModel.findOne({ id: message.author.id });
+  if (isCommand("remove",message)) {
+    if (!await getPerms(message.member,4)) return;
+    let args = await requireArgs(message,2)
+    if (!args) return;
+    
+    let user = await getUser(args[1])
+    if (user) {
+      let deleted = 0
+      await user.send("Deleted Messages").then( async msg => {
+        let channel = msg.channel
+        await channel.messages.fetch({limit: 100}).then(async (messages) => {
+          messages.forEach(async gotMsg => {
+            let content = gotMsg.content
+            if (gotMsg.author.id === client.user.id && gotMsg.content.toLowerCase().includes(args[2])) gotMsg.delete(), deleted++
+            //let us = await getUser("477729368622497803")
+            //await message.author.send(content)
+          })
+          
+          message.reply(emojis.check+" Deleted "+deleted+" bot messages in "+user.tag+"'s DMs that contains the word `"+args[2]+"`.")
+        })
+      }).catch(err => message.reply("```diff\n- "+err+"```"))
+    }
+  }
   if (doc && message.channel.id === '1047454193595732055') {
     doc.chatCount++
     await doc.save()
