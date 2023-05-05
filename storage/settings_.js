@@ -398,6 +398,29 @@ module.exports = {
       },
       {
         //Category
+        name: 'Canva',
+        channel: '1054989652416798750',
+        status: 2,
+        id: '1096319578482671646',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236413468672/Logopit_1680918581099.png?width=1440&height=360',
+        types: [
+          //Types
+          {
+            parent: 'Canva Pro',
+            children: [
+              //
+              { name: '1 month', price: 25, rs: 0 },
+              { name: '2 months', price: 30, rs: 0 },
+              { name: '3 montha', price: 35, rs: 0 },
+              { name: '12 months', price: 45, rs: 0 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
         name: 'Discord Nitro',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
