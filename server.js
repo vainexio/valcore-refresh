@@ -1079,7 +1079,15 @@ client.on('interactionCreate', async inter => {
           .replace('{status}','**COMPLETED**')
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
-        orders.send(content)
+        let row2 = new MessageActionRow().addComponents(
+          new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
+            {label: 'Noted',description: 'Update order status',value: 'noted', emoji: '<a:S_diamond:1093738450156535859>'},
+            {label: 'Processing',description: 'Update order status',value: 'processing', emoji: '<a:S_bearheart:1094190497179910225>'},
+            {label: 'Completed',description: 'Update order status',value: 'completed', emoji: '<a:S_checkmark:1095303661648892006>'},
+          ]),
+        );
+        
+        orders.send({content: content, components: [row2]})
         //
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
