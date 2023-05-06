@@ -1075,6 +1075,7 @@ client.on('interactionCreate', async inter => {
           .replace('{price}',price.value.toString())
           .replace('{quan}',quan.value.toString()).replace('{product}',(item ? item.value : 'nitro boost'))
           .replace('{mop}',mop ? mop.value : 'gcash')
+          .replace('{ticket}',inter.channel.name)
           .replace('{status}','**COMPLETED**')
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
@@ -1154,7 +1155,14 @@ client.on('interactionCreate', async inter => {
         let msg = await template.messages.fetch("1093800287002693702")
         let status = 'PENDING'
         let content = msg.content
-        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash').replace('{ticket}',inter.channel.name).replace('{status}',status)
+        content = content
+          .replace('{user}','<@'+user.user.id+'>')
+          .replace('{price}',price.value.toString())
+          .replace('{quan}',quan.value.toString())
+          .replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
+          .replace('{ticket}',inter.channel.name)
+          .replace('{status}',status)
+          .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
         let row = new MessageActionRow().addComponents(
           new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
@@ -1163,8 +1171,14 @@ client.on('interactionCreate', async inter => {
             {label: 'Completed',description: 'Sets order status to COMPLETED',value: 'completed', emoji: '<:g3:1056579662572179586>'},
           ]),
         );
-        orders.send({content: content, components: [row]})
-        inter.reply({content: emojis.check+' Queue added.'})
+        let msgUrl
+        await orders.send({content: content, components: [row]}).then(msg => msgUrl = msg.url)
+        
+        let linkRow = new MessageActionRow().addComponents(
+          new MessageButton().setURL(msgUrl).setStyle('LINK').setEmoji('<a:S_tick:1095508349161840660>').setLabel("Go to queue"),
+        );
+        
+        inter.reply({content: 'Queue added was added to '+orders.toString(), components: [linkRow]})
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
       }
@@ -1253,7 +1267,7 @@ client.on('interactionCreate', async inter => {
       if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`', ephemeral: true})
       //if (inter)
       let args = await getArgs(inter.message.content)
-      let a = args[args.length-3]
+      let a = args[args.length-5]
       let b = args[args.length-1]
       let content = inter.message.content.replace(a,'**'+found.toUpperCase()+'**').replace(b,'<t:'+getTime(new Date().getTime())+':R>')
       console.log(content)
@@ -1399,6 +1413,7 @@ client.on('interactionCreate', async inter => {
       let stocks = await getChannel(shop.channels.stocks)
       let args = await getArgs(content)
       let returned = 0
+      let msgReturn = false
       
       dropMsg.edit({content: 'Returned\n'+content, components: []})
       
@@ -1408,8 +1423,12 @@ client.on('interactionCreate', async inter => {
           returned++
         }
       }
+      if (returned === 0) {
+        msgReturn = true
+        await stocks.send(content)
+      }
       inter.update({components: []})
-      inter.message.reply({content: emojis.check+' Returned '+returned+' links to stocks.'})
+      msgReturn ? inter.message.reply({content: emojis.check+' Returned the whole message to stocks.'}) : inter.message.reply({content: emojis.check+' Returned '+returned+' links to stocks.'})
     }
     else if (id.startsWith('showDrop-')) {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
