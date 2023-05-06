@@ -1153,8 +1153,16 @@ client.on('interactionCreate', async inter => {
         let status = 'PENDING'
         let content = msg.content
         content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash').replace('{ticket}',inter.channel.name).replace('{status}',status)
-        orders.send(content).then(async msg => {
-          await msg.react("<:g1:1056579657828417596>")
+        
+        let row = new MessageActionRow().addComponents(
+          new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
+            {label: 'Noted',description: 'Sets order status to NOTED',value: 'noted', emoji: '<:g1:1056579657828417596>'},
+            {label: 'Processing',description: 'Sets order status to PROCESSING',value: 'processing', emoji: '<:g2:1056579660353372160>'},
+            {label: 'Completed',description: 'Sets order status to COMPLETED',value: 'completed', emoji: '<:g3:1056579662572179586>'},
+          ]),
+        );
+        orders.send({content: content, components: [row]}).then(async msg => {
+          //await msg.react("<:g1:1056579657828417596>")
         })
         inter.reply({content: emojis.check+' Queue added.'})
       } catch (err) {
@@ -1225,8 +1233,9 @@ client.on('interactionCreate', async inter => {
   }
   
   //BUTTONS
-  else if (inter.isButton()) {
+  else if (inter.isButton() || inter.isSelectMenu()) {
     let id = inter.customId
+    console.log(id)
     if (id === 'terms') {
       let member = inter.member;
       await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
@@ -1235,6 +1244,18 @@ client.on('interactionCreate', async inter => {
         );
       inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
       inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
+    }
+    else if (id === 'orderStatus') {
+      console.log('got')
+      let template = await getChannel(shop.channels.templates)
+        let msg = await template.messages.fetch("1093800287002693702")
+        let content = msg.content
+        let stat = ['pending','processing','completed']
+        let found = stat.find(s => s === inter.values[0])
+        if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`'})
+        //if (inter)
+        content = content.replace('{status}',found)
+        inter.update({})
     }
     else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})
