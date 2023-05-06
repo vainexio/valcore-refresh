@@ -1153,7 +1153,7 @@ client.on('interactionCreate', async inter => {
         let orders = await getChannel(shop.channels.orders)
         let template = await getChannel(shop.channels.templates)
         let msg = await template.messages.fetch("1093800287002693702")
-        let status = 'PENDING'
+        let status = 'NOTED'
         let content = msg.content
         content = content
           .replace('{user}','<@'+user.user.id+'>')
@@ -1166,9 +1166,9 @@ client.on('interactionCreate', async inter => {
         
         let row = new MessageActionRow().addComponents(
           new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
-            {label: 'Noted',description: 'Sets order status to NOTED',value: 'noted', emoji: '<:g1:1056579657828417596>'},
-            {label: 'Processing',description: 'Sets order status to PROCESSING',value: 'processing', emoji: '<:g2:1056579660353372160>'},
-            {label: 'Completed',description: 'Sets order status to COMPLETED',value: 'completed', emoji: '<:g3:1056579662572179586>'},
+            {label: 'Noted',description: 'Update order status',value: 'noted', emoji: '<a:S_diamond:1093738450156535859>'},
+            {label: 'Processing',description: 'Update order status',value: 'processing', emoji: '<a:S_bearheart:1094190497179910225>'},
+            {label: 'Completed',description: 'Update order status',value: 'completed', emoji: '<a:S_checkmark:1095303661648892006>'},
           ]),
         );
         let msgUrl
@@ -1270,8 +1270,7 @@ client.on('interactionCreate', async inter => {
       let a = args[args.length-5]
       let b = args[args.length-1]
       let content = inter.message.content.replace(a,'**'+found.toUpperCase()+'**').replace(b,'<t:'+getTime(new Date().getTime())+':R>')
-      console.log(content)
-      inter.update({content: content, components: found === 'completed' ? [] : null})
+      inter.update({content: content})
     }
     else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})
