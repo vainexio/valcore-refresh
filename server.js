@@ -163,7 +163,7 @@ const sendMsg = require('./functions/sendMessage.js')
 const {sendChannel, sendUser} = sendMsg
 //Functions
 const get = require('./functions/get.js')
-const {chatAI, getNth, getChannel, getGuild, getUser, getMember, getRandom, getColor} = get
+const {getTime, chatAI, getNth, getChannel, getGuild, getUser, getMember, getRandom, getColor} = get
 //Command Handler
 const cmdHandler = require('./functions/commands.js')
 const {checkCommand, isCommand, isMessage, getTemplate} = cmdHandler
@@ -1246,16 +1246,18 @@ client.on('interactionCreate', async inter => {
       inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
     }
     else if (id === 'orderStatus') {
-      console.log('got')
-      let template = await getChannel(shop.channels.templates)
-        let msg = await template.messages.fetch("1093800287002693702")
-        let content = msg.content
-        let stat = ['pending','processing','completed']
-        let found = stat.find(s => s === inter.values[0])
-        if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`'})
-        //if (inter)
-        content = content.replace('{status}',found)
-        inter.update({})
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      
+      let stat = ['pending','processing','completed']
+      let found = stat.find(s => s === inter.values[0])
+      if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`'})
+      //if (inter)
+      let args = await getArgs(inter.message.content)
+      let e = args[args.length-1]
+      console.log(e)
+      let content = inter.message.content.replace(e,'**'+found.toUpperCase()+'**'+(found === 'completed' ? '\n<a:rotatingTime:1104264008078475294> stamp : <t:'+getTime(new Date().getTime())+':R>' : ''))
+      console.log(content)
+      inter.update({content: content, components: found === 'completed' ? [] : null})
     }
     else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})

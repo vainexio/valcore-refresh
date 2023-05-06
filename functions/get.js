@@ -11,6 +11,9 @@ const {AI, shop, notices, auth, prefix, status, theme, commands, permissions, em
 const open_ai = process.env.OPEN_AI
 
 module.exports = {
+  getTime: function(stamp) {
+    return Math.floor(new Date(Number(stamp)).getTime()/1000.0);
+  },
   chatAI: async function(content,type) {
     let data = {}
     let chosenAPI = null
