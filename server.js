@@ -1150,8 +1150,9 @@ client.on('interactionCreate', async inter => {
         let orders = await getChannel(shop.channels.orders)
         let template = await getChannel(shop.channels.templates)
         let msg = await template.messages.fetch("1093800287002693702")
+        let status = 'PENDING'
         let content = msg.content
-        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash')
+        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',product.value).replace('{mop}',mop ? mop.value : 'gcash').replace('{ticket}',inter.channel.name).replace('{status}',status)
         orders.send(content).then(async msg => {
           await msg.react("<:g1:1056579657828417596>")
         })
