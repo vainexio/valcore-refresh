@@ -1,6 +1,6 @@
 //const others = require('../functions/others.js')
 const Discord = require('discord.js');
-const {Client, Intents, MessageEmbed, MessageActionRow, MessageButton} = Discord;
+const {Client, Intents, MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} = Discord;
 let colors = {
   red: "#ea3737",
   blue: "#1200ff",
@@ -47,6 +47,14 @@ let keys = [
 ]
 module.exports = {
   shop: {
+    orderStatus: new MessageActionRow().addComponents(
+          new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
+            {label: 'Noted',description: 'Change order status',value: 'noted', emoji: '<a:S_diamond:1093738450156535859>'},
+            {label: 'Processing',description: 'Change order status',value: 'processing', emoji: '<a:S_bearheart:1094190497179910225>'},
+            {label: 'Completed',description: 'Complete order',value: 'completed', emoji: '<a:S_checkmark:1095303661648892006>'},
+            {label: 'Cancelled',description: 'Cancel order',value: 'cancelled', emoji: '<:S_exclamation:1093734009005158450>'},
+          ]),
+        ),
     channels: {
       announcements: '1102417073642164274',
       status: '1054766857552396419', //vc

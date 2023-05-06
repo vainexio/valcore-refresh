@@ -1079,13 +1079,7 @@ client.on('interactionCreate', async inter => {
           .replace('{status}','**COMPLETED**')
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
-        let row2 = new MessageActionRow().addComponents(
-          new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
-            {label: 'Noted',description: 'Update order status',value: 'noted', emoji: '<a:S_diamond:1093738450156535859>'},
-            {label: 'Processing',description: 'Update order status',value: 'processing', emoji: '<a:S_bearheart:1094190497179910225>'},
-            {label: 'Completed',description: 'Update order status',value: 'completed', emoji: '<a:S_checkmark:1095303661648892006>'},
-          ]),
-        );
+        let row2 = shop.orderStatus
         
         orders.send({content: content, components: [row2]})
         //
@@ -1172,13 +1166,7 @@ client.on('interactionCreate', async inter => {
           .replace('{status}',status)
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
-        let row = new MessageActionRow().addComponents(
-          new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('View Options').addOptions([
-            {label: 'Noted',description: 'Update order status',value: 'noted', emoji: '<a:S_diamond:1093738450156535859>'},
-            {label: 'Processing',description: 'Update order status',value: 'processing', emoji: '<a:S_bearheart:1094190497179910225>'},
-            {label: 'Completed',description: 'Update order status',value: 'completed', emoji: '<a:S_checkmark:1095303661648892006>'},
-          ]),
-        );
+        let row = shop.orderStatus
         let msgUrl
         await orders.send({content: content, components: [row]}).then(msg => msgUrl = msg.url)
         
@@ -1270,7 +1258,7 @@ client.on('interactionCreate', async inter => {
     else if (id === 'orderStatus') {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
-      let stat = ['noted','processing','completed']
+      let stat = ['noted','processing','completed','cancelled']
       let found = stat.find(s => s === inter.values[0])
       if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`', ephemeral: true})
       //if (inter)
@@ -1278,7 +1266,7 @@ client.on('interactionCreate', async inter => {
       let a = args[args.length-5]
       let b = args[args.length-1]
       let content = inter.message.content.replace(a,'**'+found.toUpperCase()+'**').replace(b,'<t:'+getTime(new Date().getTime())+':R>')
-      inter.update({content: content})
+      inter.update({content: content, components: [shop.orderStatus]})
     }
     else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})
