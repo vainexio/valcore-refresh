@@ -22,7 +22,7 @@ let emojis = {
   check: '<a:check:969936488739512340>',
   x: '<a:Xmark:969401924736651284>',
   loading: '<a:loading:968743431528669210>',
-  warning: '⚠️',
+  warning: '<a:S_error:1095504279042805820>',
   online: '<:online_:1004014930959286342>',
   idle: '<:Idle_:1004014897417424938>',
   dnd: '<:dnd_:1004017480613773422>',
@@ -42,8 +42,9 @@ let keys = [
   'comm',
   'noted',
   'sb',
-  'dev-badge',
-  'db'
+  'badge',
+  'db',
+  'canva',
 ]
 module.exports = {
   shop: {
