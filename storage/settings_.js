@@ -762,7 +762,7 @@ module.exports = {
         message: '<a:catpet:1054020868650578081> __**Vouch here!**__\n\n• Send any message of acknowledgement\n• Send screenshot of your purchase\n\n<:mark:1056579773989650543> **Void warranty if:**\n• no vouch/improper vouch\n• no screenshot/proof of login\n• did not vouch within 12 hours\n• reference code is not visible',
       },
       {
-        id: '1054731027240726528',
+        id: '0',
         message: '<:gude1:1056579657828417596> — Noted\n<:gude2:1056579660353372160> — Processing\n<:gude3:1056579662572179586> — Completed',
       },
       {

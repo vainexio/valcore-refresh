@@ -340,7 +340,6 @@ client.on("messageCreate", async (message) => {
       let member = message.mentions.members.first()
       if (member) {
       await addRole(member,['pending','buyer'],message.guild)
-      message.react('<:gude1:1056579657828417596>')
       }
     }
 
@@ -888,7 +887,7 @@ client.on("messageCreate", async (message) => {
   if (message.channel.id === shop.channels.vouch) {
     if (message.attachments.size === 0) return message.reply('⚠️ Invalid form of vouch! Please attach an image file that shows the product you ordered!')
     else {
-      message.react('<:08:1069200741807435866>')
+      await message.react('<a:S_bearheart:1094190497179910225>')
       await removeRole(message.member,['pending'])
     }
   }
@@ -1071,12 +1070,15 @@ client.on('interactionCreate', async inter => {
         let template = await getChannel(shop.channels.templates)
         let msg = await template.messages.fetch("1093800287002693702")
         let content = msg.content
-        content = content.replace('{user}','<@'+user.user.id+'>').replace('{price}',price.value.toString()).replace('{quan}',quan.value.toString()).replace('{product}',(item ? item.value : 'nitro boost')).replace('{mop}',mop ? mop.value : 'gcash')
-        orders.send(content).then(async msg => {
-          await msg.react("<:g1:1056579657828417596>")
-          await msg.react("<:g2:1056579660353372160>")
-          await msg.react("<:g3:1056579662572179586>")
-        })
+        content = content
+          .replace('{user}','<@'+user.user.id+'>')
+          .replace('{price}',price.value.toString())
+          .replace('{quan}',quan.value.toString()).replace('{product}',(item ? item.value : 'nitro boost'))
+          .replace('{mop}',mop ? mop.value : 'gcash')
+          .replace('{status}','**COMPLETED**')
+          .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
+        
+        orders.send(content)
         //
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
@@ -1161,9 +1163,7 @@ client.on('interactionCreate', async inter => {
             {label: 'Completed',description: 'Sets order status to COMPLETED',value: 'completed', emoji: '<:g3:1056579662572179586>'},
           ]),
         );
-        orders.send({content: content, components: [row]}).then(async msg => {
-          //await msg.react("<:g1:1056579657828417596>")
-        })
+        orders.send({content: content, components: [row]})
         inter.reply({content: emojis.check+' Queue added.'})
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
@@ -1248,14 +1248,14 @@ client.on('interactionCreate', async inter => {
     else if (id === 'orderStatus') {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
-      let stat = ['pending','processing','completed']
+      let stat = ['noted','processing','completed']
       let found = stat.find(s => s === inter.values[0])
-      if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`'})
+      if (!found) return inter.reply({content: emojis.warning+' Invalid order status: `'+inter.values[0]+'`', ephemeral: true})
       //if (inter)
       let args = await getArgs(inter.message.content)
-      let e = args[args.length-1]
-      console.log(e)
-      let content = inter.message.content.replace(e,'**'+found.toUpperCase()+'**'+(found === 'completed' ? '\n<a:rotatingTime:1104264008078475294> stamp : <t:'+getTime(new Date().getTime())+':R>' : ''))
+      let a = args[args.length-3]
+      let b = args[args.length-1]
+      let content = inter.message.content.replace(a,'**'+found.toUpperCase()+'**').replace(b,'<t:'+getTime(new Date().getTime())+':R>')
       console.log(content)
       inter.update({content: content, components: found === 'completed' ? [] : null})
     }
