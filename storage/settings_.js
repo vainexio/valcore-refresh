@@ -893,6 +893,14 @@ module.exports = {
         ),
       },
       {
+        id: '1102416143152578681',
+        message: 'Click the button to gain the **Shop Status** role and get notified when the shop opens or closes!',
+        comp: new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('Shop Status').setStyle('SECONDARY').setEmoji('🔔').setCustomId('roles-Shop_Status')
+        ),
+      },
+      {
         id: '1047454193197252644',
         message: '*Pick your language*',
         comp: new MessageActionRow()

@@ -1079,7 +1079,7 @@ client.on('interactionCreate', async inter => {
           .replace('{status}','**COMPLETED**')
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
-        let row2 = shop.orderStatus
+        let row2 = JSON.parse(JSON.stringify(shop.orderStatus));
         row.components[0].disabled = true
         orders.send({content: content, components: [row2]})
         //
@@ -1166,7 +1166,7 @@ client.on('interactionCreate', async inter => {
           .replace('{status}',status)
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
-        let row = shop.orderStatus
+        let row = JSON.parse(JSON.stringify(shop.orderStatus));
         let msgUrl
         await orders.send({content: content, components: [row]}).then(msg => msgUrl = msg.url)
         
@@ -1267,8 +1267,8 @@ client.on('interactionCreate', async inter => {
       let b = args[args.length-1]
       let content = inter.message.content.replace(a,'**'+found.toUpperCase()+'**').replace(b,'<t:'+getTime(new Date().getTime())+':R>')
       
-      let row = shop.orderStatus
-      found === 'completed' ? row.components[0].disabled = true : null
+      let row = JSON.parse(JSON.stringify(shop.orderStatus));
+      found === 'completed' || found === 'cancelled' ? row.components[0].disabled = true : null
       
       inter.update({content: content, components: [row]})
     }
