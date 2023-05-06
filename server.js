@@ -1080,7 +1080,7 @@ client.on('interactionCreate', async inter => {
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
         let row2 = shop.orderStatus
-        
+        row.components[0].disabled = true
         orders.send({content: content, components: [row2]})
         //
       } catch (err) {
@@ -1266,7 +1266,11 @@ client.on('interactionCreate', async inter => {
       let a = args[args.length-5]
       let b = args[args.length-1]
       let content = inter.message.content.replace(a,'**'+found.toUpperCase()+'**').replace(b,'<t:'+getTime(new Date().getTime())+':R>')
-      inter.update({content: content, components: [shop.orderStatus]})
+      
+      let row = shop.orderStatus
+      found === 'completed' ? row.components[0].disabled = true : null
+      
+      inter.update({content: content, components: [row]})
     }
     else if (id === 'cancel') {
       inter.reply({content: 'Interaction cancelled.', ephemeral: true})
