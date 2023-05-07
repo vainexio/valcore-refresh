@@ -1178,7 +1178,7 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setURL(msgUrl).setStyle('LINK').setEmoji('<a:S_tick:1095508349161840660>').setLabel("Go to queue"),
         );
         
-        inter.reply({content: 'Queue added was added to '+orders.toString(), components: [linkRow]})
+        inter.reply({content: 'Queue was added to '+orders.toString(), components: [linkRow]})
       } catch (err) {
         inter.reply({content: emojis.warning+' Unexpected Error Occurred\n```diff\n- '+err+'```'})
       }
