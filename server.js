@@ -1170,6 +1170,8 @@ client.on('interactionCreate', async inter => {
         
         let row = JSON.parse(JSON.stringify(shop.orderStatus));
         let msgUrl
+        let member = await getMember(user.user.id,inter.guild)
+        await addRole(member,['pending','buyer'],inter.guild)
         await orders.send({content: content, components: [row]}).then(msg => msgUrl = msg.url)
         
         let linkRow = new MessageActionRow().addComponents(
