@@ -433,7 +433,7 @@ module.exports = {
         name: 'Discord Nitro',
         channel: '1054720561277841438',
         rs: '1078708432091226112',
-        status: 3,
+        status: 2,
         id: '1096319579787116544',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077186127970414/Logopit_1680918484757.png?width=1440&height=360',
         types: [
