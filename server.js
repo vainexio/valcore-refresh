@@ -1081,7 +1081,7 @@ client.on('interactionCreate', async inter => {
           .replace('{stamp}','<t:'+getTime(new Date().getTime())+':R>')
         
         let row2 = JSON.parse(JSON.stringify(shop.orderStatus));
-        row.components[0].disabled = true
+        row2.components[0].disabled = true
         orders.send({content: content, components: [row2]})
         //
       } catch (err) {
