@@ -721,7 +721,7 @@ module.exports = {
         },
         {
           command: 'paypal',
-          response: '<a:MoneyFlash:1054781743355396186> Paypal (w/ fee)\n— Link: https://paypal.me/nexionshin\n— Email: nexionshin123@gmail.com\n— Please make sure to set the payment type to **friends and family**!\n\n— Send screenshot of receipt here',
+          response: '<a:MoneyFlash:1054781743355396186> Paypal (w/ fee)\n— Link: https://www.paypal.me/KaiNagraski\n— Email: alternative107697@gmail.com\n— Please make sure to set the payment type to **friends and family**!\n\n— Send screenshot of receipt here',
           autoDelete: true,
         },
         {
