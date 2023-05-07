@@ -309,8 +309,8 @@ module.exports = {
             parent: 'Stocks dropper',
             children: [
               //
-              { name: 'Uncovered hosting', price: 299 },
-              { name: 'Covered hosting', price: 499 },
+              { name: 'Uncovered hosting', price: 300 },
+              { name: 'Covered hosting', price: 400 },
               { name: 'Features:\n+ </drop:1102423261914091530> command\n+ </stocks:1102433613116616734> command\n+ auto queue\n+ nitro links checker\n+ can do different item drops'}
               //
             ],
