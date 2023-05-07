@@ -549,6 +549,7 @@ client.on("messageCreate", async (message) => {
           break
         };
         let stocks = await getChannel(shop.channels.stocks)
+        sleep(1000);
         await stocks.send("https://discord.gift/"+codes[i].code);
       }
       msg.edit({content: emojis.check+" Stocked **"+codes.length+"** nitro boost(s)", components: []})
@@ -561,10 +562,10 @@ client.on("messageCreate", async (message) => {
         break
       };
       let fetched = false
-      let retry = true
-      let waitingTime = 1000
-      async function scan() {
-        sleep
+      let waitingTime = 5000
+      while (!fetched) {
+        waitingTime > 0 ? sleep(waitingTime) : null
+        waitingTime = 0
         let eCode = expCodes.find(e => e.code === codes[i].code)
         let res = eCode ? eCode : await fetch('https://discord.com/api/v10/entitlements/gift-codes/'+codes[i].code)
         res = eCode ? eCode : await res.json()
@@ -576,7 +577,7 @@ client.on("messageCreate", async (message) => {
         if (res.retry_after >= 600000) {
           fetched = true
           text = '⚠️ The resource is currently being rate limited. Please try again in '+res.retry_after+' seconds'
-          return;
+          break;
         }
           }
         if (!res.retry_after) {
@@ -597,7 +598,7 @@ client.on("messageCreate", async (message) => {
             }
             expCodes.push(data)
           }
-          return;
+          break;
         }
       }
     }
