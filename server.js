@@ -475,7 +475,9 @@ client.on("messageCreate", async (message) => {
   //
   let doc = await userModel.findOne({ id: message.author.id });
   if (message.content === 'live') {
-    let response = await fetch('https://www.facebook.com/itsShowtimena/live_videos?fields=live_videos.limit(1)%7Bstatus%7D')
+    let id = '105695088538055'
+    let id2 = '666591030050766'
+    let response = await fetch('https://www.facebook.com/'+id2+'/live_videos?fields=live_videos.limit(1)%7Bstatus%7D')
     console.log(response,response.status)
   }
   if (isCommand("remove",message)) {
