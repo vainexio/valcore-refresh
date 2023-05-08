@@ -1750,12 +1750,12 @@ let ready = true;
 let randomTime = null;
 
 let streamers = [
-    {
+    /*{
       name: 'Kdrysss',
       live: false,
-    },
+    },*/
     {
-      name: 'YelchanPh',
+      name: '105695088538055',
       live: false,
     },
   ]
@@ -1773,8 +1773,9 @@ const interval = setInterval(async function() {
   }
   
   for (let i in streamers) {
-    let response = await fetch()
-    console.log(response.url)
+    let url = 'https://www.facebook.com/YelchanPh'
+    let response = await fetch(url)
+    console.log(response,url)
     if (response.url.includes(streamers[i].name+'/live') && !streamers[i].live) {
       let user = await getUser('477729368622497803')
       await user.send(emojis.check+' '+streamers[i].name+' is live!\nLink: '+response.url)
