@@ -474,17 +474,6 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   //
   let doc = await userModel.findOne({ id: message.author.id });
-  if (message.content.startsWith('live')) {
-    let args = await getArgs(message.content)
-    let user = args[1]
-    let response = await fetch('https://www.facebook.com/'+user+'/live')
-    console.log(response)
-    if (response.url.includes('live')) {
-      message.reply(user+' is live!\nLink: '+response.url)
-    } else {
-      message.reply(user+' User is not live!')
-    }
-  }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,2)
