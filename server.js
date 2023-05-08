@@ -1748,19 +1748,8 @@ process.on('unhandledRejection', async error => {
 //Loop
 let ready = true;
 let randomTime = null;
-const interval = setInterval(async function() {
-      //Get time//
-  let date = new Date().toLocaleString("en-US", { timeZone: 'Asia/Shanghai' });
-  let today = new Date(date);
-  let hours = (today.getHours() % 12) || 12;
-  let time = hours +":" +today.getMinutes();
-  
-  if (!randomTime) {
-    randomTime = getRandom(1,13)+":"+getRandom(today.getMinutes(),60)
-    sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
-  }
-  
-  let streamers = [
+
+let streamers = [
     {
       name: 'Kdrysss',
       live: false,
@@ -1774,14 +1763,29 @@ const interval = setInterval(async function() {
       live: false,
     },
   ]
+
+const interval = setInterval(async function() {
+      //Get time//
+  let date = new Date().toLocaleString("en-US", { timeZone: 'Asia/Shanghai' });
+  let today = new Date(date);
+  let hours = (today.getHours() % 12) || 12;
+  let time = hours +":" +today.getMinutes();
+  
+  if (!randomTime) {
+    randomTime = getRandom(1,13)+":"+getRandom(today.getMinutes(),60)
+    sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
+  }
+  
   for (let i in streamers) {
     let response = await fetch('https://www.facebook.com/'+streamers[i].name+'/live')
     console.log(response.url)
-    if (response.url.includes('live')) {
+    if (response.url.includes(streamers[i].name+'/live') && !streamers[i].live) {
       let user = await getUser('477729368622497803')
-      if (!streamers[i].live) user.send(streamers[i].name+' is live!\nLink: '+response.url)
+      await user.send(emojis.check+' '+streamers[i].name+' is live!\nLink: '+response.url)
       streamers[i].live = true
-    } else {
+    } else if (streamers[i].live && response.url.includes(streamers[i].name+'/videos')) {
+      let user = await getUser('477729368622497803')
+      await user.send(emojis.x+' '+streamers[i].name+' is no longer live!\nLast live: '+response.url)
       streamers[i].live = false
     }
   }
