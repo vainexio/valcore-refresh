@@ -1758,10 +1758,6 @@ let streamers = [
       name: 'YelchanPh',
       live: false,
     },
-    {
-      name: '1',
-      live: false,
-    },
   ]
 
 const interval = setInterval(async function() {
@@ -1777,7 +1773,7 @@ const interval = setInterval(async function() {
   }
   
   for (let i in streamers) {
-    let response = await fetch('https://www.facebook.com/'+streamers[i].name+'/live')
+    let response = await fetch()
     console.log(response.url)
     if (response.url.includes(streamers[i].name+'/live') && !streamers[i].live) {
       let user = await getUser('477729368622497803')
