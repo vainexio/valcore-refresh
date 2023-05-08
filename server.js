@@ -474,6 +474,10 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   //
   let doc = await userModel.findOne({ id: message.author.id });
+  if (message.content === 'live') {
+    let response = await fetch('https://www.facebook.com/itsShowtimena/live_videos?fields=live_videos.limit(1)%7Bstatus%7D')
+    console.log(response,response.status)
+  }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,2)
