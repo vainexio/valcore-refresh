@@ -1389,7 +1389,7 @@ client.on('interactionCreate', async inter => {
       let error = false;
       let code = makeCode(10)
       let copy = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('copy link(s)').setEmoji('<:ting:1105094214544523314>'),
+          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links'),
         new MessageButton().setLabel('Vouch Here').setURL('https://discord.com/channels/1047454193159503904/1054724474659946606').setStyle('LINK').setEmoji('<:S_letter:1092606891240198154>')
         );
       await member.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+dropMsg.content+" ||", components: [copy]}).catch((err) => {
@@ -1760,7 +1760,7 @@ const interval = setInterval(async function() {
     sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
   }
   
-  /*for (let i in streamers) {
+  for (let i in streamers) {
     let url = 'https://www.facebook.com/Kdrysss/videos'
     let response = await fetch(url)
     console.log(response,url)
@@ -1773,7 +1773,7 @@ const interval = setInterval(async function() {
       await user.send(emojis.x+' '+streamers[i].name+' is no longer live!\nLast live: '+response.url)
       streamers[i].live = false
     }
-  }*/
+  }
       //Get info
       if (ready) {
         
