@@ -1772,8 +1772,8 @@ const interval = setInterval(async function() {
     sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
   }
   
-  for (let i in streamers) {
-    let url = 'https://www.facebook.com/YelchanPh'
+  /*for (let i in streamers) {
+    let url = 'https://www.facebook.com/Kdrysss/videos'
     let response = await fetch(url)
     console.log(response,url)
     if (response.url.includes(streamers[i].name+'/live') && !streamers[i].live) {
@@ -1785,7 +1785,7 @@ const interval = setInterval(async function() {
       await user.send(emojis.x+' '+streamers[i].name+' is no longer live!\nLast live: '+response.url)
       streamers[i].live = false
     }
-  }
+  }*/
       //Get info
       if (ready) {
         
