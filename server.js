@@ -1389,7 +1389,7 @@ client.on('interactionCreate', async inter => {
       let error = false;
       let code = makeCode(10)
       let copy = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('Copy Links').setEmoji('<a:S_pastelheart:1093737606451298354>'),
+          new MessageButton().setCustomId('copyLinks').setStyle('SECONDARY').setLabel('copy link(s)').setEmoji('<:ting:1105094214544523314>'),
         new MessageButton().setLabel('Vouch Here').setURL('https://discord.com/channels/1047454193159503904/1054724474659946606').setStyle('LINK').setEmoji('<:S_letter:1092606891240198154>')
         );
       await member.send({content: msg.content+"\n\nRef code: `"+code+"`\n||"+dropMsg.content+" ||", components: [copy]}).catch((err) => {
