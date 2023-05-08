@@ -265,7 +265,6 @@ function makeCode(length) {
     }
     return result;
 }
-let breakChecker = false
 let truck = false
 client.on("messageCreate", async (message) => {
   //Ping
@@ -544,8 +543,8 @@ client.on("messageCreate", async (message) => {
     if (message.content.toLowerCase().includes("stocks") && !message.content.toLowerCase().includes('sort')) {
       msg.edit("Fetching nitro codes (stocking - "+codes.length+") " + emojis.loading);
       for (let i in codes) {
-        if (breakChecker) {
-          breakChecker = false
+        if (shop.breakChecker) {
+          shop.breakChecker = false
           break
         };
         let stocks = await getChannel(shop.channels.stocks)
@@ -557,12 +556,12 @@ client.on("messageCreate", async (message) => {
     }
     
     for (let i in codes) {
-      if (breakChecker) {
-        breakChecker = false
+      if (shop.breakChecker) {
+        shop.breakChecker = false
         break
       };
       let fetched = false
-      let waitingTime = 5000
+      let waitingTime = 0
       while (!fetched) {
         waitingTime > 0 ? sleep(waitingTime) : null
         waitingTime = 0
@@ -1462,8 +1461,8 @@ client.on('interactionCreate', async inter => {
     }
     else if (id.startsWith('breakChecker-')) {
       let user = id.replace('breakChecker-','')
-      breakChecker = true
-      inter.reply({content: emojis.check+" Stopped Checking", ephemeral: true})
+      shop.breakChecker = true
+      inter.reply({content: emojis.check+" Forced Stop", ephemeral: true})
     }
     else if (id.startsWith('reply-')) {
       let reply = id.replace('reply-','')

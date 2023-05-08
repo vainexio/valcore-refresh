@@ -7,7 +7,7 @@ const sendChannel = sendMsg.sendChannel
 const sendUser = sendMsg.sendUser
 
 const settings = require('../storage/settings_.js')
-const {emojis, colors, theme, status} = settings
+const {shop, emojis, colors, theme, status} = settings
 
 const cmdHandler = require('../functions/commands.js')
 const {getTemplate} = cmdHandler
@@ -128,7 +128,7 @@ module.exports = {
 },
   sleep: function (miliseconds) {
     var currentTime = new Date().getTime();
-    while (currentTime + miliseconds >= new Date().getTime()) {
+    while (currentTime + miliseconds >= new Date().getTime() && !shop.breakChecker) {
     }
   },
   moderate: function(member,perms) {

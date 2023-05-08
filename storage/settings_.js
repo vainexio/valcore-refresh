@@ -48,6 +48,7 @@ let keys = [
 ]
 module.exports = {
   shop: {
+    breakChecker: false,
     orderStatus: new MessageActionRow().addComponents(
           new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('Update Order Status').addOptions([
             {label: 'Noted',description: 'Change Order Status',value: 'noted', emoji: '<a:S_diamond:1093738450156535859>'},
