@@ -1761,9 +1761,10 @@ const interval = setInterval(async function() {
   }
   
   for (let i in streamers) {
-    let url = 'https://www.facebook.com/Kdrysss/videos'
+    break;
+    let url = 'https://www.facebook.com/Kdrysss/live'
     let response = await fetch(url)
-    console.log(response,url)
+    console.log(response.url,url)
     if (response.url.includes(streamers[i].name+'/live') && !streamers[i].live) {
       let user = await getUser('477729368622497803')
       await user.send(emojis.check+' '+streamers[i].name+' is live!\nLink: '+response.url)
