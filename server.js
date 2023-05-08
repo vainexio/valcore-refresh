@@ -474,11 +474,16 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   //
   let doc = await userModel.findOne({ id: message.author.id });
-  if (message.content === 'live') {
-    let id = 'YelchanPh'
-    let id2 = 'lpubatangas.lssc'
-    let response = await fetch('https://www.facebook.com/'+id+'/live')
-    console.log(response,response.url)
+  if (message.content.startsWith('live')) {
+    let args = await getArgs(message.content)
+    let user = args[1]
+    let response = await fetch('https://www.facebook.com/'+user+'/live')
+    console.log(response)
+    if (response.url.includes('live')) {
+      message.reply(user+' is live!\nLink: '+response.url)
+    } else {
+      message.reply(user+' User is not live!')
+    }
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
@@ -1754,6 +1759,32 @@ const interval = setInterval(async function() {
     randomTime = getRandom(1,13)+":"+getRandom(today.getMinutes(),60)
     sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
   }
+  
+  let streamers = [
+    {
+      name: 'Kdrysss',
+      live: false,
+    },
+    {
+      name: 'YelchanPh',
+      live: false,
+    },
+    {
+      name: '1',
+      live: false,
+    },
+  ]
+  for (let i in streamers) {
+    let response = await fetch('https://www.facebook.com/'+streamers[i].name+'/live')
+    console.log(response.url)
+    if (response.url.includes('live')) {
+      let user = await getUser('477729368622497803')
+      if (!streamers[i].live) user.send(streamers[i].name+' is live!\nLink: '+response.url)
+      streamers[i].live = true
+    } else {
+      streamers[i].live = false
+    }
+  }
       //Get info
       if (ready) {
         
@@ -1823,4 +1854,4 @@ const interval = setInterval(async function() {
         }
       }
   
-  },5000)
+  },10000)
