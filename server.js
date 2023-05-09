@@ -1781,6 +1781,7 @@ const interval = setInterval(async function() {
     response = await response.json();
     
     if (JSON.stringify(shop.gcashStatus) !== JSON.stringify(response) && shop.gcashStatus) {
+      console.log(response)
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
