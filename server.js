@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const moment = require('moment')
 const HttpsProxyAgent = require('https-proxy-agent');
 const url = require('url');
-const { downdetector } = require('downdetector-api');
 
 //
 //Discord
@@ -476,8 +475,7 @@ client.on("messageCreate", async (message) => {
   //
   let doc = await userModel.findOne({ id: message.author.id });
   if (message.content === 'test') {
-    let response = await downdetector('gcash');
-    console.log(response)
+    
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
