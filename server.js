@@ -473,6 +473,11 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   //
   let doc = await userModel.findOne({ id: message.author.id });
+  if (message.content === 'test') {
+    let response = await fetch('https://help.gcash.com/')
+    .then(res => res.text())
+  .then(html => console.log(html));
+  }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await requireArgs(message,2)
