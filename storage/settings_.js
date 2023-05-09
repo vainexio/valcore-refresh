@@ -48,7 +48,7 @@ let keys = [
 ]
 module.exports = {
   shop: {
-    gcashStatus: {},
+    gcashStatus: null,
     breakChecker: false,
     orderStatus: new MessageActionRow().addComponents(
           new MessageSelectMenu().setCustomId('orderStatus').setPlaceholder('Update Order Status').addOptions([

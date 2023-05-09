@@ -1785,7 +1785,7 @@ const interval = setInterval(async function() {
   let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
     response = await response.json();
     
-    if (JSON.stringify(shop.gcashStatus) !== JSON.stringify(response)) {
+    if (JSON.stringify(shop.gcashStatus) !== JSON.stringify(response) && shop.gcashStatus) {
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
@@ -1797,9 +1797,10 @@ const interval = setInterval(async function() {
      .addField('Response Body',response.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
      .setFooter({text: "Beta"})
      let channel = await getChannel(shop.channels.gcash)
-     await channel.send({embeds: [embed]})
+     await channel.send({content: '@here GCash Service Advisory was updated.', embeds: [embed]})
       shop.gcashStatus = response;
     } else {
+      if (!shop.gcashStatus) shop.gcashStatus = response;
       console.log('no')
     } 
   
