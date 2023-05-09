@@ -1122,16 +1122,20 @@ client.on('interactionCreate', async inter => {
       });
       let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes('nitro'))
       if (!foundCat) return inter.reply(emojis.x+' Invalid Category: `nitro`')
+      let style = 'SECONDARY'
       foundCat.status = quan > 0 ? 1 : 3
-      stockHolder[0].push(new MessageButton().setCustomId('none').setStyle('SECONDARY').setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
+      stockHolder[0].push(new MessageButton().setCustomId('none').setStyle(style).setLabel('Nitro boost ('+quan+')').setEmoji('<a:nitroboost:1057999297787985960>'))
       for (let i in arrays) {
         let msg = arrays[i];
         if (arrays.length > 0) {
           let args = await getArgs(msg);
           let text = args[0].includes(':') ? args.slice(1).join(" ") : msg
           let emoji = args[0].includes(':') ? args[0] : null
-          if (stockHolder[holderCount].length === 5) holderCount++
-          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle("SECONDARY").setLabel(text).setEmoji(emoji));
+          //if (stockHolder[holderCount].length === 5) holderCount++
+          
+          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle(style).setLabel(' ').setLabel(text));
+          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle(style).setLabel().setEmoji(emoji));
+          holderCount++
         }
       }
     
