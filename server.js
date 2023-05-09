@@ -1127,20 +1127,20 @@ client.on('interactionCreate', async inter => {
       foundCat.status = quan > 0 ? 1 : 3
       stockHolder[0].push(
         new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(style).setLabel('Nitro boost').setEmoji('<a:nitroboost:1057999297787985960>'),
-        new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(quanStyle).setLabel(quan.toString())
+        new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(quan == '0' ? 'DANGER' : quan == 'MTO' ? 'PRIMARY' : 'SUCCESS').setLabel(quan.toString())
       )
+  
       for (let i in arrays) {
         let msg = arrays[i];
         if (arrays.length > 0) {
           let args = await getArgs(msg);
-          //let text = args.slice(2).join(" ")
+          let text = args.slice(2).join(" ")
           let count = args[1]
           let emoji = args[0]
-          let text = msg.replace(count,'').replace(emoji,'')
           //if (stockHolder[holderCount].length === 5) holderCount++
           holderCount++
-          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle(style).setLabel(text).setEmoji(emoji));
-          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle(quanStyle).setLabel(count));
+          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle(style).setLabel(text+'    ').setEmoji(emoji));
+          stockHolder[holderCount].push(new MessageButton().setCustomId("none"+getRandom(1,10000)).setStyle(count == '0' ? 'DANGER' : count == 'MTO' ? 'PRIMARY' : 'SUCCESS').setLabel(count));
         }
       }
     
