@@ -485,8 +485,11 @@ client.on("messageCreate", async (message) => {
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
      .addField('Author ID','```diff\n- '+gcash.article.author_id+'```',true)
-     .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)',true)
-     
+     .addField('Outdated','```yaml\n'+gcash.article.outdated+'```',true)
+     .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)')
+     .addField('Edited At','<t:'+getTime(gcash.article.edited_at)+':f> (<t:'+getTime(gcash.article.edited_at)+':R>)')
+     .addField('Label Names',gcash.article.label_names.join('\n'))
+     .addField('Body',gcash.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
      message.channel.send({embeds: [embed]})
     } else {
       console.log('no')
