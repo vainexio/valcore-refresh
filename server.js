@@ -478,21 +478,16 @@ client.on("messageCreate", async (message) => {
     response = await response.json();
     
     let gcash = shop.gcashStatus
-    if (JSON.stringify(response) !== JSON.stringify(gcash)) {
-      gcash = response;
       console.log(gcash)
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
-     .addField('Author ID','```diff\n- '+gcash.article.author_id+'```',true)
-     .addField('Outdated','```yaml\n'+gcash.article.outdated+'```',true)
-     .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)')
-     .addField('Label Names',gcash.article.label_names.join('\n • ').toUpperCase())
-     .addField('Response Body',gcash.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
+     .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
+     .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
+     .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
+     .addField('Label Names',response.article.label_names.join('\n • ').toUpperCase())
+     .addField('Response Body',response.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
      message.channel.send({embeds: [embed]})
-    } else {
-      console.log('no')
-    } 
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
@@ -1797,7 +1792,7 @@ const interval = setInterval(async function() {
      .addField('Response Body',response.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
      .setFooter({text: "Beta"})
      let channel = await getChannel(shop.channels.gcash)
-     await channel.send({content: '@here GCash Service Advisory was updated.', embeds: [embed]})
+     await channel.send({content: 'GCash Service Advisory was updated.', embeds: [embed]})
       shop.gcashStatus = response;
     } else {
       if (!shop.gcashStatus) shop.gcashStatus = response;
