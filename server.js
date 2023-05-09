@@ -478,11 +478,19 @@ client.on("messageCreate", async (message) => {
     response = await response.json();
     
     let gcash = shop.gcashStatus
-    if (JSON.stringify(response) === JSON.stringify(gcash)) {
-      gcash = 
+    if (JSON.stringify(response) !== JSON.stringify(gcash)) {
+      gcash = response;
+      console.log(gcash)
      let embed = new MessageEmbed()
-    .setTitle('') 
-    }
+     .setTitle('Gcash Service Advisory')
+     .setColor(colors.none)
+     .addField('Author ID','```diff\n- '+gcash.article.author_id+'```',true)
+     .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)',true)
+     
+     message.channel.send({embeds: [embed]})
+    } else {
+      console.log('no')
+    } 
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
