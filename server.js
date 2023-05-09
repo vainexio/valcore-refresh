@@ -474,9 +474,15 @@ client.on("messageCreate", async (message) => {
   //
   let doc = await userModel.findOne({ id: message.author.id });
   if (message.content === 'test') {
-    let response = await fetch('https://help.gcash.com/')
-    .then(res => res.text())
-  .then(html => console.log(html));
+    let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
+    response = await response.json();
+    
+    let gcash = shop.gcashStatus
+    if (JSON.stringify(response) === JSON.stringify(gcash)) {
+      gcash = 
+     let embed = new MessageEmbed()
+    .setTitle('') 
+    }
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
