@@ -487,9 +487,8 @@ client.on("messageCreate", async (message) => {
      .addField('Author ID','```diff\n- '+gcash.article.author_id+'```',true)
      .addField('Outdated','```yaml\n'+gcash.article.outdated+'```',true)
      .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)')
-     .addField('Edited At','<t:'+getTime(gcash.article.edited_at)+':f> (<t:'+getTime(gcash.article.edited_at)+':R>)')
-     .addField('Label Names',gcash.article.label_names.join('\n'))
-     .addField('Body',gcash.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
+     .addField('Label Names',gcash.article.label_names.join('\n • ').toUpperCase())
+     .addField('Response Body',gcash.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
      message.channel.send({embeds: [embed]})
     } else {
       console.log('no')
@@ -1783,21 +1782,28 @@ const interval = setInterval(async function() {
     sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
   }
   
-  for (let i in streamers) {
-    break;
-    let url = 'https://www.facebook.com/Kdrysss/live'
-    let response = await fetch(url)
-    console.log(response.url,url)
-    if (response.url.includes(streamers[i].name+'/live') && !streamers[i].live) {
-      let user = await getUser('477729368622497803')
-      await user.send(emojis.check+' '+streamers[i].name+' is live!\nLink: '+response.url)
-      streamers[i].live = true
-    } else if (streamers[i].live && response.url.includes(streamers[i].name+'/videos')) {
-      let user = await getUser('477729368622497803')
-      await user.send(emojis.x+' '+streamers[i].name+' is no longer live!\nLast live: '+response.url)
-      streamers[i].live = false
-    }
-  }
+  let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
+    response = await response.json();
+    
+    let gcash = shop.gcashStatus
+    if (JSON.stringify(response) !== JSON.stringify(gcash)) {
+      gcash = response;
+      console.log(gcash)
+     let embed = new MessageEmbed()
+     .setTitle('Gcash Service Advisory')
+     .setColor(colors.none)
+     .addField('Author ID','```diff\n- '+gcash.article.author_id+'```',true)
+     .addField('Outdated','```yaml\n'+gcash.article.outdated+'```',true)
+     .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)')
+     .addField('Label Names',gcash.article.label_names.join('\n • ').toUpperCase())
+     .addField('Response Body',gcash.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
+     .setFooter({text: "Beta"})
+     let channel = await getChannel(shop.channels.gcash)
+     channel.send({embeds: [embed]})
+    } else {
+      console.log('no')
+    } 
+  
       //Get info
       if (ready) {
         
@@ -1867,4 +1873,4 @@ const interval = setInterval(async function() {
         }
       }
   
-  },10000)
+  },30000)

@@ -59,6 +59,7 @@ module.exports = {
           ]),
         ),
     channels: {
+      gcash: '1105332833079267460',
       announcements: '1102417073642164274',
       status: '1054766857552396419', //vc
       reportsVc: '1079713500731015209', //c
