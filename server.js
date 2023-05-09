@@ -1785,21 +1785,20 @@ const interval = setInterval(async function() {
   let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
     response = await response.json();
     
-    let gcash = shop.gcashStatus
-    if (JSON.stringify(response) !== JSON.stringify(gcash)) {
-      gcash = response;
-      console.log(gcash)
+    if (JSON.stringify(shop.gcashStatus) !== JSON.stringify(response)) {
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
-     .addField('Author ID','```diff\n- '+gcash.article.author_id+'```',true)
-     .addField('Outdated','```yaml\n'+gcash.article.outdated+'```',true)
-     .addField('Updated At','<t:'+getTime(gcash.article.updated_at)+':f> (<t:'+getTime(gcash.article.updated_at)+':R>)')
-     .addField('Label Names',gcash.article.label_names.join('\n • ').toUpperCase())
-     .addField('Response Body',gcash.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
+     .setDescription('[Source](https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/)')
+     .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
+     .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
+     .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
+     .addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
+     .addField('Response Body',response.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
      .setFooter({text: "Beta"})
      let channel = await getChannel(shop.channels.gcash)
-     channel.send({embeds: [embed]})
+     await channel.send({embeds: [embed]})
+      shop.gcashStatus = response;
     } else {
       console.log('no')
     } 
