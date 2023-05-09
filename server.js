@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const moment = require('moment')
 const HttpsProxyAgent = require('https-proxy-agent');
 const url = require('url');
+const { downdetector } = require('downdetector-api');
+
 //
 //Discord
 const Discord = require('discord.js');
@@ -474,20 +476,8 @@ client.on("messageCreate", async (message) => {
   //
   let doc = await userModel.findOne({ id: message.author.id });
   if (message.content === 'test') {
-    let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
-    response = await response.json();
-    
-    let gcash = shop.gcashStatus
-      console.log(gcash)
-     let embed = new MessageEmbed()
-     .setTitle('Gcash Service Advisory')
-     .setColor(colors.none)
-     .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
-     .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
-     .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
-     .addField('Label Names',response.article.label_names.join('\n • ').toUpperCase())
-     .addField('Response Body',response.article.body.replace(/<p>|<\/p>|<strong>|<\/strong>|<li><span class="wysiwyg-font-size-medium">|<\/span>|<\/li>|<\/ul>|<ul>/g,''))
-     message.channel.send({embeds: [embed]})
+    let response = await downdetector('gcash');
+    console.log(response)
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
