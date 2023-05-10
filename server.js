@@ -170,7 +170,7 @@ const cmdHandler = require('./functions/commands.js')
 const {checkCommand, isCommand, isMessage, getTemplate} = cmdHandler
 //Others
 const others = require('./functions/others.js')
-const {stringJSON, fetchMany, ghostPing, sleep, moderate, getPercentage, getPercentageEmoji, randomTable, scanString, requireArgs, getArgs, makeButton, makeRow} = others
+const {stringJSON, fetchKey, ghostPing, sleep, moderate, getPercentage, getPercentageEmoji, randomTable, scanString, requireArgs, getArgs, makeButton, makeRow} = others
 //Roles Handler
 const roles = require('./functions/roles.js')
 const {getRole, addRole, removeRole, hasRole} = roles
@@ -358,14 +358,6 @@ client.on("messageCreate", async (message) => {
   }
 }
   if (message.author.bot) return;
-  if (isCommand('find',message)) { 
-    if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
-    let args = await requireArgs(message,1)
-    if (!args) return;
-    console.log(args[1])
-    
-    await fetchMany(message.channel,args[1])
-  }
   if (isCommand('feedback',message)) {
     if (message.channel.type !== 'DM') return message.reply(emojis.x+' This function can only be used in Dms.')
     
@@ -473,7 +465,6 @@ client.on("messageCreate", async (message) => {
   //
   if (message.channel.type === 'DM') return;
   //
-  let doc = await userModel.findOne({ id: message.author.id });
   if (message.content === 'test') {
     let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
     response = await response.json();
@@ -504,24 +495,17 @@ client.on("messageCreate", async (message) => {
         await channel.messages.fetch({limit: 100}).then(async (messages) => {
           messages.forEach(async gotMsg => {
             let content = gotMsg.content
-            if (gotMsg.author.id === client.user.id && gotMsg.content.toLowerCase().includes(args[2])) gotMsg.delete(), deleted++
-            //let us = await getUser("477729368622497803")
-            //await message.author.send(content)
+            if (gotMsg.author.id === client.user.id && (gotMsg.content.toLowerCase().includes(args[2]) || args[2].toLowerCase() === 'all')) {
+              gotMsg.delete()
+              deleted++
+            }
           })
           
           message.reply(emojis.check+" Deleted "+deleted+" bot messages in "+user.tag+"'s DMs that contains the word `"+args[2]+"`.")
         })
+        msg.delete();
       }).catch(err => message.reply("```diff\n- "+err+"```"))
     }
-  }
-  if (doc && message.channel.id === '1047454193595732055') {
-    doc.chatCount++
-    await doc.save()
-  } else if (message.channel.id === '1047454193595732055') {
-    doc = await userModel(userSchema)
-    doc.id = message.author.id
-    doc.chatCount = 1
-    await doc.save()
   }
   //Nitro checker
   if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
@@ -734,6 +718,15 @@ client.on("messageCreate", async (message) => {
     
     message.channel.send({embeds: [embed], components: [row]})
     } 
+  else if (isCommand('find',message)) {
+    if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+' Insufficient Permissions'});
+    let args = await requireArgs(message,1)
+    if (!args) return;
+    console.log(args[1])
+    
+    let drops = await getChannel(shop.channels.drops)
+    await fetchKey(drops,args[1],message)
+  }
   else if (isCommand('setpr',message)) {
     if (!await getPerms(message.member,4)) return;
     let args = await getArgs(message.content)
@@ -896,10 +889,6 @@ client.on("messageCreate", async (message) => {
       if (found) message.channel.delete();
       else console.log('Channel deletion was cancelled.') 
       },countdown)
-  }
-  else if (isCommand('chat',message)) {
-    doc = await userModel.findOne({ id: message.author.id });
-    message.reply('You sent **'+doc.chatCount+'** messages in <#1047454193595732055> as of 02/05/2023.')
   }
   //
   if (message.channel.id === shop.channels.vouch) {

@@ -79,7 +79,7 @@ module.exports = {
     msg = msg + "\n}\`\`\`"
     return msg;
   },
-  fetchMany: async function (channel, key) {
+  fetchKey: async function (channel, key, message) {
   
   let last_id;
   let foundKey = false
@@ -89,43 +89,43 @@ module.exports = {
   let totalMsg = 0
   
   let embedMention = new MessageEmbed()
-      .setDescription("No recent pings was found.")
-       .setColor(colors.red)
+  .setDescription("No recent pings was found.")
+  .setColor(colors.red)
   
   let msgBot
-  await channel.send("Searching for reference code in this channel... "+emojis.loading).then((botMsg) => {
-      msgBot = botMsg;
-      })
+  await message.channel.send("Searching for reference code... "+emojis.loading).then((botMsg) => { msgBot = botMsg })
+    
     while (true) {
-        const options = { limit: 100 };
-        if (last_id) {
-            options.before = last_id;
-        }
-       
-    let messages = await channel.messages.fetch(options).then(messages => {
+      const options = { limit: 100 };
+      if (last_id) {
+        options.before = last_id;
+      }
+      
+      let messages = await channel.messages.fetch(options).then(messages => {
       
       last_id = messages.last().id;
       totalMsg += messages.size
       msgSize = messages.size
-      
-    messages.forEach(async (gotMsg) => {
-    if (gotMsg.content.toLowerCase().includes(key.toLowerCase()) && gotMsg.author.id === '1057167023492300881') {
-      mentionsCount += 1
-      gotMsg.reply(emojis.check+' Reference code was found.')
-      foundKey = true
+        
+        messages.forEach(async (gotMsg) => {
+          if (gotMsg.content.includes(key) && gotMsg.author.id === client.user.id) {
+            mentionsCount += 1
+            let row = new MessageActionRow().addComponents(
+              new MessageButton().setLabel('Jump to Message').setURL(gotMsg.url).setStyle('LINK')
+            );
+            message.reply({content: emojis.check+' Reference code was found.', components: [row]})
+            foundKey = true
+          }
+        })
+      });
+      //Return
+      if (foundKey || await msgSize != 100) {
+        msgBot.delete();
+        if (!foundKey) message.channel.send(emojis.x+" No key was found `"+key+"`.")
+        break;
+      }
     }
-    })
-    });
-
-        if (foundKey || await msgSize != 100) {
-          msgBot.delete();
-          if (!foundKey) channel.send(emojis.x+" No key was found.")
-          break;
-        }
-    }
-
-    //return sum_messages;
-},
+  },
   sleep: function (miliseconds) {
     var currentTime = new Date().getTime();
     while (currentTime + miliseconds >= new Date().getTime() && !shop.breakChecker) {
