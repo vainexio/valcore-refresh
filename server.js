@@ -473,7 +473,6 @@ client.on("messageCreate", async (message) => {
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
-     .setDescription('[Source](https://help.gcash.com/hc/en-us/articles/900000125806-GCash-Service-Advisories)')
      .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
      .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
      .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
@@ -1646,6 +1645,9 @@ client.on('interactionCreate', async inter => {
       let notice = await getChannel(shop.channels.alerts)
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
+    else if (id.startsWith('gsaRaw')) {
+      inter.reply({content: '```js\n'+shop.gcashStatus+'```'})
+    }
     else if (id.startsWith('design')) {
       if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
       animation = true
@@ -1785,7 +1787,7 @@ const interval = setInterval(async function() {
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
-     .setDescription('[Source](https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/)')
+     .setDescription('[Source](https://help.gcash.com/hc/en-us/articles/900000125806-GCash-Service-Advisories)')
      .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
      .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
      .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
@@ -1793,7 +1795,12 @@ const interval = setInterval(async function() {
      .addField('Response Body',response.article.body.replace(/ *\<[^>]*\> */g, "").replace(/\n\n/g,''))
      .setFooter({text: "Beta"})
      let channel = await getChannel(shop.channels.gcash)
-     await channel.send({content: 'GCash Service Advisory was updated.', embeds: [embed]})
+     
+     let row = new MessageActionRow().addComponents(
+       new MessageButton().setCustomId('gsaRaw').setStyle('SECONDARY').setLabel('Raw Data'),
+       new MessageButton().setURL('https://help.gcash.com/hc/en-us/articles/900000125806-GCash-Service-Advisories').setStyle('LINK').setLabel('View Source').setEmoji('<:gcash:1086081913061646428>'),
+     );
+     await channel.send({content: 'GCash Service Advisory was updated.', embeds: [embed], components: [row]})
       shop.gcashStatus = response;
     } else {
       if (!shop.gcashStatus) shop.gcashStatus = response;
