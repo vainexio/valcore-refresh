@@ -786,7 +786,7 @@ client.on("messageCreate", async (message) => {
       let stockHolder = [[],[],[],[],[],[],[],[],[],[]];
       let holderCount = 0
       let channel = await getChannel(bulked[i].channel)
-      stockHolder[0].push(new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setEmoji('<:09:1069200736631656518>'))
+      stockHolder[0].push(new MessageButton().setLabel('Order Here').setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1095603406632144936').setStyle('LINK').setEmoji('<:09:1069200736631656518>'))
       for (let b in bulked[i].messages) {
       let msg = bulked[i].messages[b];
         let name = msg.name
@@ -1342,7 +1342,7 @@ client.on('interactionCreate', async inter => {
         .setColor(colors.none)
         .setFooter({text: 'Type ;use '+code+' in the ticket channel to use your voucher!'})
         
-        let row2 = await makeRow('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290','Order Here','LINK','<:09:1069200736631656518>')
+        let row2 = await makeRow('https://discord.com/channels/1047454193159503904/1054711675045036033/1095603406632144936','Order Here','LINK','<:09:1069200736631656518>')
     
         let error = false
         if (claimer === inter.user.id) {
