@@ -468,8 +468,7 @@ client.on("messageCreate", async (message) => {
   if (message.content === 'test') {
     let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
     response = await response.json();
-    
-      console.log(response)
+    shop.gcashStatus = response
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
@@ -479,7 +478,12 @@ client.on("messageCreate", async (message) => {
      .addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
      .addField('Response Body',response.article.body.replace(/ *\<[^>]*\> */g, "").replace(/\n\n/g,''))
      .setFooter({text: "Beta"})
-     await message.channel.send({content: 'GCash Service Advisory was updated.', embeds: [embed]})
+     
+     let row = new MessageActionRow().addComponents(
+       new MessageButton().setCustomId('gsaRaw').setStyle('SECONDARY').setLabel('Raw Data'),
+       new MessageButton().setURL('https://help.gcash.com/hc/en-us/articles/900000125806-GCash-Service-Advisories').setStyle('LINK').setLabel('View Source').setEmoji('<:gcash:1086081913061646428>'),
+     );
+     await message.channel.send({content: 'GCash Service Advisory was updated.', embeds: [embed], components: [row]})
   }
   if (isCommand("remove",message)) {
     if (!await getPerms(message.member,4)) return;
@@ -1646,7 +1650,7 @@ client.on('interactionCreate', async inter => {
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
     else if (id.startsWith('gsaRaw')) {
-      inter.reply({content: '```js\n'+shop.gcashStatus+'```'})
+      inter.reply({content: '```json\n'+JSON.stringify(shop.gcashStatus, null, 2)+'```', ephemeral: true})
     }
     else if (id.startsWith('design')) {
       if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
@@ -1787,7 +1791,6 @@ const interval = setInterval(async function() {
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
-     .setDescription('[Source](https://help.gcash.com/hc/en-us/articles/900000125806-GCash-Service-Advisories)')
      .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
      .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
      .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
