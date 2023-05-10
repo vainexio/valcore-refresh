@@ -228,7 +228,7 @@ module.exports = {
         channel: '1054989652416798750',
         status: 2,
         id: '',
-        image: '',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1105784399028559933/Logopit_1683709776330.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -249,7 +249,7 @@ module.exports = {
         channel: '1054989652416798750',
         status: 2,
         id: '',
-        image: '',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1105784399347318854/Logopit_1683709816535.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -636,7 +636,7 @@ module.exports = {
         channel: '1094056028938698833',
         status: 2,
         id: '',
-        image: '',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1105784399875813496/Logopit_1683709883410.png?width=1440&height=360',
         types: [
           //Types
           {
@@ -658,7 +658,7 @@ module.exports = {
         channel: '1094056028938698833',
         status: 2,
         id: '',
-        image: '',
+        image: 'https://media.discordapp.net/attachments/1093391705753002064/1105784399636733982/Logopit_1683709898945.png?width=1440&height=360',
         types: [
           //Types
           {
