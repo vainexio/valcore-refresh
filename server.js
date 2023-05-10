@@ -490,10 +490,10 @@ client.on("messageCreate", async (message) => {
     let user = await getUser(args[1])
     if (user) {
       let deleted = 0
-      await user.send("Deleted Messages").then( async msg => {
-        let channel = msg.channel
-        await channel.messages.fetch({limit: 100}).then(async (messages) => {
-          messages.forEach(async gotMsg => {
+      await user.send('.').then(async msg => {
+        
+        await msg.channel.messages.fetch({limit: 100}).then(async (messages) => {
+          await messages.forEach(async gotMsg => {
             let content = gotMsg.content
             if (gotMsg.author.id === client.user.id && (gotMsg.content.toLowerCase().includes(args[2]) || args[2].toLowerCase() === 'all')) {
               gotMsg.delete()
@@ -501,10 +501,10 @@ client.on("messageCreate", async (message) => {
             }
           })
           
-          message.reply(emojis.check+" Deleted "+deleted+" bot messages in "+user.tag+"'s DMs that contains the word `"+args[2]+"`.")
+          await message.reply(emojis.check+" Deleted "+deleted+" bot messages in "+user.tag+"'s DMs that contains the word `"+args[2]+"`.")
         })
-        msg.delete();
-      }).catch(err => message.reply("```diff\n- "+err+"```"))
+        await msg.delete();
+      })
     }
   }
   //Nitro checker
