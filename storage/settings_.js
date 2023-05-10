@@ -202,25 +202,11 @@ module.exports = {
         //Category
         name: 'Crunchyroll',
         channel: '1054989652416798750',
-        status: 1,
+        status: 2,
         id: '1096319567866904646',
         image: 'https://media.discordapp.net/attachments/1093391705753002064/1094077236161818664/Logopit_1680918569709.png?width=1440&height=360',
         types: [
           //Types
-          /*{
-            parent: 'Fan',
-            children: [
-              //
-              { name: '1 month', price: 50 },
-              { name: '2 months', price: 60 },
-              { name: '3 months', price: 70 },
-              { name: '4 months', price: 80 },
-              { name: '5 months', price: 95 },
-              { name: '6 months', price: 115 },
-              { name: '12 months', price: 160 },
-              //
-            ],
-          },*/
           {
             parent: 'Mega Fan',
             children: [
@@ -228,8 +214,61 @@ module.exports = {
               { name: '1 month', price: 60 },
               { name: '3 months', price: 100 },
               { name: '6 months', price: 140 },
-              { name: '8 months', price: 180 },
+              { name: '8 months', price: 170 },
               { name: '12 months', price: 200 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'HBO GO',
+        channel: '1054989652416798750',
+        status: 2,
+        id: '',
+        image: '',
+        types: [
+          //Types
+          {
+            parent: 'Monthly',
+            children: [
+              //
+              { name: '1 month shared', price: 80 },
+              { name: '1 month solo acc', price: 350 },
+              //
+            ],
+          },
+          //
+        ],
+      },
+      {
+        //Category
+        name: 'TIDAL',
+        channel: '1054989652416798750',
+        status: 2,
+        id: '',
+        image: '',
+        types: [
+          //Types
+          {
+            parent: 'HiFi',
+            children: [
+              //
+              { name: '1 month', price: 35 },
+              { name: '3 months', price: 55 },
+              { name: '6 months', price: 80 },
+              { name: '8 months', price: 90 },
+              { name: '12 months', price: 110 },
+              //
+            ],
+          },
+          {
+            parent: '\u200b',
+            children: [
+              //
+              { name: '+15 if HiFi+', price: 0 },
               //
             ],
           },
@@ -578,15 +617,6 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'Shared',
-            children: [
-              //
-              { name: '1 month', price: 45 },
-              { name: '12 months', price: 90 },
-              //
-            ],
-          },
-          {
             parent: 'Solo',
             children: [
               //
@@ -602,15 +632,20 @@ module.exports = {
       },
       {
         //Category
-        name: '',
-        channel: '',
+        name: 'Windscribe VPN',
+        channel: '1094056028938698833',
+        status: 2,
+        id: '',
+        image: '',
         types: [
           //Types
           {
-            parent: '',
+            parent: 'Solo',
             children: [
               //
-              { name: '', price: 0 },
+              { name: '1 month', price: 240 },
+              { name: '3 months', price: 310 },
+              { name: '12 months', price: 680 },
               //
             ],
           },
@@ -619,32 +654,22 @@ module.exports = {
       },
       {
         //Category
-        name: '',
-        channel: '',
+        name: 'Express VPN',
+        channel: '1094056028938698833',
+        status: 2,
+        id: '',
+        image: '',
         types: [
           //Types
           {
-            parent: '',
+            parent: 'Solo',
             children: [
               //
-              { name: '', price: 0 },
-              //
-            ],
-          },
-          //
-        ],
-      },
-      {
-        //Category
-        name: '',
-        channel: '',
-        types: [
-          //Types
-          {
-            parent: '',
-            children: [
-              //
-              { name: '', price: 0 },
+              { name: '7 days', price: 80 },
+              { name: '14 days', price: 70 },
+              { name: '1 month', price: 85 },
+              { name: '2 months', price: 120 },
+              { name: '3 months', price: 165 },
               //
             ],
           },
