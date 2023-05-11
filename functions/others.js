@@ -108,7 +108,7 @@ module.exports = {
       msgSize = messages.size
         
         messages.forEach(async (gotMsg) => {
-          if (gotMsg.content.includes(key) && gotMsg.author.id === client.user.id) {
+          if (gotMsg.content.startsWith(key) && gotMsg.author.id === client.user.id) {
             mentionsCount += 1
             let row = new MessageActionRow().addComponents(
               new MessageButton().setLabel('Jump to Message').setURL(gotMsg.url).setStyle('LINK')
