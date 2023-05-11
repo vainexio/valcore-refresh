@@ -357,7 +357,7 @@ module.exports = {
         types: [
           //Types
           {
-            parent: 'Stocks dropper',
+            parent: 'Nitro stocks dropper',
             children: [
               //
               { name: 'Uncovered hosting', price: 300 },
