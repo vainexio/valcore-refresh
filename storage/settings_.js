@@ -82,6 +82,7 @@ module.exports = {
       {
         //Category
         name: 'Spotify',
+        keywords: ['spoti','spotify'],
         channel: '1054989652416798750',
         status: 2,
         id: '1096319564662448198',
@@ -116,6 +117,7 @@ module.exports = {
       {
         //Category
         name: 'Youtube',
+        keywords: ['yt', 'yt prem','youtube'],
         channel: '1054989652416798750',
         status: 2,
         id: '1096319565606174800',
@@ -162,6 +164,7 @@ module.exports = {
       {
         //Category
         name: 'Netflix',
+        keywords: ['nf','netflix','netplix'],
         channel: '1054989652416798750',
         status: 2,
         id: '1096319566902218813',
@@ -201,6 +204,7 @@ module.exports = {
       {
         //Category
         name: 'Crunchyroll',
+        keywords: ['crunchy','crunchyroll'],
         channel: '1054989652416798750',
         status: 2,
         id: '1096319567866904646',
@@ -225,6 +229,7 @@ module.exports = {
       {
         //Category
         name: 'HBO GO',
+        keywords: ['hbo','hbo go'],
         channel: '1054989652416798750',
         status: 2,
         id: '',
@@ -246,6 +251,7 @@ module.exports = {
       {
         //Category
         name: 'TIDAL',
+        keywords: ['tidal','hifi'],
         channel: '1054989652416798750',
         status: 2,
         id: '',
@@ -278,6 +284,7 @@ module.exports = {
       {
         //Category
         name: 'Developer Badge',
+        keywords: ['dev','badge'],
         channel: '1057249812656955514',
         rs: '1078708594188496987',
         status: 1,
@@ -319,6 +326,7 @@ module.exports = {
       {
         //Category
         name: 'E-Wallet Exchange',
+        keywords: ['exchange','paypal to gcash'],
         channel: '1072434004873195540',
         status: 1,
         id: '1096319572614860810',
@@ -341,6 +349,7 @@ module.exports = {
       {
         //Category
         name: 'Bot Commission',
+        keywords: ['bot comms','comms'],
         channel: '1081107027054571550',
         status: 2,
         id: '1096319574284193842',
@@ -388,6 +397,7 @@ module.exports = {
       {
         //Category
         name: 'Server Boosting',
+        keywords: ['server boost','sb','boosting'],
         channel: '1054720561277841438',
         rs: '1078708432091226112',
         status: 2,
@@ -422,6 +432,7 @@ module.exports = {
       {
         //Category
         name: 'Disney+',
+        keywords: ['disney'],
         channel: '1054989652416798750',
         status: 4,
         id: '1096319578482671646',
@@ -450,6 +461,7 @@ module.exports = {
       {
         //Category
         name: 'Canva',
+        keywords: ['canva'],
         channel: '1054989652416798750',
         status: 2,
         id: '1096319578482671646',
@@ -473,6 +485,7 @@ module.exports = {
       {
         //Category
         name: 'Discord Nitro',
+        keywords: ['nitro','nitor'],
         channel: '1054720561277841438',
         rs: '1078708432091226112',
         status: 2,
@@ -504,6 +517,7 @@ module.exports = {
       {
         //Category
         name: 'Steam',
+        keywords: ['swc','steam'],
         channel: '1054989628765122571',
         status: 4,
         id: '1096319581393535036',
@@ -529,6 +543,7 @@ module.exports = {
       {
         //Category
         name: 'Genshin Impact',
+        keywords: ['genesis crystals','genshin','welkin'],
         channel: '1054989628765122571',
         status: 2,
         id: '1096319582240788490',
@@ -553,6 +568,7 @@ module.exports = {
       {
         //Category
         name: 'Robux',
+        keywords: ['roblox','robux','rbx'],
         channel: '1054989628765122571',
         rs: '1078710810806853704',
         status: 2,
@@ -585,6 +601,7 @@ module.exports = {
       {
         //Category
         name: 'Valorant',
+        keywords: ['vp','valorant','balo'],
         channel: '1054989628765122571',
         status: 2,
         id: '1096319584514080859',
@@ -610,6 +627,7 @@ module.exports = {
       {
         //Category
         name: 'Vyper VPN',
+        keywords: ['vyper'],
         channel: '1094056028938698833',
         status: 2,
         id: '1096319586640609280',
@@ -633,6 +651,7 @@ module.exports = {
       {
         //Category
         name: 'Windscribe VPN',
+        keywords: ['windscribe','wind'],
         channel: '1094056028938698833',
         status: 2,
         id: '',
@@ -655,6 +674,7 @@ module.exports = {
       {
         //Category
         name: 'Express VPN',
+        keywords: ['express'],
         channel: '1094056028938698833',
         status: 2,
         id: '',

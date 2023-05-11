@@ -916,7 +916,7 @@ client.on("messageCreate", async (message) => {
       for (let a in pricelists) {
       let data = pricelists[a]
       let dataArgs = await getArgs(data.name)
-      if (data.name.length > 0 && (message.content?.toLowerCase().includes(data.name.toLowerCase()) || args.find(a => dataArgs.find(d => d.toLowerCase() === a.toLowerCase())))) {
+      if (data.name.length > 0 && (message.content?.toLowerCase().includes(data.name.toLowerCase()) || args.find(a => data.keywords.find(d => a.toLowerCase().startsWith(d.toLowerCase()))))) {
         custom = true
         console.log(data.name)
       if (data.name.length > 0) {
