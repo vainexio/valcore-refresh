@@ -1129,7 +1129,7 @@ client.on('interactionCreate', async inter => {
       let foundCat = shop.pricelists.find(c => c.name.toLowerCase().includes('nitro'))
       if (!foundCat) return inter.reply(emojis.x+' Invalid Category: `nitro`')
       let style = 'SECONDARY'
-      let quanStyle = 'PRIMARY'
+      let quanStyle = 'SECONDARY'
       foundCat.status = quan > 0 ? 1 : 3
       stockHolder[0].push(
         new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(style).setLabel('Nitro boost').setEmoji('<a:nitroboost:1057999297787985960>'),

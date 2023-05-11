@@ -349,7 +349,7 @@ module.exports = {
       {
         //Category
         name: 'Bot Commission',
-        keywords: ['bot comms','comms'],
+        keywords: ['bot comms','comms','stocks dropper','dropper'],
         channel: '1081107027054571550',
         status: 2,
         id: '1096319574284193842',
