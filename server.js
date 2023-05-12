@@ -1879,4 +1879,4 @@ const interval = setInterval(async function() {
         }
       }
   
-  },30000)
+  },10000)
