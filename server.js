@@ -530,8 +530,8 @@ client.on("messageCreate", async (message) => {
     }
     let boost_data = await fetch("https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots",auth)
     console.log(await boost_data.json())
-    let joinServer = await fetch(`https://discord.gg/${invite}`,auth)
-    console.log(joinServer)
+    let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803`,auth2)
+    console.log(await joinServer)
   }
   //Nitro checker
   if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
