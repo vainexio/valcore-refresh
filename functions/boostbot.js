@@ -52,7 +52,7 @@ async function get_fingerprint(thread) {
       let fr = await fingerprint.json()['fingerprint']
       return fr
     } catch (err) {
-      get_fingerprint(thread)
+      console.log(err)
     }        
 }
 module.exports = {

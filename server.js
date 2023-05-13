@@ -515,11 +515,23 @@ client.on("messageCreate", async (message) => {
   }
   else if (isCommand("boost",message)) {
     let vai = process.env.vaiToken
-    let invite = 'https://discord.gg/J5jW47fF'
-    let joinServer = await fetch(`https://discord.com/api/v9/invites/${invite}`)
-    let headers, useragent = boostbot.get_headers(token, 1)
-    let boost_data = await fetch("https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots", headers=headers)
-    
+    let invite = 'J5jW47fF'
+    let auth = {
+      method: 'GET',
+      headers: {
+        'Authorization': vai,
+      }
+    }
+    let auth2 = {
+      method: 'POST',
+      headers: {
+        'Authorization': vai,
+      }
+    }
+    let boost_data = await fetch("https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots",auth)
+    console.log(await boost_data.json())
+    let joinServer = await fetch(`https://discord.gg/${invite}`,auth)
+    console.log(joinServer)
   }
   //Nitro checker
   if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
