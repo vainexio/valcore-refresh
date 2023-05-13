@@ -174,6 +174,9 @@ const {stringJSON, fetchKey, ghostPing, sleep, moderate, getPercentage, getPerce
 //Roles Handler
 const roles = require('./functions/roles.js')
 const {getRole, addRole, removeRole, hasRole} = roles
+
+const boostbot = require('./functions/boostbot.js')
+//const {} = boostbot
 /*
 ░█████╗░██╗░░░░░██╗███████╗███╗░░██╗████████╗  ███╗░░░███╗███████╗░██████╗░██████╗░█████╗░░██████╗░███████╗
 ██╔══██╗██║░░░░░██║██╔════╝████╗░██║╚══██╔══╝  ████╗░████║██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝░██╔════╝
@@ -511,6 +514,9 @@ client.on("messageCreate", async (message) => {
     }
   }
   else if (isCommand("boost"),message) {
+    let vai = process.env.vaiToken
+    let invite = 'https://discord.gg/J5jW47fF'
+    let joinServer = await fetch(`https://discord.com/api/v9/invites/${invite}`)
     
   }
   //Nitro checker
