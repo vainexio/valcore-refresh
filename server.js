@@ -517,6 +517,8 @@ client.on("messageCreate", async (message) => {
     let vai = process.env.vaiToken
     let invite = 'https://discord.gg/J5jW47fF'
     let joinServer = await fetch(`https://discord.com/api/v9/invites/${invite}`)
+    let headers, useragent = get_headers(token, thread)
+    let boost_data = session.get(f"https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots", headers=headers)
     
   }
   //Nitro checker
