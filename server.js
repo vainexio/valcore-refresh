@@ -523,12 +523,9 @@ client.on("messageCreate", async (message) => {
       }
     }
     let auth2 = {
-      method: 'PUT',
-      body: JSON.stringify({
-        access_token: `Bearer `+vai,
-      }),
+      method: 'GET',
       headers: {
-        //"Authorization": `Bot Bot_Token`,
+        "Authorization": vai,
         "Content-Type": "application/json"
       }
     }
