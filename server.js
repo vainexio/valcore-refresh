@@ -630,6 +630,7 @@ client.on("messageCreate", async (message) => {
         }
       }
     }
+    if (shop.breakChecker) return;
     codes.sort((a, b) => (b.expire - a.expire));
     let embeds = []
     let embed = new MessageEmbed()
