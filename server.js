@@ -979,13 +979,18 @@ client.on("messageCreate", async (message) => {
       console.log(custom)
       if (custom) return;
       //
+    if (!await hasRole(message.member,['pr access'],message.guild)) {
+      message.reply("Please head to <#1094079711753281596> and click the **Access** button to be able to view our pricelist channels!")
+    } 
+    else {
       let channels = ''
       message.guild.channels.cache.forEach( ch => {
         if (ch.parent?.name === 'PRICELIST' && ch.type !== 'GUILD_TEXT') {
           channels += '\n<:circley:1072388650337308742> <#'+ch.id+'>'
         }
-    })
-      message.reply("Hello, there! You can check our products' pricelists through these channels:\n"+channels)
+      })
+      message.reply("Hello, there! You can check our products' pricelists through these channels:\n"+channels) 
+    }
     }
   //
   let userPerms = await getPerms(message.member, 3)
