@@ -1822,7 +1822,7 @@ const interval = setInterval(async function() {
      .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
      .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
      .addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
-     .addField('Response Body',response.article.body.replace(/ *\<[^>]*\> */g, "").replace(/\n\n/g,''))
+     .addField('Response Body',response.article.body.replace(/ *\<[^>]*\> */g, ""))
      .setFooter({text: "Beta"})
      let channel = await getChannel(shop.channels.gcash)
      
