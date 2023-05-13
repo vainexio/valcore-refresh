@@ -909,7 +909,7 @@ client.on("messageCreate", async (message) => {
       .setStyle('DANGER')
       .setLabel("Cancel Deletion")
     )
-    message.reply({content: emojis.loading+' Deleting this channel in **'+args[1]+'** `('+countdown+'ms)`', components: [row]})
+    message.reply({content: emojis.loading+' Deleting this channel in **'+args[1]+'** `('+countdown+'ms)`\nPlease click **Cancel Deletion** if you wish to proceed with your order.', components: [row]})
     
     setTimeout(function() {
       let found = shop.deleteChannels.find(c => c === channelId)
@@ -1279,10 +1279,13 @@ client.on('interactionCreate', async inter => {
       let calcu = price.value/subscription.value*remaining.value*service
       
       let embed = new MessageEmbed()
-      .addField('Refund Amount',Math.round(calcu).toString())
-      .addField('Price paid',price.value.toString())
+      .addField('Refund Amount','♻️ **'+Math.round(calcu).toString()+'**',true)
+      .addField('Price paid',price.value.toString(),true)
+      .addField('Remaining Days',remaining.value.toString(),true)
+      .addField('Subscription Days',subscription.value.toString(),true)
+      .addField('Service Fee',service.toString(),true)
       .setFooter({text: "Formula: price paid/subscription days*remaining days*service fee"})
-      .addField("Calculation",price.value+'/'+subscription.value+'\\*'+remaining.value+'\\*'+service)
+      //.addField("Calculation",price.value+'/'+subscription.value+'\\*'+remaining.value+'\\*'+service)
       .setColor(colors.none)
       
       inter.reply({embeds: [embed]});
