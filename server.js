@@ -510,6 +510,9 @@ client.on("messageCreate", async (message) => {
       })
     }
   }
+  else if (isCommand("boost"),message) {
+    
+  }
   //Nitro checker
   if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
     let args = getArgs(message.content)
