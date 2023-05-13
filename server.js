@@ -523,9 +523,13 @@ client.on("messageCreate", async (message) => {
       }
     }
     let auth2 = {
-      method: 'POST',
+      method: 'PUT',
+      body: JSON.stringify({
+        access_token: `Bearer `+vai,
+      }),
       headers: {
-        'Authorization': vai,
+        //"Authorization": `Bot Bot_Token`,
+        "Content-Type": "application/json"
       }
     }
     let boost_data = await fetch("https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots",auth)
