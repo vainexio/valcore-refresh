@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const moment = require('moment')
 const HttpsProxyAgent = require('https-proxy-agent');
 const url = require('url');
-
+const discordTranscripts = require('discord-html-transcripts');
 //
 //Discord
 const Discord = require('discord.js');
