@@ -42,7 +42,7 @@ module.exports = {
       let ticketChannel = {
         id: channel.id,
         name: channel.name,
-        pabel: data.name,
+        panel: data.name,
         count: data.count,
         transcript: 'none',
         status: 'open',

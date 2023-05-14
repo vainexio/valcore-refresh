@@ -1478,15 +1478,21 @@ client.on('interactionCreate', async inter => {
       let doc = await tixModel.findOne({id: user.id})
 
       if (doc) {
+        let ticket = await doc.tickets.find(tix => tix.id === inter.channel.id)
+        if (!ticket) return inter.reply({content: emojis.warning+' Invalid ticket data.'})
         let attachment = await discordTranscripts.createTranscript(inter.channel);
-        console.log(attachment)
         let log = await getChannel(shop.tixSettings.transcripts)
         let embed = new MessageEmbed()
         .addField('Ticket Owner',user.toString(),true)
-        .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+doc.,true)
-        .addField('Panel Name',doc.panel,true)
-        .addField('Transcript','[View Transcript](https://codebeautify.org/htmlviewer?url='+attachment.url+')',true)
-        await log.send({ files: [attachment] });
+        .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+ticket.name,true)
+        .addField('Panel Name',ticket.panel,true)
+        .addField('Transcript','Loading',true)
+        .addField('Count',ticket.count.toString())
+        
+        await doc.save();
+        await log.send({ embeds: [embed], files: [attachment] }).then(msg => {
+          let transcriptUrl = 'https://codebeautify.org/htmlviewer?url='+attachment.url
+        });
         await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
       }
     }
