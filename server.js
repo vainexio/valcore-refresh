@@ -1406,9 +1406,8 @@ client.on('interactionCreate', async inter => {
     }
     //
     else if (id.includes('Ticket-')) {
-      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
-      console.log(method)
+      if (!await getPerms(inter.member,4) && method !== 'close') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
       let user = await getUser(userId)
@@ -1419,8 +1418,12 @@ client.on('interactionCreate', async inter => {
           if (ticket.id === inter.channel.id) {
             if (ticket.status === method) return inter.reply({content: 'Ticket was already '+method+'d.', ephemeral: true})
             ticket.status = method
-            if (method === 'delete') doc.tickets.splice(i,1)
-            //inter.channel.setName(ticket.status+ticket.number)
+            if (method === 'delete') {
+              doc.tickets.splice(i,1)
+              await doc.save()
+            } else {
+              inter.channel.setName(method+'d-'+ticket.count).catch(err => console.log(err))
+            }
             await inter.channel.permissionOverwrites.set([
               {
                 id: inter.guild.roles.everyone,
@@ -1445,7 +1448,7 @@ client.on('interactionCreate', async inter => {
           }
         }
         let comp
-        let text = '['+method.toUpperCase()+'D] Ticket controls' 
+        let text = 'Ticket controls ('+method+'d by '+inter.user.toString()+')' 
         if (method === 'delete') {
           text = 'Deleting this channel in 10 seconds.. '+emojis.loading
           comp = []

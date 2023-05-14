@@ -845,10 +845,12 @@ module.exports = {
       },
       {
         id: '1092411405191352451',
-        message: 'Testicket',
+        message: 'Click the button below to create a ticket!\n\nOrder — Availing products\nSupport — General concerns and inquiries\nReport — Reporting revoked products',
         comp: new MessageActionRow()
         .addComponents(
-          new MessageButton().setLabel('Order Ticket').setCustomId('openTicket-order').setStyle('SECONDARY').setEmoji('<a:S_bearheart:1094190497179910225>')
+          new MessageButton().setLabel('Create Order').setCustomId('openTicket-order').setStyle('SECONDARY').setEmoji('<a:S_bearheart:1094190497179910225>'),
+          new MessageButton().setLabel('Support Ticket').setCustomId('openTicket-support').setStyle('SECONDARY').setEmoji('<a:S_pastelheart:1093737606451298354> '),
+          new MessageButton().setLabel('Submit Report').setCustomId('openTicket-report').setStyle('SECONDARY').setEmoji('<:S_exclamation:1093734009005158450>')
         ),
       },
       {
