@@ -1506,7 +1506,7 @@ client.on('interactionCreate', async inter => {
           }
           
           let embed = new MessageEmbed()
-          .setAuthor({ name: inter.user.tag, iconURL: inter.user.avatarURL(), url: 'https://discord.gg/sloopies' })
+          .setAuthor({ name: user.tag, iconURL: user.avatarURL(), url: 'https://discord.gg/sloopies' })
           .addField('Ticket Owner',user.toString(),true)
           .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+ticket.name,true)
           .addField('Panel Name',ticket.panel,true)

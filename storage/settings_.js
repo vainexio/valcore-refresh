@@ -845,7 +845,7 @@ module.exports = {
         ),
       },
       {
-        id: '1092411405191352451',
+        id: '1054711675045036033',
         message: 'Click the button below to create a ticket!\n\nOrder — Availing products\nSupport — General concerns and inquiries\nReport — Reporting revoked products',
         comp: new MessageActionRow()
         .addComponents(
