@@ -58,6 +58,7 @@ client.on("ready", async () => {
         panel: String,
         transcript: String,
         status: String,
+        count: Number,
       }
     ],
   })
@@ -1482,16 +1483,29 @@ client.on('interactionCreate', async inter => {
         if (!ticket) return inter.reply({content: emojis.warning+' Invalid ticket data.'})
         let attachment = await discordTranscripts.createTranscript(inter.channel);
         let log = await getChannel(shop.tixSettings.transcripts)
-        let embed = new MessageEmbed()
-        .addField('Ticket Owner',user.toString(),true)
-        .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+ticket.name,true)
-        .addField('Panel Name',ticket.panel,true)
-        .addField('Transcript','Loading',true)
-        .addField('Count',ticket.count.toString())
         
-        await doc.save();
-        await log.send({ embeds: [embed], files: [attachment] }).then(msg => {
-          let transcriptUrl = 'https://codebeautify.org/htmlviewer?url='+attachment.url
+        await log.send({ content: 'Loading', files: [attachment] }).then(async msg => {
+          let attachments = Array.from(msg.attachments.values())
+          let stringFiles = ""
+          if (msg.attachments.size > 0) {
+            let index = 0
+            for (let i in attachments) {
+              console.log(attachments[i])
+              ticket.transcript = 'https://codebeautify.org/htmlviewer?url='+attachments[i].url
+              await doc.save();
+            }
+          }
+          
+          let embed = new MessageEmbed()
+          .setAuthor({ name: inter.user.tag, iconURL: inter.user.avatarURL(), url: 'https://discord.gg/sloopies' })
+          .addField('Ticket Owner',user.toString(),true)
+          .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+ticket.name,true)
+          .addField('Panel Name',ticket.panel,true)
+          .addField('Transcript','[View Transcript]('+ticket.transcript+')',true)
+          .addField('Count',ticket.count.toString(),true)
+          .setColor(colors.yellow)
+          
+          msg.edit({content: null, embeds: [embed]})
         });
         await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
       }
