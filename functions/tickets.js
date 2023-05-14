@@ -17,38 +17,47 @@ const {getRandom, getChannel} = get
 
 module.exports = {
   makeTicket: async function (data) {
-    const {guild, user, name, category, support, context, ticketName} = data
     //var author = message.author;
-    ticketName = ticketName+Math.floor(Math.random() * 1000) + 1
-    guild.channels.create(ticketName, {
+    await data.guild.channels.create(data.ticketName, {
       type: "text", 
-      parent: category,
+      parent: data.category,
       permissionOverwrites: [
         {
-          id:  guild.roles.everyone, 
+          id:  data.guild.roles.everyone, 
           deny: ['VIEW_CHANNEL'] 
         },
         {
-          id: user.id, 
+          id: data.user.id, 
           allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
         },
         {
-          id: guild.roles.cache.find(r => r.id === support), 
+          id: data.guild.roles.cache.find(r => r.id === data.support), 
           allow: ['VIEW_CHANNEL','SEND_MESSAGES','READ_MESSAGE_HISTORY'],
         },
       ],
     })
       .then(async channel => {
-
+      
+      let ticketChannel = {
+        id: channel.id,
+        name: channel.name,
+        transcript: 'none',
+        status: 'open',
+      }
+      data.doc.tickets.push(ticketChannel)
+      await data.doc.save()
+      
       let embed = new MessageEmbed()
-      .setDescription("Welcome **"+name+"**! Any available <@&"+support+"> will assist you soon. Please be patient!\n\n"+context)
-      .setColor(colors.red)
+      .setTitle(data.name)
+      .setDescription("Welcome **"+data.user.username+"**! Any available <@&"+data.support+"> will assist you soon. Please be patient!\n\n"+data.context)
+      .setColor(colors.yellow)
+      .setFooter({text: 'Sloopie Tickets'})
       
       let row = new MessageActionRow().addComponents(
         new MessageButton().setCustomId('close-ticket').setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔒'),
         new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
       );
-      let BotMsg = channel.send({ content: "<@"+user.id+"> / <@&"+support+">", embeds: [embed] , components: [row]})
+      let BotMsg = channel.send({ content: "<@"+data.user.id+"> - <@&"+data.support+">", embeds: [embed] , components: [row]})
       
       }).catch(console.error);
 }

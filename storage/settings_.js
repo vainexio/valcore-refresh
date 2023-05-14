@@ -839,11 +839,11 @@ module.exports = {
         ),
       },
       {
-        id: '0',
-        message: 'Click the button below to access our pricelists.',
+        id: '1092411405191352451',
+        message: 'Testicket',
         comp: new MessageActionRow()
         .addComponents(
-          new MessageButton().setLabel('Access').setCustomId('prVerify').setStyle('SECONDARY').setEmoji('<a:S_bearheart:1094190497179910225>')
+          new MessageButton().setLabel('Order Ticket').setCustomId('openTicket-order').setStyle('SECONDARY').setEmoji('<a:S_bearheart:1094190497179910225>')
         ),
       },
       {

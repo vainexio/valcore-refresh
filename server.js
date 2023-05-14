@@ -1341,21 +1341,26 @@ client.on('interactionCreate', async inter => {
       let data = {}
       
       let foundData = await ticketModel.findOne({id: ticketId})
-      let doc = await tixModel.findOne({id: inter.user.id})
+      let doc = await tixModel.findOne({id: '12021'})
       if (foundData) {
         foundData.count++
         await foundData.save()
       }
       if (!doc) {
         let newDoc = new tixModel(tixSchema)
-        newDoc.id = inter.user.id
+        newDoc.id = '12021'
         newDoc.number = foundData.count
-        newDoc
-      } else if (doc) {
+        newDoc.tickets = []
+        await newDoc.save()
+        doc = await tixModel.findOne({id: '12021'})
         
+      } else if (doc && doc.tickets.length >= 5) {
+        await inter.reply({content: `You have exceeded the maximum amount of tickets!`, ephemeral: true})
+        return;
       }
       if (type === 'order') {
         data = {
+          doc: doc,
           guild: inter.guild,
           user: inter.user,
           name: 'Order Ticket',
@@ -1367,6 +1372,7 @@ client.on('interactionCreate', async inter => {
       }
       
       let ticket = await makeTicket(data)
+      await inter.reply({content: " Ticket created "+ticket.channel.toString()})
     }
     //
     else if (id === 'orderStatus') {
