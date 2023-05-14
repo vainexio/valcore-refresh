@@ -46,7 +46,7 @@ module.exports = {
         count: data.count,
         category: data.category,
         transcript: 'none',
-        status: 'opened',
+        status: 'open',
       }
       data.doc.tickets.push(ticketChannel)
       await data.doc.save()
@@ -58,7 +58,7 @@ module.exports = {
       .setFooter({text: 'Sloopie Tickets'})
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('closeTicket-'+data.user.id).setStyle('SECONDARY').setLabel('Close').setEmoji('🔒'),
+        new MessageButton().setCustomId('closedTicket-'+data.user.id).setStyle('SECONDARY').setLabel('Close').setEmoji('🔒'),
         //new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
       );
       let BotMsg = channel.send({ content: "<@"+data.user.id+"> - <@&"+data.support+"> Ticket opened *!*", embeds: [embed] , components: [row]})

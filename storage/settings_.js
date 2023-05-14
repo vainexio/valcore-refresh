@@ -708,6 +708,11 @@ module.exports = {
       prefix: '.',
       responders: [
         {
+          command: 'form',
+          response: '<a:S_bearheart:1094190497179910225> Order Format\n\n• product:\n• quantity:\n• mop:',
+          autoDelete: true,
+        },
+        {
           command: 'rpremium',
           response: '• premium purchased:\n• subscription:\n• original email:\n• replacement email:\n• working pass:\n• shared/solo/fh:\n• date availed :\n• date reported:\n• days used:\n• remaining days:\n• price paid:\n• issue & screenshot of issue:\n• screenshot of vouch with proof of login:',
           autoDelete: false,

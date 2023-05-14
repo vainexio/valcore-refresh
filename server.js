@@ -1371,7 +1371,7 @@ client.on('interactionCreate', async inter => {
           name: 'Order Ticket',
           category: '1054731483656499290',
           support: '1047454193184682040',
-          context: 'Please fill up the form:\n\n• user :\n• product :\n• quantity :\n• mop :',
+          context: 'Type `.form` to get the order format!',
           ticketName: 'order-'+shard
         }
       }
@@ -1397,7 +1397,7 @@ client.on('interactionCreate', async inter => {
           name: 'Report Ticket',
           category: '1068070430457470976',
           support: '1047454193184682040',
-          context: 'Please tell us which product you are having a problem, so we can send you the form.',
+          context: 'Use the respective autoresponders to view the report format of the item you wish to report.\n`.rboost`\n`.rnitro`\n`.rbadge`\n`.rpremium`',
           ticketName: 'report-'+shard
         }
       }
@@ -1407,8 +1407,8 @@ client.on('interactionCreate', async inter => {
     }
     //
     else if (id.includes('Ticket-')) {
-      let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
-      if (!await getPerms(inter.member,4) && method !== 'close') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let method = id.startsWith('reopenTicket-') ? 'open' : id.startsWith('closedTicket-') ? 'closed' : id.startsWith('deleteTicket-') ? 'delete' : null
+      if (!await getPerms(inter.member,4) && method !== 'closed') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
       let user = await getUser(userId)
@@ -1421,7 +1421,7 @@ client.on('interactionCreate', async inter => {
           text = 'Deleting this channel in 10 seconds.. '+emojis.loading
           comp = []
         }
-        else if (method === 'close') {
+        else if (method === 'closed') {
           let row = new MessageActionRow().addComponents(
             new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
             new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🧨'),
@@ -1429,9 +1429,9 @@ client.on('interactionCreate', async inter => {
           );
           comp = [row]
         }
-        else if (method === 'reopen') {
+        else if (method === 'open') {
           let row = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('SECONDARY').setLabel('Close').setEmoji('🔓'),
+            new MessageButton().setCustomId('closedTicket-'+user.id).setStyle('SECONDARY').setLabel('Close').setEmoji('🔓'),
           );
           comp = [row]
         }
@@ -1446,10 +1446,10 @@ client.on('interactionCreate', async inter => {
             if (method === 'delete') {
               doc.tickets.splice(i,1)
             } 
-            else if (method === 'close') {
+            else if (method === 'closed') {
               inter.channel.setParent(shop.tixSettings.closed)
             } 
-            else if (method === 'reopene') {
+            else if (method === 'open') {
               inter.channel.setParent(ticket.category)
             }
             await inter.channel.permissionOverwrites.set([
@@ -1459,8 +1459,8 @@ client.on('interactionCreate', async inter => {
               },
               {
                 id: user.id,
-                deny: method === 'close' || method === 'delete' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
-                allow: method === 'reopen' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                deny: method === 'closed' || method === 'delete' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                allow: method === 'open' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
               },
               {
                 id: inter.guild.roles.cache.find(r => r.id === shop.tixSettings.support), 
@@ -1510,12 +1510,14 @@ client.on('interactionCreate', async inter => {
           let embed = new MessageEmbed()
           .setAuthor({ name: user.tag, iconURL: user.avatarURL(), url: 'https://discord.gg/sloopies' })
           .addField('Ticket Owner',user.toString(),true)
-          .addField('Ticket Name','Current: '+inter.channel.name+'`\nOriginal: `'+ticket.name+'`',true)
+          .addField('Ticket Name','Current: `'+inter.channel.name+'`\nOriginal: `'+ticket.name+'`',true)
           .addField('Panel Name',ticket.panel,true)
           .addField('Status',ticket.status.toUpperCase(),true)
           .addField('Count',ticket.count.toString(),true)
+          .addField('Moderator',inter.user.toString(),true)
+          .setThumbnail(inter.guild.iconURL())
           .setColor(colors.yellow)
-          .setFooter({text: "Sloopies Ticket System"})
+          .setFooter({text: "Sloopies Ticketing System"})
           
           let row = new MessageActionRow().addComponents(
             new MessageButton().setURL(ticket.transcript).setStyle('LINK').setLabel('View Transcript').setEmoji('<:S_separator:1093733778633019492>'),
