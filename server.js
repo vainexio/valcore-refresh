@@ -1364,6 +1364,7 @@ client.on('interactionCreate', async inter => {
           doc: doc,
           guild: inter.guild,
           user: inter.user,
+          count: foundData.count,
           name: 'Order Ticket',
           category: '1054731483656499290',
           support: '1047454193184682040',
@@ -1376,6 +1377,7 @@ client.on('interactionCreate', async inter => {
           doc: doc,
           guild: inter.guild,
           user: inter.user,
+          count: foundData.count,
           name: 'Support Ticket',
           category: '1068070403446149120',
           support: '1047454193184682040',
@@ -1388,6 +1390,7 @@ client.on('interactionCreate', async inter => {
           doc: doc,
           guild: inter.guild,
           user: inter.user,
+          count: foundData.count,
           name: 'Report Ticket',
           category: '1068070430457470976',
           support: '1047454193184682040',
@@ -1400,19 +1403,30 @@ client.on('interactionCreate', async inter => {
       await inter.reply({content: " Ticket created "+ticket.channel.toString()})
     }
     //
-    else if (id.startsWith('closeTicket-')) {
+    else if (id.includes('Ticket-')) {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : null
+      console.log(method)
       let foundData = await ticketModel.findOne({id: ticketId})
       
-      let userId = id.replace('closeTicket-','').replace(/_/g,' ')
-      let doc = await tixModel.findOne({id: userId})
+      let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
+      let user = await getUser(userId)
+      let doc = await tixModel.findOne({id: user.id})
       if (doc) {
         for (let i in doc.tickets) {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
+            if (ticket.status === 'closed') return inter.reply({content: 'Ticket was already closed.'})
             ticket.status = 'closed'
+            inter.channel.setName(ticket.status+ticket.number)
+            inter.channel.permissionOverwrites.delete(user.id);
           }
         }
+        let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
+          new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
+        );
+        inter.reply({content: '🔒 Ticket controls', components: [row]})
         await doc.save()
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
