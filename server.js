@@ -1904,6 +1904,40 @@ client.on('interactionCreate', async inter => {
       let notice = await getChannel(shop.channels.alerts)
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
+    else if (id.startsWith('orderFormat')) {
+      
+      let product = null
+      let count = 0
+      let thread = [
+        {
+          question: '<:S_letter:1092606891240198154> Which product do you want to avail?',
+          answer: '',
+        },
+        {
+          question: '<:S_letter:1092606891240198154> How many '+product+' do you want buy?',
+          answer: '',
+        },
+        {
+          question: "<:S_letter:1092606891240198154> What's your selected mode of payment?",
+          answer: '',
+        },
+      ]
+      const filter = m => m.author.id === inter.user.id;
+      async function getResponse(data) {
+        await inter.channel.send(data.question)
+        let msg = await inter.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
+        msg = msg?.first()
+        data.answer = msg.content
+        count === 1 ? product = data.answer : null
+      }
+      for (let i in thread) {
+        let data = thread[i]
+        count++
+        await getResponse(data,count)
+      }
+      inter.channel.send("Is this you")
+      
+    }
     else if (id.startsWith('gsaRaw')) {
       inter.reply({content: '```json\n'+JSON.stringify(shop.gcashStatus, null, 2)+'```', ephemeral: true})
     }
