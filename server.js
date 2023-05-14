@@ -327,7 +327,7 @@ client.on("messageCreate", async (message) => {
       
       let row = await makeRow('terms','Agree and continue','SECONDARY','<a:S_bearheart:1094190497179910225>')
       //
-    if (message.author.id === "557628352828014614") {
+    if (message.author.id === client.user.id && message.content?.toLowerCase().includes('ticket opened')) {
       
     let member = message.mentions.members.first()
     if (member) {

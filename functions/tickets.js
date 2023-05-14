@@ -61,7 +61,7 @@ module.exports = {
         new MessageButton().setCustomId('closeTicket-'+data.user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔒'),
         //new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
       );
-      let BotMsg = channel.send({ content: "<@"+data.user.id+"> - <@&"+data.support+">", embeds: [embed] , components: [row]})
+      let BotMsg = channel.send({ content: "<@"+data.user.id+"> - <@&"+data.support+"> Ticket opened *!*", embeds: [embed] , components: [row]})
       
       }).catch(console.error);
     
