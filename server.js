@@ -174,7 +174,9 @@ const {stringJSON, fetchKey, ghostPing, sleep, moderate, getPercentage, getPerce
 //Roles Handler
 const roles = require('./functions/roles.js')
 const {getRole, addRole, removeRole, hasRole} = roles
-
+//Tickets Handler
+const tickets = require('./functions/tickets.js')
+const {makeTicket} = tickets
 //const {} = boostbot
 /*
 ░█████╗░██╗░░░░░██╗███████╗███╗░░██╗████████╗  ███╗░░░███╗███████╗░██████╗░██████╗░█████╗░░██████╗░███████╗
@@ -1310,6 +1312,26 @@ client.on('interactionCreate', async inter => {
       inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
       inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
     }
+    //tickets
+    else if (id.startsWith('openTicket-')) {
+      let type = id.replace('openTicket-','').replace(/_/g,' ')
+      let data = {}
+      {guild, user, name, category, support, context, ticket}
+      if (type === 'order') {
+        data = {
+          guild: inter.guild,
+          user: inter.user,
+          name: 'Order Ticket',
+          category: '1054731483656499290',
+          support: '1070267838922752060',
+          context: 'Our staff will be with you shortly. Please fill up the form:\n\n• user :\n• product :\n• quantity :\n• mop :',
+          ticketName: 'order-'
+        }
+      }
+      
+      let ticket = await makeTicket()
+    }
+    //
     else if (id === 'orderStatus') {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
