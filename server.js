@@ -34,17 +34,41 @@ async function startApp() {
 startApp();
 let cmd = false
 
-let userSchema
-let userModel
+let ticketSchema
+let ticketModel
+
+let tixSchema
+let tixModel
+
+let ticketId = 10
 //When bot is ready
 client.on("ready", async () => {
   await mongoose.connect(mongooseToken,{keepAlive: true});
-  
-  userSchema = new mongoose.Schema({
+  ticketSchema = new mongoose.Schema({
     id: String,
-    chatCount: Number,
+    count: Number,
   })
-  userModel = mongoose.model("SloopieUser_Model", userSchema);
+  tixSchema = new mongoose.Schema({
+    id: String,
+    number: Number,
+    tickets: [
+      {
+        id: String,
+        name: String,
+        transcript: String,
+        status: String,
+      }
+    ],
+  })
+  tixModel = mongoose.model("SloopieTix", tixSchema);
+  ticketModel = mongoose.model("SloopieTickets", ticketSchema);
+  let doc = await ticketModel.findOne({id: ticketId})
+  if (!doc) {
+    let newDoc = new ticketModel(ticketSchema)
+    newDoc.id = ticketId
+    newDoc.count = 0
+    await newDoc.save()
+  }
   if (cmd) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"
@@ -1058,7 +1082,6 @@ client.on("messageCreate", async (message) => {
 });//END MESSAGE CREATE
 
 let ondutyChannel = '977736253908848711'
-let tickets = []
 let vrDebounce = false
 let claimer = null
 let animation = false
@@ -1316,7 +1339,21 @@ client.on('interactionCreate', async inter => {
     else if (id.startsWith('openTicket-')) {
       let type = id.replace('openTicket-','').replace(/_/g,' ')
       let data = {}
-      {guild, user, name, category, support, context, ticket}
+      
+      let foundData = await ticketModel.findOne({id: ticketId})
+      let doc = await tixModel.findOne({id: inter.user.id})
+      if (foundData) {
+        foundData.count++
+        await foundData.save()
+      }
+      if (!doc) {
+        let newDoc = new tixModel(tixSchema)
+        newDoc.id = inter.user.id
+        newDoc.number = foundData.count
+        newDoc
+      } else if (doc) {
+        
+      }
       if (type === 'order') {
         data = {
           guild: inter.guild,
@@ -1325,11 +1362,11 @@ client.on('interactionCreate', async inter => {
           category: '1054731483656499290',
           support: '1070267838922752060',
           context: 'Our staff will be with you shortly. Please fill up the form:\n\n• user :\n• product :\n• quantity :\n• mop :',
-          ticketName: 'order-'
+          ticketName: 'order-'+foundData.count
         }
       }
       
-      let ticket = await makeTicket()
+      let ticket = await makeTicket(data)
     }
     //
     else if (id === 'orderStatus') {
