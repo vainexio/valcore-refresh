@@ -59,6 +59,7 @@ client.on("ready", async () => {
         transcript: String,
         status: String,
         count: Number,
+        category: String,
       }
     ],
   })
@@ -1413,16 +1414,44 @@ client.on('interactionCreate', async inter => {
       let user = await getUser(userId)
       let doc = await tixModel.findOne({id: user.id})
       if (doc) {
+        let comp
+        let text = 'Ticket controls ('+method+'d by '+inter.user.toString()+')' 
+        if (method === 'delete') {
+          text = 'Deleting this channel in 10 seconds.. '+emojis.loading
+          comp = []
+        }
+        else if (method === 'close') {
+          let row = new MessageActionRow().addComponents(
+            new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
+            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🧨'),
+            new MessageButton().setCustomId('transcript-'+user.id).setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
+          );
+          comp = [row]
+        }
+        else if (method === 'reopen') {
+          let row = new MessageActionRow().addComponents(
+            new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔓'),
+          );
+          comp = [row]
+        }
+        inter.message.edit({components: []})
+        inter.reply({content: text, components: comp})
+        await doc.save()
+        setTimeout(async function() {
+          //Modify channel
         for (let i in doc.tickets) {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
-            if (ticket.status === method) return inter.reply({content: 'Ticket was already '+method+'d.', ephemeral: true})
             ticket.status = method
             if (method === 'delete') {
               doc.tickets.splice(i,1)
               await doc.save()
-            } else {
-              inter.channel.setName(method+'d-'+ticket.count).catch(err => console.log(err))
+            } 
+            else if (method === 'close') {
+              inter.channel.setParent(shop.tixSettings.closed)
+            } 
+            else if (method === 'reopen') {
+              inter.channel.setParent(ticket.category)
             }
             await inter.channel.permissionOverwrites.set([
               {
@@ -1447,29 +1476,7 @@ client.on('interactionCreate', async inter => {
             }
           }
         }
-        let comp
-        let text = 'Ticket controls ('+method+'d by '+inter.user.toString()+')' 
-        if (method === 'delete') {
-          text = 'Deleting this channel in 10 seconds.. '+emojis.loading
-          comp = []
-        }
-        else if (method === 'close') {
-          let row = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
-            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🔴'),
-            new MessageButton().setCustomId('transcript-'+user.id).setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
-          );
-          comp = [row]
-        }
-        else if (method === 'reopen') {
-          let row = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔓'),
-          );
-          comp = [row]
-        }
-        inter.message.edit({components: []})
-        inter.reply({content: text, components: comp})
-        await doc.save()
+        },5000)
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
       }
@@ -1493,7 +1500,6 @@ client.on('interactionCreate', async inter => {
           if (msg.attachments.size > 0) {
             let index = 0
             for (let i in attachments) {
-              console.log(attachments[i])
               ticket.transcript = 'https://codebeautify.org/htmlviewer?url='+attachments[i].url
               await doc.save();
             }

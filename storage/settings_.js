@@ -51,6 +51,7 @@ module.exports = {
     tixSettings: {
       support: '1047454193184682040',
       transcripts: '1054713463739531304',
+      closed: '1055288190669443072',
     },
     
     gcashStatus: null,

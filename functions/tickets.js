@@ -44,6 +44,7 @@ module.exports = {
         name: channel.name,
         panel: data.name,
         count: data.count,
+        category: data.category,
         transcript: 'none',
         status: 'open',
       }
