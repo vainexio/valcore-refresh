@@ -29,7 +29,7 @@ module.exports = {
         },
         {
           id: data.user.id, 
-          allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
+          allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY','ATTACH_FILES'],
         },
         {
           id: data.guild.roles.cache.find(r => r.id === data.support), 
