@@ -1339,25 +1339,26 @@ client.on('interactionCreate', async inter => {
     else if (id.startsWith('openTicket-')) {
       let type = id.replace('openTicket-','').replace(/_/g,' ')
       let data = {}
-      
       let foundData = await ticketModel.findOne({id: ticketId})
-      let doc = await tixModel.findOne({id: '12021'})
+      let doc = await tixModel.findOne({id: inter.user.id})
       if (foundData) {
         foundData.count++
         await foundData.save()
       }
       if (!doc) {
         let newDoc = new tixModel(tixSchema)
-        newDoc.id = '12021'
+        newDoc.id = inter.user.id
         newDoc.number = foundData.count
         newDoc.tickets = []
         await newDoc.save()
-        doc = await tixModel.findOne({id: '12021'})
+        doc = await tixModel.findOne({id: inter.user.id})
         
-      } else if (doc && doc.tickets.length >= 5) {
+      } 
+      else if (doc && doc.tickets.length >= 5) {
         await inter.reply({content: `You have exceeded the maximum amount of tickets!`, ephemeral: true})
         return;
       }
+      let shard = foundData.count > 1000 ? foundData.count : foundData.count > 100 ? '0'+foundData.count : foundData.count > 10 ? '00'+foundData.count : foundData.count > 0 ? '000'+foundData.count : null
       if (type === 'order') {
         data = {
           doc: doc,
@@ -1365,14 +1366,57 @@ client.on('interactionCreate', async inter => {
           user: inter.user,
           name: 'Order Ticket',
           category: '1054731483656499290',
-          support: '1070267838922752060',
-          context: 'Our staff will be with you shortly. Please fill up the form:\n\n• user :\n• product :\n• quantity :\n• mop :',
-          ticketName: 'order-'+foundData.count
+          support: '1047454193184682040',
+          context: 'Please fill up the form:\n\n• user :\n• product :\n• quantity :\n• mop :',
+          ticketName: 'order-'+shard
+        }
+      }
+      else if (type === 'support') {
+        data = {
+          doc: doc,
+          guild: inter.guild,
+          user: inter.user,
+          name: 'Support Ticket',
+          category: '1068070403446149120',
+          support: '1047454193184682040',
+          context: 'Please tell us your concerns or inquiries in advance.',
+          ticketName: 'support-'+shard
+        }
+      }
+      else if (type === 'report') {
+        data = {
+          doc: doc,
+          guild: inter.guild,
+          user: inter.user,
+          name: 'Report Ticket',
+          category: '1068070430457470976',
+          support: '1047454193184682040',
+          context: 'Please tell us which product you are having a problem, so we can send you the form.',
+          ticketName: 'report-'+shard
         }
       }
       
       let ticket = await makeTicket(data)
       await inter.reply({content: " Ticket created "+ticket.channel.toString()})
+    }
+    //
+    else if (id.startsWith('closeTicket-')) {
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let foundData = await ticketModel.findOne({id: ticketId})
+      
+      let userId = id.replace('closeTicket-','').replace(/_/g,' ')
+      let doc = await tixModel.findOne({id: userId})
+      if (doc) {
+        for (let i in doc.tickets) {
+          let ticket = doc.tickets[i]
+          if (ticket.id === inter.channel.id) {
+            ticket.status = 'closed'
+          }
+        }
+        await doc.save()
+      } else {
+        inter.reply({content: emojis.warning+' No data was found.'})
+      }
     }
     //
     else if (id === 'orderStatus') {
