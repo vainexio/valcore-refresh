@@ -340,7 +340,7 @@ client.on("messageCreate", async (message) => {
       message.channel.send({content: "<@"+member.id+">", embeds: [embed], components: [row]})
     } else if (await hasRole(member,['1077462108381388873'],message.guild)) {
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<:S_cattowant:1071030960562388992>'),
+        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<a:S_arrowright:1095503803761033276>'),
       );
       message.channel.send({components: [row]})
       //message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
@@ -960,7 +960,7 @@ client.on("messageCreate", async (message) => {
   }
   //
     let content = message.content.toLowerCase()
-    let responder = shop.ar.responders.find(res => content === shop.ar.prefix+res.command && res.response.length > 0)
+    let responder = shop.ar.responders.find(res => content === shop.ar.prefix+res.command)
     if (responder) {
       if (responder.autoDelete) message.delete();
       message.channel.send({content: responder.response ? responder.response : null, files: responder.files ? responder.files : [], components: responder.components ? [responder.components] : []})
@@ -1444,6 +1444,11 @@ client.on('interactionCreate', async inter => {
         }
         inter.message.edit({components: []})
         if (method === 'delete') {
+          for (let i in doc.tickets) {
+            let ticket = doc.tickets[i]
+            doc.tickets.splice(i,1)
+            await doc.save();
+          }
           inter.reply({content: text})
           setTimeout(function(){
             inter.channel.delete();
@@ -1457,10 +1462,7 @@ client.on('interactionCreate', async inter => {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
             ticket.status = method
-            if (method === 'delete') {
-              doc.tickets.splice(i,1)
-            } 
-            else if (method === 'closed') {
+            if (method === 'closed') {
               inter.channel.setParent(shop.tixSettings.closed)
             } 
             else if (method === 'open') {
@@ -1948,7 +1950,7 @@ client.on('interactionCreate', async inter => {
         await getResponse(data,count)
       }
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('confirmOrder').setStyle('SECONDARY').setLabel('Yes'),
+        new MessageButton().setCustomId('confirmOrder').setStyle('SUCCESS').setLabel('Yes'),
         new MessageButton().setCustomId('orderFormat').setStyle('DANGER').setLabel('Retry'),
       );
       inter.channel.send({content: "<:S_separator:1093733778633019492> Is this your order?\n\nItem: **"+thread[0].answer+"**\nQuantity: **"+thread[1].answer+"**\nMode of Payment: **"+thread[2].answer+'**', components: [row]})
