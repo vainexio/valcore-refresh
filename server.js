@@ -175,7 +175,6 @@ const {stringJSON, fetchKey, ghostPing, sleep, moderate, getPercentage, getPerce
 const roles = require('./functions/roles.js')
 const {getRole, addRole, removeRole, hasRole} = roles
 
-const boostbot = require('./functions/boostbot.js')
 //const {} = boostbot
 /*
 ░█████╗░██╗░░░░░██╗███████╗███╗░░██╗████████╗  ███╗░░░███╗███████╗░██████╗░██████╗░█████╗░░██████╗░███████╗
