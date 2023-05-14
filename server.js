@@ -1415,9 +1415,9 @@ client.on('interactionCreate', async inter => {
       let doc = await tixModel.findOne({id: user.id})
       if (doc) {
         let comp
-        let text = 'Ticket controls\n\nStatus : '+method.toUpperCase()+'\nAuthor : '+inter.user.id 
+        let text = '<:S_dot:1093733278541951078>Status: `'+method.toUpperCase()+'`\n<:S_dot:1093733278541951078>Author: '+inter.user.toString()
         if (method === 'delete') {
-          text = 'Deleting this channel in 10 seconds.. '+emojis.loading
+          text = 'This channel will be deleted in a few seconds.'
           comp = []
         }
         else if (method === 'closed') {
@@ -1435,7 +1435,14 @@ client.on('interactionCreate', async inter => {
           comp = [row]
         }
         inter.message.edit({components: []})
-        inter.reply({content: 'Updating ticket...'})
+        if (method === 'delete') {
+          inter.reply({content: text})
+          setTimeout(function(){
+            inter.channel.delete();
+          },5000)
+        }
+        else if (method !== 'delete') {
+        inter.reply({content: 'Updating ticket... '+emojis.loading})
         setTimeout(async function() {
           //Modify channel
         for (let i in doc.tickets) {
@@ -1467,16 +1474,12 @@ client.on('interactionCreate', async inter => {
               },
               
             ]);
-            if (method === 'delete') {
-              setTimeout(function(){
-                inter.channel.delete();
-              },10000)
-            }
           }
         }
           await doc.save()
-          inter.message.reply({content: text, components: comp})
+          inter.channel.send({content: text, components: comp})
         },5000)
+        }
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
       }
@@ -1525,7 +1528,7 @@ client.on('interactionCreate', async inter => {
           await msg.edit({content: null, embeds: [embed], components: [row]})
           await user.send({content: 'Your ticket transcript was generated.', embeds: [embed], components: [row]}).catch(err => console.log(err))
           
-          inter.message.reply({content: emojis.check+' Transcript saved *!*'})
+          inter.channel.send({content: emojis.check+' Transcript saved *!*'})
         });
       }
     }
