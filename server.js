@@ -1444,13 +1444,13 @@ client.on('interactionCreate', async inter => {
         }
         inter.message.edit({components: []})
         if (method === 'delete') {
-          for (let i in doc.tickets) {
-            let ticket = doc.tickets[i]
-            doc.tickets.splice(i,1)
-            await doc.save();
-          }
           inter.reply({content: text})
-          setTimeout(function(){
+          setTimeout(async function(){
+            for (let i in doc.tickets) {
+              let ticket = doc.tickets[i]
+              doc.tickets.splice(i,1)
+              await doc.save();
+            }
             inter.channel.delete();
           },5000)
         }
@@ -1953,7 +1953,12 @@ client.on('interactionCreate', async inter => {
         new MessageButton().setCustomId('confirmOrder').setStyle('SUCCESS').setLabel('Yes'),
         new MessageButton().setCustomId('orderFormat').setStyle('DANGER').setLabel('Retry'),
       );
-      inter.channel.send({content: "<:S_separator:1093733778633019492> Is this your order?\n\nItem: **"+thread[0].answer+"**\nQuantity: **"+thread[1].answer+"**\nMode of Payment: **"+thread[2].answer+'**', components: [row]})
+      let embed = new MessageEmbed()
+      .setDescription('Item: **'+thread[0].answer+'**\nQuantity: **'+thread[1].answer+'**\nMode of Payment: **'+thread[2].answer+'**')
+      .setColor(colors.yellow)
+      .setFooter({text: 'Order Confirmation'})
+      
+      inter.channel.send({content: "<:S_separator:1093733778633019492> Is this your order?", embeds: [embed], components: [row]})
       
     }
     else if (id.startsWith('confirmOrder')) {
