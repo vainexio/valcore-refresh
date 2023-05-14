@@ -48,6 +48,10 @@ let keys = [
 ]
 module.exports = {
   shop: {
+    tixSettings: {
+      support: '1047454193184682040'
+    },
+    
     gcashStatus: null,
     breakChecker: false,
     orderStatus: new MessageActionRow().addComponents(

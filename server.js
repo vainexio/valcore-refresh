@@ -1416,17 +1416,45 @@ client.on('interactionCreate', async inter => {
         for (let i in doc.tickets) {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
-            if (ticket.status === 'closed') return inter.reply({content: 'Ticket was already closed.'})
-            ticket.status = 'closed'
-            inter.channel.setName(ticket.status+ticket.number)
-            inter.channel.permissionOverwrites.delete(user.id);
+            if (ticket.status === method) return inter.reply({content: 'Ticket was already '+method+'d.', ephemeral: true})
+            ticket.status = method
+            //inter.channel.setName(ticket.status+ticket.number)
+            await inter.channel.permissionOverwrites.set([
+              {
+                id: inter.guild.roles.everyone,
+                deny: ['VIEW_CHANNEL'],
+              },
+              {
+                id: user.id,
+                deny: method === 'close' || method === 'delete' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                allow: method === 'reopen' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+              },
+              {
+                id: inter.guild.roles.cache.find(r => r.id === shop.tixSettings.support), 
+                allow: ['VIEW_CHANNEL','SEND_MESSAGES','READ_MESSAGE_HISTORY'],
+              },
+              
+            ]);
           }
         }
-        let row = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
-          new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
-        );
-        inter.reply({content: '🔒 Ticket controls', components: [row]})
+        let comp
+        let text = '['+method.toUpperCase()+'D] Ticket controls' 
+        if (method === 'close') {
+          let row = new MessageActionRow().addComponents(
+            new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
+            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('DANGER').setLabel('Delete Ticket').setEmoji('🔴'),
+            new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
+          );
+          comp = [row]
+        }
+        else if (method === 'reopen') {
+          let row = new MessageActionRow().addComponents(
+            new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔓'),
+          );
+          comp = [row]
+        }
+        inter.update({components: []})
+        inter.reply({content: text, components: comp})
         await doc.save()
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
