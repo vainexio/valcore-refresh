@@ -49,7 +49,8 @@ let keys = [
 module.exports = {
   shop: {
     tixSettings: {
-      support: '1047454193184682040'
+      support: '1047454193184682040',
+      transcripts: '1047454193910284300',
     },
     
     gcashStatus: null,

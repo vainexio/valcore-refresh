@@ -1399,15 +1399,14 @@ client.on('interactionCreate', async inter => {
         }
       }
       
-      let ticket = await makeTicket(data)
-      await inter.reply({content: " Ticket created "+ticket.channel.toString()})
+      let channel = await makeTicket(data)
+      await inter.reply({content: "<a:S_arrowright:1095503803761033276> Ticket created "+channel.toString(), ephemeral: true})
     }
     //
     else if (id.includes('Ticket-')) {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
-      let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : null
+      let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
       console.log(method)
-      let foundData = await ticketModel.findOne({id: ticketId})
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
       let user = await getUser(userId)
@@ -1418,6 +1417,7 @@ client.on('interactionCreate', async inter => {
           if (ticket.id === inter.channel.id) {
             if (ticket.status === method) return inter.reply({content: 'Ticket was already '+method+'d.', ephemeral: true})
             ticket.status = method
+            if (method === 'delete') doc.tickets.splice(i,1)
             //inter.channel.setName(ticket.status+ticket.number)
             await inter.channel.permissionOverwrites.set([
               {
@@ -1435,15 +1435,24 @@ client.on('interactionCreate', async inter => {
               },
               
             ]);
+            if (method === 'delete') {
+              setTimeout(function(){
+                inter.channel.delete();
+              },10000)
+            }
           }
         }
         let comp
         let text = '['+method.toUpperCase()+'D] Ticket controls' 
-        if (method === 'close') {
+        if (method === 'delete') {
+          text = 'Deleting this channel in 10 seconds.. '+emojis.loading
+          comp = []
+        }
+        else if (method === 'close') {
           let row = new MessageActionRow().addComponents(
             new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
-            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('DANGER').setLabel('Delete Ticket').setEmoji('🔴'),
-            new MessageButton().setCustomId('transcript-ticket').setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
+            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🔴'),
+            new MessageButton().setCustomId('transcript-'+user.id).setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
           );
           comp = [row]
         }
@@ -1453,11 +1462,24 @@ client.on('interactionCreate', async inter => {
           );
           comp = [row]
         }
-        inter.update({components: []})
+        inter.message.edit({components: []})
         inter.reply({content: text, components: comp})
         await doc.save()
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
+      }
+    }
+    //
+    else if (id.startsWith('transcript-')) {
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
+      let userId = id.replace('transcript-','').replace(/_/g,' ')
+      let user = await getUser(userId)
+      let doc = await tixModel.findOne({id: user.id})
+      if (doc) {
+        const attachment = await discordTranscripts.createTranscript(inter.channel);
+        let log = await getChannel(shop.tixSettings.transcripts)
+        await log.send({ files: [attachment] });
+        await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
       }
     }
     //

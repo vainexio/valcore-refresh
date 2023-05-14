@@ -18,6 +18,7 @@ const {getRandom, getChannel} = get
 module.exports = {
   makeTicket: async function (data) {
     //var author = message.author;
+    let ch = null
     await data.guild.channels.create(data.ticketName, {
       type: "text", 
       parent: data.category,
@@ -37,7 +38,7 @@ module.exports = {
       ],
     })
       .then(async channel => {
-      
+      ch = channel
       let ticketChannel = {
         id: channel.id,
         name: channel.name,
@@ -61,5 +62,7 @@ module.exports = {
       let BotMsg = channel.send({ content: "<@"+data.user.id+"> - <@&"+data.support+">", embeds: [embed] , components: [row]})
       
       }).catch(console.error);
+    
+    return ch;
 }
 };
