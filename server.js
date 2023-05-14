@@ -1339,8 +1339,8 @@ client.on('interactionCreate', async inter => {
       inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
     }
     //tickets
-    else if (id.startsWith('openTicket-')) {
-      let type = id.replace('openTicket-','').replace(/_/g,' ')
+    else if (id.startsWith('createTicket-')) {
+      let type = id.replace('createTicket-','').replace(/_/g,' ')
       let data = {}
       let foundData = await ticketModel.findOne({id: ticketId})
       let doc = await tixModel.findOne({id: inter.user.id})
@@ -1407,23 +1407,22 @@ client.on('interactionCreate', async inter => {
     }
     //
     else if (id.includes('Ticket-')) {
-      let method = id.startsWith('reopenTicket-') ? 'open' : id.startsWith('closedTicket-') ? 'closed' : id.startsWith('deleteTicket-') ? 'delete' : null
+      let method = id.startsWith('openTicket-') ? 'open' : id.startsWith('closedTicket-') ? 'closed' : id.startsWith('deleteTicket-') ? 'delete' : null
       if (!await getPerms(inter.member,4) && method !== 'closed') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
       let user = await getUser(userId)
-      console.log(userId,method)
       let doc = await tixModel.findOne({id: user.id})
       if (doc) {
         let comp
-        let text = 'Ticket controls ('+method+' by '+inter.user.toString()+')' 
+        let text = 'Ticket controls\n\nStatus : '+method.toUpperCase()+'\nAuthor : '+inter.user.id 
         if (method === 'delete') {
           text = 'Deleting this channel in 10 seconds.. '+emojis.loading
           comp = []
         }
         else if (method === 'closed') {
           let row = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
+            new MessageButton().setCustomId('openTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
             new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🧨'),
             new MessageButton().setCustomId('transcript-'+user.id).setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
           );
@@ -1436,7 +1435,7 @@ client.on('interactionCreate', async inter => {
           comp = [row]
         }
         inter.message.edit({components: []})
-        inter.reply({content: text, components: comp})
+        inter.reply({content: 'Updating ticket...'})
         setTimeout(async function() {
           //Modify channel
         for (let i in doc.tickets) {
@@ -1476,6 +1475,7 @@ client.on('interactionCreate', async inter => {
           }
         }
           await doc.save()
+          inter.message.reply({content: text, components: comp})
         },5000)
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
