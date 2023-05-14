@@ -50,7 +50,7 @@ module.exports = {
   shop: {
     tixSettings: {
       support: '1047454193184682040',
-      transcripts: '1047454193910284300',
+      transcripts: '1054713463739531304',
     },
     
     gcashStatus: null,

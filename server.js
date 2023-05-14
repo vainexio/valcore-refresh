@@ -55,6 +55,7 @@ client.on("ready", async () => {
       {
         id: String,
         name: String,
+        panel: String,
         transcript: String,
         status: String,
       }
@@ -1475,9 +1476,16 @@ client.on('interactionCreate', async inter => {
       let userId = id.replace('transcript-','').replace(/_/g,' ')
       let user = await getUser(userId)
       let doc = await tixModel.findOne({id: user.id})
+
       if (doc) {
-        const attachment = await discordTranscripts.createTranscript(inter.channel);
+        let attachment = await discordTranscripts.createTranscript(inter.channel);
+        console.log(attachment)
         let log = await getChannel(shop.tixSettings.transcripts)
+        let embed = new MessageEmbed()
+        .addField('Ticket Owner',user.toString(),true)
+        .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+doc.,true)
+        .addField('Panel Name',doc.panel,true)
+        .addField('Transcript','[View Transcript](https://codebeautify.org/htmlviewer?url='+attachment.url+')',true)
         await log.send({ files: [attachment] });
         await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
       }
