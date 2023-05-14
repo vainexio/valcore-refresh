@@ -1407,11 +1407,12 @@ client.on('interactionCreate', async inter => {
     }
     //
     else if (id.includes('Ticket-')) {
-      let method = id.startsWith('reopenedTicket-') ? 'reopen' : id.startsWith('closedTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
+      let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
       if (!await getPerms(inter.member,4) && method !== 'close') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
       let user = await getUser(userId)
+      console.log(userId,method)
       let doc = await tixModel.findOne({id: user.id})
       if (doc) {
         let comp
@@ -1430,7 +1431,7 @@ client.on('interactionCreate', async inter => {
         }
         else if (method === 'reopen') {
           let row = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔓'),
+            new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('SECONDARY').setLabel('Close').setEmoji('🔓'),
           );
           comp = [row]
         }
@@ -1484,16 +1485,17 @@ client.on('interactionCreate', async inter => {
     else if (id.startsWith('transcript-')) {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       let userId = id.replace('transcript-','').replace(/_/g,' ')
-      let user = await getUser(userId)
-      let doc = await tixModel.findOne({id: user.id})
+      let doc = await tixModel.findOne({id: userId})
+      let log = await getChannel(shop.tixSettings.transcripts)
+      await inter.reply({content: 'Saving transcript to '+log.toString()})
 
       if (doc) {
-        let ticket = await doc.tickets.find(tix => tix.id === inter.channel.id)
-        if (!ticket) return inter.reply({content: emojis.warning+' Invalid ticket data.'})
-        let attachment = await discordTranscripts.createTranscript(inter.channel);
-        let log = await getChannel(shop.tixSettings.transcripts)
         
-        await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
+        let user = await getUser(userId)
+        let ticket = await doc.tickets.find(tix => tix.id === inter.channel.id)
+        if (!ticket) return inter.message.reply({content: emojis.warning+' Invalid ticket data.'})
+        let attachment = await discordTranscripts.createTranscript(inter.channel);
+        
         await log.send({ content: 'Loading', files: [attachment] }).then(async msg => {
           let attachments = Array.from(msg.attachments.values())
           let stringFiles = ""
@@ -1508,17 +1510,20 @@ client.on('interactionCreate', async inter => {
           let embed = new MessageEmbed()
           .setAuthor({ name: user.tag, iconURL: user.avatarURL(), url: 'https://discord.gg/sloopies' })
           .addField('Ticket Owner',user.toString(),true)
-          .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+ticket.name,true)
+          .addField('Ticket Name','Current: '+inter.channel.name+'`\nOriginal: `'+ticket.name+'`',true)
           .addField('Panel Name',ticket.panel,true)
           .addField('Status',ticket.status.toUpperCase(),true)
           .addField('Count',ticket.count.toString(),true)
           .setColor(colors.yellow)
+          .setFooter({text: "Sloopies Ticket System"})
           
           let row = new MessageActionRow().addComponents(
             new MessageButton().setURL(ticket.transcript).setStyle('LINK').setLabel('View Transcript').setEmoji('<:S_separator:1093733778633019492>'),
           );
           await msg.edit({content: null, embeds: [embed], components: [row]})
           await user.send({content: 'Your ticket transcript was generated.', embeds: [embed], components: [row]}).catch(err => console.log(err))
+          
+          inter.message.reply({content: emojis.check+' Transcript saved *!*'})
         });
       }
     }
