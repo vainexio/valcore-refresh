@@ -1358,7 +1358,7 @@ client.on('interactionCreate', async inter => {
         
       } 
       else if (doc && doc.tickets.length >= 5) {
-        await inter.reply({content: `You have exceeded the maximum amount of tickets!`, ephemeral: true})
+        await inter.reply({content: `You have exceeded the maximum amount of tickets! (${doc.tickets.length})`, ephemeral: true})
         return;
       }
       let shard = foundData.count > 1000 ? foundData.count : foundData.count > 100 ? '0'+foundData.count : foundData.count > 10 ? '00'+foundData.count : foundData.count > 0 ? '000'+foundData.count : null
@@ -1515,7 +1515,7 @@ client.on('interactionCreate', async inter => {
           .addField('Ticket Owner',user.toString(),true)
           .addField('Ticket Name','Current: `'+inter.channel.name+'`\nOriginal: `'+ticket.name+'`',true)
           .addField('Panel Name',ticket.panel,true)
-          .addField('Status',ticket.status.toUpperCase(),true)
+          .addField('Transcript','[Online Transcript]('+ticket.transcript+')',true)
           .addField('Count',ticket.count.toString(),true)
           .addField('Moderator',inter.user.toString(),true)
           .setThumbnail(inter.guild.iconURL())
