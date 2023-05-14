@@ -1407,7 +1407,7 @@ client.on('interactionCreate', async inter => {
     }
     //
     else if (id.includes('Ticket-')) {
-      let method = id.startsWith('reopenedTicket-') ? 'reopened' : id.startsWith('closedTicket-') ? 'closed' : id.startsWith('deletedTicket-') ? 'delete' : null
+      let method = id.startsWith('reopenedTicket-') ? 'reopen' : id.startsWith('closedTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
       if (!await getPerms(inter.member,4) && method !== 'close') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
@@ -1420,7 +1420,7 @@ client.on('interactionCreate', async inter => {
           text = 'Deleting this channel in 10 seconds.. '+emojis.loading
           comp = []
         }
-        else if (method === 'closed') {
+        else if (method === 'close') {
           let row = new MessageActionRow().addComponents(
             new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
             new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🧨'),
@@ -1428,7 +1428,7 @@ client.on('interactionCreate', async inter => {
           );
           comp = [row]
         }
-        else if (method === 'reopened') {
+        else if (method === 'reopen') {
           let row = new MessageActionRow().addComponents(
             new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔓'),
           );
@@ -1442,13 +1442,13 @@ client.on('interactionCreate', async inter => {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
             ticket.status = method
-            if (method === 'deleted') {
+            if (method === 'delete') {
               doc.tickets.splice(i,1)
             } 
-            else if (method === 'closed') {
+            else if (method === 'close') {
               inter.channel.setParent(shop.tixSettings.closed)
             } 
-            else if (method === 'reopened') {
+            else if (method === 'reopene') {
               inter.channel.setParent(ticket.category)
             }
             await inter.channel.permissionOverwrites.set([
@@ -1458,8 +1458,8 @@ client.on('interactionCreate', async inter => {
               },
               {
                 id: user.id,
-                deny: method === 'closed' || method === 'deleted' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
-                allow: method === 'reopened' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                deny: method === 'close' || method === 'delete' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                allow: method === 'reopen' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
               },
               {
                 id: inter.guild.roles.cache.find(r => r.id === shop.tixSettings.support), 
@@ -1467,7 +1467,7 @@ client.on('interactionCreate', async inter => {
               },
               
             ]);
-            if (method === 'deleted') {
+            if (method === 'delete') {
               setTimeout(function(){
                 inter.channel.delete();
               },10000)
