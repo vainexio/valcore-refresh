@@ -709,7 +709,10 @@ module.exports = {
       responders: [
         {
           command: 'form',
-          response: '<a:S_bearheart:1094190497179910225> Order Format\n\n• product:\n• quantity:\n• mop:',
+          response: '',
+          components: new MessageActionRow().addComponents(
+            new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<:S_cattowant:1071030960562388992>'),
+          ),
           autoDelete: true,
         },
         {

@@ -1341,7 +1341,7 @@ client.on('interactionCreate', async inter => {
         );
       inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
       let row2 = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<:S_cattowant:1071030960562388992>'),
+        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<a:S_arrowright:1095503803761033276>'),
       );
       inter.channel.send({components: [row2]})
       //inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
@@ -1913,20 +1913,25 @@ client.on('interactionCreate', async inter => {
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
     else if (id.startsWith('orderFormat')) {
-      inter.update({components: inter.components})
-      let product = null
+      //let found = comp.components.find(c => c.customId === 'orderFormat')
+      let comp = inter.message.components[0]
+        for (let i in comp.components) {
+          let row = comp.components[i]
+          row.disabled = true
+        }
+      inter.update({components: [comp]})
       let count = 0
       let thread = [
         {
-          question: '<:S_letter:1092606891240198154> Which product do you want to avail?',
+          question: '> <:S_letter:1092606891240198154> Which product do you want to avail?',
           answer: '',
         },
         {
-          question: '<:S_letter:1092606891240198154> How many '+product+' do you want buy?',
+          question: '> <:S_letter:1092606891240198154> How many of this item do you wish buy?',
           answer: '',
         },
         {
-          question: "<:S_letter:1092606891240198154> What's your selected mode of payment?",
+          question: "> <:S_letter:1092606891240198154> What's your selected mode of payment?",
           answer: '',
         },
       ]
@@ -1936,7 +1941,6 @@ client.on('interactionCreate', async inter => {
         let msg = await inter.channel.awaitMessages({ filter, max: 1,time: 900000 ,errors: ['time'] })
         msg = msg?.first()
         data.answer = msg.content
-        count === 1 ? product = data.answer : null
       }
       for (let i in thread) {
         let data = thread[i]
@@ -1947,7 +1951,7 @@ client.on('interactionCreate', async inter => {
         new MessageButton().setCustomId('confirmOrder').setStyle('SECONDARY').setLabel('Yes'),
         new MessageButton().setCustomId('orderFormat').setStyle('DANGER').setLabel('Retry'),
       );
-      inter.channel.send({content: "Is this your order?\n\nItem: "+thread[0].answer+"\nQuantity: "+thread[1].answer+"\nMode of Payment: "+thread[2].answer, components: [row]})
+      inter.channel.send({content: "<:S_separator:1093733778633019492> Is this your order?\n\nItem: **"+thread[0].answer+"**\nQuantity: **"+thread[1].answer+"**\nMode of Payment: **"+thread[2].answer+'**', components: [row]})
       
     }
     else if (id.startsWith('confirmOrder')) {
