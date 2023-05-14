@@ -1494,6 +1494,7 @@ client.on('interactionCreate', async inter => {
         let attachment = await discordTranscripts.createTranscript(inter.channel);
         let log = await getChannel(shop.tixSettings.transcripts)
         
+        await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
         await log.send({ content: 'Loading', files: [attachment] }).then(async msg => {
           let attachments = Array.from(msg.attachments.values())
           let stringFiles = ""
@@ -1510,13 +1511,16 @@ client.on('interactionCreate', async inter => {
           .addField('Ticket Owner',user.toString(),true)
           .addField('Ticket Name','Current : '+inter.channel.name+'\nOriginal : '+ticket.name,true)
           .addField('Panel Name',ticket.panel,true)
-          .addField('Transcript','[View Transcript]('+ticket.transcript+')',true)
+          .addField('Status',ticket.status.toUpperCase(),true)
           .addField('Count',ticket.count.toString(),true)
           .setColor(colors.yellow)
           
-          msg.edit({content: null, embeds: [embed]})
+          let row = new MessageActionRow().addComponents(
+            new MessageButton().setURL(ticket.transcript).setStyle('LINK').setLabel('View Transcript').setEmoji('<:S_separator:1093733778633019492>'),
+          );
+          await msg.edit({content: null, embeds: [embed], components: [row]})
+          await user.send({content: 'Your ticket transcript was generated.', embeds: [embed], components: [row]}).catch(err => console.log(err))
         });
-        await inter.reply({content: emojis.check+' Ticket transcript was saved to '+log.toString()})
       }
     }
     //
