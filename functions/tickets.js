@@ -46,7 +46,7 @@ module.exports = {
         count: data.count,
         category: data.category,
         transcript: 'none',
-        status: 'open',
+        status: 'opened',
       }
       data.doc.tickets.push(ticketChannel)
       await data.doc.save()

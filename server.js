@@ -1407,7 +1407,7 @@ client.on('interactionCreate', async inter => {
     }
     //
     else if (id.includes('Ticket-')) {
-      let method = id.startsWith('reopenTicket-') ? 'reopen' : id.startsWith('closeTicket-') ? 'close' : id.startsWith('deleteTicket-') ? 'delete' : null
+      let method = id.startsWith('reopenedTicket-') ? 'reopened' : id.startsWith('closedTicket-') ? 'closed' : id.startsWith('deletedTicket-') ? 'delete' : null
       if (!await getPerms(inter.member,4) && method !== 'close') return inter.reply({content: emojis.warning+' Insufficient Permission', ephemeral: true});
       
       let userId = id.replace(method+'Ticket-','').replace(/_/g,' ')
@@ -1415,12 +1415,12 @@ client.on('interactionCreate', async inter => {
       let doc = await tixModel.findOne({id: user.id})
       if (doc) {
         let comp
-        let text = 'Ticket controls ('+method+'d by '+inter.user.toString()+')' 
+        let text = 'Ticket controls ('+method+' by '+inter.user.toString()+')' 
         if (method === 'delete') {
           text = 'Deleting this channel in 10 seconds.. '+emojis.loading
           comp = []
         }
-        else if (method === 'close') {
+        else if (method === 'closed') {
           let row = new MessageActionRow().addComponents(
             new MessageButton().setCustomId('reopenTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
             new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🧨'),
@@ -1428,7 +1428,7 @@ client.on('interactionCreate', async inter => {
           );
           comp = [row]
         }
-        else if (method === 'reopen') {
+        else if (method === 'reopened') {
           let row = new MessageActionRow().addComponents(
             new MessageButton().setCustomId('closeTicket-'+user.id).setStyle('DANGER').setLabel('Close Ticket').setEmoji('🔓'),
           );
@@ -1436,21 +1436,19 @@ client.on('interactionCreate', async inter => {
         }
         inter.message.edit({components: []})
         inter.reply({content: text, components: comp})
-        await doc.save()
         setTimeout(async function() {
           //Modify channel
         for (let i in doc.tickets) {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
             ticket.status = method
-            if (method === 'delete') {
+            if (method === 'deleted') {
               doc.tickets.splice(i,1)
-              await doc.save()
             } 
-            else if (method === 'close') {
+            else if (method === 'closed') {
               inter.channel.setParent(shop.tixSettings.closed)
             } 
-            else if (method === 'reopen') {
+            else if (method === 'reopened') {
               inter.channel.setParent(ticket.category)
             }
             await inter.channel.permissionOverwrites.set([
@@ -1460,8 +1458,8 @@ client.on('interactionCreate', async inter => {
               },
               {
                 id: user.id,
-                deny: method === 'close' || method === 'delete' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
-                allow: method === 'reopen' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                deny: method === 'closed' || method === 'deleted' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
+                allow: method === 'reopened' ? ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] : null,
               },
               {
                 id: inter.guild.roles.cache.find(r => r.id === shop.tixSettings.support), 
@@ -1469,13 +1467,14 @@ client.on('interactionCreate', async inter => {
               },
               
             ]);
-            if (method === 'delete') {
+            if (method === 'deleted') {
               setTimeout(function(){
                 inter.channel.delete();
               },10000)
             }
           }
         }
+          await doc.save()
         },5000)
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
