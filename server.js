@@ -339,7 +339,11 @@ client.on("messageCreate", async (message) => {
       
       message.channel.send({content: "<@"+member.id+">", embeds: [embed], components: [row]})
     } else if (await hasRole(member,['1077462108381388873'],message.guild)) {
-      message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<:S_cattowant:1071030960562388992>'),
+      );
+      message.channel.send({components: [row]})
+      //message.channel.setName(message.channel.name.replace('ticket',member.user.username.replace(/ /g,'')))
     }
     }
     }
@@ -1336,7 +1340,11 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
         );
       inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
-      inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
+      let row2 = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<:S_cattowant:1071030960562388992>'),
+      );
+      inter.channel.send({components: [row2]})
+      //inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
     }
     //tickets
     else if (id.startsWith('createTicket-')) {
@@ -1905,7 +1913,7 @@ client.on('interactionCreate', async inter => {
       notice.send('<@'+inter.user.id+'> '+emojis.x)
     }
     else if (id.startsWith('orderFormat')) {
-      
+      inter.update({components: inter.components})
       let product = null
       let count = 0
       let thread = [
@@ -1935,8 +1943,16 @@ client.on('interactionCreate', async inter => {
         count++
         await getResponse(data,count)
       }
-      inter.channel.send("Is this you")
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('confirmOrder').setStyle('SECONDARY').setLabel('Yes'),
+        new MessageButton().setCustomId('orderFormat').setStyle('DANGER').setLabel('Retry'),
+      );
+      inter.channel.send({content: "Is this your order?\n\nItem: "+thread[0].answer+"\nQuantity: "+thread[1].answer+"\nMode of Payment: "+thread[2].answer, components: [row]})
       
+    }
+    else if (id.startsWith('confirmOrder')) {
+      inter.message.edit({components: []})
+      inter.reply({content: "Thank you for confirming your order! <:S_bearlove:1072353337699225640>\nOur staff will be with you shortly."})
     }
     else if (id.startsWith('gsaRaw')) {
       inter.reply({content: '```json\n'+JSON.stringify(shop.gcashStatus, null, 2)+'```', ephemeral: true})
