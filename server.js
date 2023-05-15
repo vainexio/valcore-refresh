@@ -1492,7 +1492,7 @@ client.on('interactionCreate', async inter => {
           .setDescription(text)
           .setColor(colors.none)
           .setFooter({text: "Sloopies Ticketing System"})
-          inter.channel.send({content: text, components: comp})
+          inter.channel.send({embeds: [embed], components: comp})
         },5000)
         }
       } else {
