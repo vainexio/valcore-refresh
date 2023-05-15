@@ -1659,10 +1659,10 @@ client.on('interactionCreate', async inter => {
     let role = id.replace('roles-','').replace(/_/g,' ')
     if (hasRole(inter.member, [role], inter.guild)) {
       removeRole(inter.member, [role], inter.guild)
-      await inter.reply({content: emojis.x+' Removed **'+role+'** role.', ephemeral: true})
+      await inter.reply({content: emojis.off+' Removed **'+role+'** role.', ephemeral: true})
     } else {
     addRole(inter.member, [role], inter.guild)
-    await inter.reply({ content: emojis.check+' Added **'+role+'** role.', ephemeral: true });
+    await inter.reply({ content: emojis.on+' Added **'+role+'** role.', ephemeral: true });
     }
   }
     else if (id.startsWith('drop-')) {
