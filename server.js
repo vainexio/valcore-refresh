@@ -1379,7 +1379,7 @@ client.on('interactionCreate', async inter => {
           name: 'Order Ticket',
           category: '1054731483656499290',
           support: '1047454193184682040',
-          context: 'Type `.form` to get the order format!',
+          context: 'Type `.form` to get the order format or use the **click me** button!',
           ticketName: inter.user.username+'-'+shard
         }
       }
@@ -1451,13 +1451,14 @@ client.on('interactionCreate', async inter => {
               doc.tickets.splice(i,1)
               await doc.save();
             }
-            inter.channel.delete();
-          },5000)
+            await inter.channel.delete();
+          },8000)
         }
         else if (method !== 'delete') {
-        inter.reply({content: 'Updating ticket... '+emojis.loading})
-        setTimeout(async function() {
+          let botMsg = null
+          await inter.reply({content: 'Updating ticket... '+emojis.loading}).then()
           //Modify channel
+          setTimeout(async function() {
         for (let i in doc.tickets) {
           let ticket = doc.tickets[i]
           if (ticket.id === inter.channel.id) {
@@ -1493,7 +1494,7 @@ client.on('interactionCreate', async inter => {
           .setColor(colors.none)
           .setFooter({text: "Sloopies Ticketing System"})
           inter.channel.send({embeds: [embed], components: comp})
-        },5000)
+          },500)
         }
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
@@ -1541,9 +1542,8 @@ client.on('interactionCreate', async inter => {
             new MessageButton().setURL(ticket.transcript).setStyle('LINK').setLabel('View Transcript').setEmoji('<:S_separator:1093733778633019492>'),
           );
           await msg.edit({content: null, embeds: [embed], components: [row]})
-          await user.send({content: 'Your ticket transcript was generated.', embeds: [embed], components: [row]}).catch(err => console.log(err))
-          
-          inter.channel.send({content: emojis.check+' Transcript saved *!*'})
+          await inter.channel.send({content: emojis.check+' Transcript saved *!*'})
+          user.send({content: 'Your ticket transcript was generated.', embeds: [embed], components: [row]}).catch(err => console.log(err))
         });
       }
     }
@@ -1971,7 +1971,7 @@ client.on('interactionCreate', async inter => {
       inter.reply({content: "Thank you for confirming your order! <:S_bearlove:1072353337699225640>\nOur staff will be with you shortly."})
     }
     else if (id.startsWith('gsaRaw')) {
-      inter.reply({content: '```json\n'+JSON.stringify(shop.gcashStatus, null, 2)+'```', ephemeral: true})
+      inter.reply({content: '```json\n'+JSON.stringify(shop.gcashStatus, null, 2).replace(/ *\<[^>]*\> */g, "")+'```', ephemeral: true})
     }
     else if (id.startsWith('design')) {
       if (animation) return inter.reply({content: 'An animation is currently in progress. Please try again later.', ephemeral: true})
@@ -2128,8 +2128,7 @@ const interval = setInterval(async function() {
       shop.gcashStatus = response;
     } else {
       if (!shop.gcashStatus) shop.gcashStatus = response;
-      console.log('no')
-    } 
+    }
   
       //Get info
       if (ready) {
