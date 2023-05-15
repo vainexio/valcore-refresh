@@ -491,7 +491,7 @@ module.exports = {
       {
         //Category
         name: 'Discord Nitro',
-        keywords: ['nitro','nitor'],
+        keywords: ['nitro','nitor','nb'],
         channel: '1054720561277841438',
         rs: '1078708432091226112',
         status: 2,
@@ -504,7 +504,7 @@ module.exports = {
             children: [
               //
               { name: 'Nitro Basic (MTO)', price: 85, rs: 0 },
-              { name: 'Nitro Boost', price: 175, rs: 0 },
+              { name: 'Nitro Boost', price: 170, rs: 0 },
               //
             ],
           },
@@ -764,7 +764,7 @@ module.exports = {
           autoDelete: true,
         },
         {
-          command: 'gcash',
+          command: 'gcash3',
           response: '<a:MoneyFlash:1054781743355396186> GCASH\n— **0966 208 4534**\n— **EL•A I.**\n\n— Send screenshot of receipt here',
           components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09662084534').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
@@ -776,7 +776,7 @@ module.exports = {
           autoDelete: true,
         },
         {
-          command: 'gcash3',
+          command: 'gcash',
           response: '<a:S_holobutterfly:1095503488710099035> —  **__GCASH INFO__**\n<:S_dot:1093733278541951078>0945 986 8489 | RA^^L I.\n\n<a:S_sparkles:1095303558938767480> :  *Send screenshot of receipt here!*',
           components: new MessageActionRow().addComponents(new MessageButton().setCustomId('reply-09459868489').setStyle('SECONDARY').setEmoji('<a:s_notes:1096412847522717696>').setLabel("Copy Paste")),
           autoDelete: true,
