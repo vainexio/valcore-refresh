@@ -1380,7 +1380,7 @@ client.on('interactionCreate', async inter => {
           category: '1054731483656499290',
           support: '1047454193184682040',
           context: 'Type `.form` to get the order format!',
-          ticketName: 'order-'+shard
+          ticketName: inter.user.username+'-'+shard
         }
       }
       else if (type === 'support') {
@@ -1430,9 +1430,9 @@ client.on('interactionCreate', async inter => {
         }
         else if (method === 'closed') {
           let row = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId('openTicket-'+user.id).setStyle('SECONDARY').setLabel('Open Ticket').setEmoji('🔓'),
-            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete Ticket').setEmoji('🧨'),
-            new MessageButton().setCustomId('transcript-'+user.id).setStyle('SECONDARY').setLabel('Save Transcript').setEmoji('<:S_letter:1092606891240198154>'),
+            new MessageButton().setCustomId('transcript-'+user.id).setStyle('SECONDARY').setLabel('Transcript').setEmoji('<:S_letter:1092606891240198154>'),
+            new MessageButton().setCustomId('openTicket-'+user.id).setStyle('SECONDARY').setLabel('Open').setEmoji('🔓'),
+            new MessageButton().setCustomId('deleteTicket-'+user.id).setStyle('SECONDARY').setLabel('Delete').setEmoji('⛔'),
           );
           comp = [row]
         }
@@ -1487,6 +1487,11 @@ client.on('interactionCreate', async inter => {
           }
         }
           await doc.save()
+          
+          let embed = new MessageEmbed()
+          .setDescription(text)
+          .setColor(colors.none)
+          .setFooter({text: "Sloopies Ticketing System"})
           inter.channel.send({content: text, components: comp})
         },5000)
         }
