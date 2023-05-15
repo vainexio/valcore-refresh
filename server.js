@@ -1369,7 +1369,7 @@ client.on('interactionCreate', async inter => {
         await inter.reply({content: `You have exceeded the maximum amount of tickets! (${doc.tickets.length})`, ephemeral: true})
         return;
       }
-      let shard = foundData.count > 1000 ? foundData.count : foundData.count > 100 ? '0'+foundData.count : foundData.count > 10 ? '00'+foundData.count : foundData.count > 0 ? '000'+foundData.count : null
+      let shard = foundData.count >= 1000 ? foundData.count : foundData.count >= 100 ? '0'+foundData.count : foundData.count >= 10 ? '00'+foundData.count : foundData.count >= 0 ? '000'+foundData.count : null
       if (type === 'order') {
         data = {
           doc: doc,
@@ -1380,7 +1380,7 @@ client.on('interactionCreate', async inter => {
           category: '1054731483656499290',
           support: '1047454193184682040',
           context: 'Type `.form` to get the order format or use the **click me** button!',
-          ticketName: inter.user.username+'-'+shard
+          ticketName: inter.user.username.replace(/ /g,'')+'-'+shard
         }
       }
       else if (type === 'support') {
@@ -1393,7 +1393,7 @@ client.on('interactionCreate', async inter => {
           category: '1068070403446149120',
           support: '1047454193184682040',
           context: 'Please tell us your concerns or inquiries in advance.',
-          ticketName: 'support-'+shard
+          ticketName: inter.user.username.replace(/ /g,'')+'-'+shard
         }
       }
       else if (type === 'report') {
@@ -1406,7 +1406,7 @@ client.on('interactionCreate', async inter => {
           category: '1068070430457470976',
           support: '1047454193184682040',
           context: 'Use the respective autoresponders to view the report format of the item you wish to report.\n`.rboost`\n`.rnitro`\n`.rbadge`\n`.rpremium`',
-          ticketName: 'report-'+shard
+          ticketName: inter.user.username.replace(/ /g,'')+'-'+shard
         }
       }
       
@@ -1456,20 +1456,20 @@ client.on('interactionCreate', async inter => {
         }
         else if (method !== 'delete') {
           let botMsg = null
-          await inter.reply({content: 'Updating ticket... '+emojis.loading}).then()
+          inter.deferUpdate();
+          await inter.message.reply({content: 'Updating ticket... '+emojis.loading}).then(msg => botMsg = msg)
           //Modify channel
-          setTimeout(async function() {
-        for (let i in doc.tickets) {
-          let ticket = doc.tickets[i]
-          if (ticket.id === inter.channel.id) {
-            ticket.status = method
-            if (method === 'closed') {
-              inter.channel.setParent(shop.tixSettings.closed)
-            } 
-            else if (method === 'open') {
-              inter.channel.setParent(ticket.category)
-            }
-            await inter.channel.permissionOverwrites.set([
+          for (let i in doc.tickets) {
+            let ticket = doc.tickets[i]
+            if (ticket.id === inter.channel.id) {
+              ticket.status = method
+              if (method === 'closed') {
+                inter.channel.setParent(shop.tixSettings.closed)
+              } 
+              else if (method === 'open') {
+                inter.channel.setParent(ticket.category)
+              }
+              await inter.channel.permissionOverwrites.set([
               {
                 id: inter.guild.roles.everyone,
                 deny: ['VIEW_CHANNEL'],
@@ -1485,16 +1485,15 @@ client.on('interactionCreate', async inter => {
               },
               
             ]);
+            }
           }
-        }
           await doc.save()
-          
           let embed = new MessageEmbed()
           .setDescription(text)
           .setColor(colors.none)
           .setFooter({text: "Sloopies Ticketing System"})
           inter.channel.send({embeds: [embed], components: comp})
-          },500)
+          botMsg.delete();
         }
       } else {
         inter.reply({content: emojis.warning+' No data was found.'})
