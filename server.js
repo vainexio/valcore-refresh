@@ -1193,7 +1193,7 @@ client.on('interactionCreate', async inter => {
       let quanStyle = 'SECONDARY'
       foundCat.status = quan > 0 ? 1 : 3
       stockHolder[0].push(
-        new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(style).setLabel('Nitro boost').setEmoji('<a:nitroboost:1057999297787985960>'),
+        new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(style).setLabel('Nitro Boost').setEmoji('<a:nitroboost:1057999297787985960>'),
         new MessageButton().setCustomId('none-'+getRandom(1,10000)).setStyle(quan == '0' ? 'DANGER' : quanStyle).setLabel(quan.toString())
       )
   
