@@ -2107,15 +2107,15 @@ const interval = setInterval(async function() {
   let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
     response = await response.json();
     
-    if (JSON.stringify(shop.gcashStatus) !== JSON.stringify(response) && shop.gcashStatus) {
+    if (shop.gcashStatus.article.body !== response.article.body && shop.gcashStatus) {
       console.log(response)
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
-     .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
-     .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
-     .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
-     .addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
+     //.addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
+     //.addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
+     //.addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
+     //.addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
      .addField('Response Body',response.article.body.replace(/ *\<[^>]*\> */g, ""))
      .setFooter({text: "Beta"})
      let channel = await getChannel(shop.channels.gcash)
@@ -2124,7 +2124,7 @@ const interval = setInterval(async function() {
        new MessageButton().setCustomId('gsaRaw').setStyle('SECONDARY').setLabel('Raw Data'),
        new MessageButton().setURL('https://help.gcash.com/hc/en-us/articles/900000125806-GCash-Service-Advisories').setStyle('LINK').setLabel('View Source').setEmoji('<:gcash:1086081913061646428>'),
      );
-     await channel.send({content: 'GCash Service Advisory was updated.', embeds: [embed], components: [row]})
+     await channel.send({content: '<@&1105332833079267460> GCash Service Advisory was updated.', embeds: [embed], components: [row]})
       shop.gcashStatus = response;
     } else {
       if (!shop.gcashStatus) shop.gcashStatus = response;

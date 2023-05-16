@@ -967,6 +967,14 @@ module.exports = {
         ),
       },
       {
+        id: '1105332833079267460',
+        message: 'Click the button to gain the **GCash Status** role and get notified when the gcash service advisory releases an update!',
+        comp: new MessageActionRow()
+        .addComponents(
+          new MessageButton().setLabel('GCash Status').setStyle('SECONDARY').setEmoji('🔔').setCustomId('roles-GCash_Status')
+          ),
+      },
+      {
         id: '1047454193197252644',
         message: '*Pick your language*',
         comp: new MessageActionRow()
