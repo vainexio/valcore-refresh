@@ -1082,7 +1082,7 @@ client.on("messageCreate", async (message) => {
     else if (data.chosenAPI === AI.chatAPI) {
       let msg = data.response.choices[0].message.content
       let filtered = AI.filter(msg)
-      console.log(filtered)
+      //console.log(filtered)
       if (filtered.length > 1999) return message.reply("⚠️ The message generated was longer than 2000 characters. Unable to send due to discord's limitations.")
       await message.reply(filtered)
     }
