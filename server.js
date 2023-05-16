@@ -510,7 +510,7 @@ client.on("messageCreate", async (message) => {
      .addField('Author ID','```diff\n- '+response.article.author_id+'```',true)
      .addField('Outdated','```yaml\n'+response.article.outdated+'```',true)
      .addField('Updated At','<t:'+getTime(response.article.updated_at)+':f> (<t:'+getTime(response.article.updated_at)+':R>)')
-     .addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
+     //.addField('Label Names',response.article.label_names.join(',\n').toUpperCase())
      .addField('Response Body',response.article.body.replace(/ *\<[^>]*\> */g, "").replace(/\n\n/g,''))
      .setFooter({text: "Beta"})
      
