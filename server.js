@@ -201,26 +201,17 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let guildId = options.find(a => a.name === 'guild_id')
-      let guild = await getGuild(guildId)
+      let guild = await getGuild(guildId.value)
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild'})
+      if (guild.ownerId !== inter.user.id) return inter.reply({content: emojis.warning+' You must be the owner of the guild in order to register'})
       let doc = await guildModel.findOne({id: guild.id})
-      if (doc) return inter.reply({content: emojis.warning+' Guild already registered.'})
+      if (doc) return inter.reply({content: emojis.warning+' This guild already registered.'})
       
-      let guildSchema = new mongoose.Schema({
-    id: String,
-    key: String,
-    users: [
-      {
-        id: String,
-        access_token: String,
-        refresh_token: String,
-      }
-    ],
-  })
       let newDoc = new guildModel(guildSchema)
-      newDoc.id = guild.id,
-        
-      
+      newDoc.id = guild.id
+      newDoc.key = makeCode(30)
+      await newDoc.save()
+      await inter.reply({content: "Your guild was registered! The key will not be sent again, make sure copy and save it!\n\nKEY: "+newDoc.key, ephemeral: true})
     }
     else if (cname === 'backup') {
       if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
@@ -228,6 +219,23 @@ client.on('interactionCreate', async inter => {
       //
       let key = options.find(a => a.name === 'key')
       let guildId = options.find(a => a.name === 'new_guild')
+      let guild = await getGuild(guildId.value);
+      if (!guild) return inter.reply({content: emojis.warning+' Invalid guild'})
+      let doc = await guildModel.findOne({key: key.value})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key'})
+      
+      if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to access your token'})
+      let failed = 0
+      let success = 0
+      for (let i in doc.users) {
+        let data = doc.users[i]
+        try {
+          let user = await getUser(data.id);
+          if (user) await guild.members.add(user,{accessToken: data.access_token}).catch(err => failed++).then(success => success++)
+        } catch(err) {
+          failed++
+        }
+      }
     }
   }
   //BUTTONS
@@ -280,14 +288,14 @@ let streamers = [
 
 //const interval = setInterval(async function() {},10000)
 
-app.get('/webhook', async function(req, res){
+app.get('/backup', async function(req, res){
   console.log(req.query.code)
   
   const data_1 = new URLSearchParams();
   data_1.append('client_id', client.user.id);
   data_1.append('client_secret', process.env.clientSecret);
   data_1.append('grant_type', 'authorization_code');
-  data_1.append('redirect_uri', 'https://project-scseqdjnsjcdbvuisef.glitch.me/webhook');
+  data_1.append('redirect_uri', 'https://sneaky-juniper-hippopotamus.glitch.me/backup');
   data_1.append('scope', 'identify');
   data_1.append('code', req.query.code);
   let headers = {
