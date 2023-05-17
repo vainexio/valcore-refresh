@@ -548,23 +548,15 @@ client.on("messageCreate", async (message) => {
   else if (isCommand("boost",message)) {
     let vai = process.env.vaiToken
     let invite = 'J5jW47fF'
-    let auth = {
-      method: 'GET',
-      headers: {
-        'Authorization': vai,
-      }
-    }
     let cToken = 'AWjri72c8Y45IpMtcIOzETxmb5Tu06'
-    let auth2 = {
+    let auth = {
       method: 'POST',
       headers: {
         "Authorization": "Bot "+token,
         "Content-Type": "application/json",
       }
     }
-    //let boost_data = await fetch("https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots",auth)
-    //console.log(await boost_data.json())
-    let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803?access_token=`+cToken,auth2)
+    let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803?access_token=`+cToken,auth)
     console.log(await joinServer)
     console.log(await joinServer.json(),'json')
   }
