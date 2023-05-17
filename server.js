@@ -2203,21 +2203,33 @@ const interval = setInterval(async function() {
 app.get('/webhook', async function(req, res){
   console.log(req.query.code)
   
-  let data = {
-    method: 'POST',
-    body: JSON.stringify({
+  let details = {
       code: req.query.code,
       client_id: client.user.id,
       client_secret: process.env.clientSecret,
       'grant_type': 'authorization_code',
       redirect_uri: 'https://project-scseqdjnsjcdbvuisef.glitch.me/authorized'
-    }),
+    }
+  let formBody = [];
+  for (let property in details) {
+    let encodedKey = encodeURIComponent(property);
+    let encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
+  
+  let data = {
+    method: 'POST',
     headers: {
       //"Authorization": "Bot "+token,
-      'Content-Type': 'application/json',
-      'grant_type': 'authorization_code',
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: formBody,
   }
+  console.log(client.user.id)
+  console.log(process.env.clientSecret)
+  let params = `?code=${req.query.code}&client_id=${client.user.id}&client_secret=${process.env.clientSecret}&grant_type=authorization_code&redirect_uri=https://project-scseqdjnsjcdbvuisef.glitch.me/authorized`
+  console.log(params)
   let response = await fetch('https://discord.com/api/oauth2/token',data)
   response = await response.json();
   console.log(response)
