@@ -1301,7 +1301,7 @@ client.on('interactionCreate', async inter => {
       }
       
         let embed = new MessageEmbed()
-        .addField(title,'```yaml\n'+total+'```')
+        .addField(title,'**₱'+total+'**')
         .addField('Base Amount','₱'+amount.value,true)
         .addField('Fee','x'+percentage,true)
         .setColor(colors.none)
@@ -1429,7 +1429,7 @@ client.on('interactionCreate', async inter => {
         let text = '<:S_dot:1093733278541951078>Status: `'+method.toUpperCase()+'`\n<:S_dot:1093733278541951078>Author: '+inter.user.toString()
         if (method === 'delete') {
           text = 'This channel will be deleted in a few seconds.'
-          comp = []
+          comp = null
         }
         else if (method === 'closed') {
           let row = new MessageActionRow().addComponents(
@@ -1862,7 +1862,7 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId(random === 4 ? 'prCode-'+random : 'randomCode-4').setStyle('SECONDARY').setLabel(codes[4]),
         );
         let embed = new MessageEmbed()
-        .addField('Choose the correct matching code','```yaml\n'+chosen+'```')
+        .addField('Choose the correct matching code','**'+chosen+'**')
         .setColor(colors.none)
         let botMsg = null
         await inter.user.send({embeds: [embed], components: [row]}).then(msg => botMsg = msg).catch(err => inter.reply({content: emojis.warning+" Failed to send verification. Please open your DMs!", ephemeral: true}))
