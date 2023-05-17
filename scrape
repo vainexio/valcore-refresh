@@ -1,0 +1,13 @@
+let json = {
+    "name": "register",
+    "type": 1,
+    "description": "Register your guild",
+    "options": [
+      {
+        "name": 'guild_id',
+        "description": 'Your guild ID',
+        "type": 3,
+        "required": true,
+      },
+      ],
+  }
