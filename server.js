@@ -227,6 +227,7 @@ client.on('interactionCreate', async inter => {
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to access your token'})
       let failed = 0
       let success = 0
+      await inter.reply({content: "Joining "+doc.users.length+" users to your server."})
       for (let i in doc.users) {
         let data = doc.users[i]
         try {
@@ -236,6 +237,30 @@ client.on('interactionCreate', async inter => {
           failed++
         }
       }
+      doc.id = guild.id
+      doc.key = makeCode(30)
+      doc.author = inter.user.id
+      await doc.save();
+      inter.user.send({content: "Your previous key was revoked. A new key was genereted:\n\nKEY: "+doc.key})
+      inter.message.reply({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed})
+    }
+    else if (cname === 'status') {
+      //if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
+      let options = inter.options._hoistedOptions
+      //
+      let guildId = options.find(a => a.name === 'guild_id')
+      let doc = await guildModel.findOne({id: guildId.value})
+      if (!doc) return inter.reply({content: emojis.warning+' Unregistered Guild ID'})
+      let embed = new MessageEmbed()
+      .addField("Backed-up Users",doc.users.length.toString())
+      .addField("Author",doc.author)
+      .setColor(colors.none)
+      
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=guilds.join').setStyle('SECONDARY').setLabel("Backup Link"),
+      );
+      
+      await inter.reply({embeds: [embed], components: [row]})
     }
   }
   //BUTTONS
