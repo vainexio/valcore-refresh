@@ -2104,12 +2104,13 @@ const interval = setInterval(async function() {
     sendChannel("Random: "+randomTime,"1047454193755107337",colors.red)
   }
   
-  let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
-  console.log(response)
-    response = await response.json();
+  //let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
+  //console.log(response)
+    //response = await response.json();
+  let response = false 
     return;
     if (shop.gcashStatus && shop.gcashStatus.article.body !== response.article.body) {
-      console.log(response)
+      //console.log(response)
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
      .setColor(colors.none)
@@ -2129,9 +2130,9 @@ const interval = setInterval(async function() {
       shop.gcashStatus = response;
     } else {
       //
-      console.log('e')
-      if (!shop.gcashStatus) shop.gcashStatus = response;
-      console.log(shop.gcashStatus,response)
+      //console.log('no')
+      //if (!shop.gcashStatus) shop.gcashStatus = response;
+      //console.log(shop.gcashStatus,response)
     }
   
       //Get info
