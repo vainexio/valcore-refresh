@@ -68,6 +68,15 @@ const makeRow = async function (id, label, style, emoji) {
   return row;
 }
 module.exports = {
+  makeCode: function (length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  },
   stringJSON: function (jsobj) {
     var msg = '\```json\n{'
     for (var key in jsobj) {
@@ -78,53 +87,6 @@ module.exports = {
     msg = msg.substring(0, msg.length - 1)
     msg = msg + "\n}\`\`\`"
     return msg;
-  },
-  fetchKey: async function (channel, key, message) {
-  
-  let last_id;
-  let foundKey = false
-  let mentionsCount = 0
-  let limit = 500
-  let msgSize = 0
-  let totalMsg = 0
-  
-  let embedMention = new MessageEmbed()
-  .setDescription("No recent pings was found.")
-  .setColor(colors.red)
-  
-  let msgBot
-  await message.channel.send("Searching for reference code... "+emojis.loading).then((botMsg) => { msgBot = botMsg })
-    
-    while (true) {
-      const options = { limit: 100 };
-      if (last_id) {
-        options.before = last_id;
-      }
-      
-      let messages = await channel.messages.fetch(options).then(messages => {
-      
-      last_id = messages.last().id;
-      totalMsg += messages.size
-      msgSize = messages.size
-        
-        messages.forEach(async (gotMsg) => {
-          if (gotMsg.content.toLowerCase().includes(key.toLowerCase()) && gotMsg.author.id === client.user.id) {
-            mentionsCount += 1
-            let row = new MessageActionRow().addComponents(
-              new MessageButton().setLabel('Jump to Message').setURL(gotMsg.url).setStyle('LINK')
-            );
-            message.reply({content: emojis.check+' Reference code was found.', components: [row]})
-            foundKey = true
-          }
-        })
-      });
-      //Return
-      if (foundKey || await msgSize != 100) {
-        msgBot.delete();
-        if (!foundKey) message.channel.send(emojis.x+" No key was found `"+key+"`.")
-        break;
-      }
-    }
   },
   sleep: function (miliseconds) {
     var currentTime = new Date().getTime();
