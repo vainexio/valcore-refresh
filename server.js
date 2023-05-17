@@ -228,7 +228,7 @@ client.on('interactionCreate', async inter => {
         let data = doc.users[i]
         try {
           let user = await getUser(data.id);
-          if (user) await guild.members.add(user,{accessToken: data.access_token}).catch(err => failed++).then(success => success++)
+          if (user) await guild.members.add(user,{accessToken: data.access_token}).catch(err => failed++).then(suc => success++)
         } catch(err) {
           failed++
         }
@@ -238,7 +238,7 @@ client.on('interactionCreate', async inter => {
       doc.author = inter.user.id
       await doc.save();
       inter.user.send({content: "Your previous key was revoked. A new key was genereted:\n\nKEY: "+doc.key})
-      inter.message.reply({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed})
+      inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed})
     }
     else if (cname === 'status') {
       //if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
@@ -250,12 +250,12 @@ client.on('interactionCreate', async inter => {
       if (!doc || !guild) return inter.reply({content: emojis.warning+' Unregistered Guild ID'})
       let embed = new MessageEmbed()
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
-      .addField("Backed-up Users",doc.users.length.toString())
-      .addField("Author",'<@'+doc.author+'>')
+      .addField("Registered Users",doc.users.length.toString())
+      .addField("Key Holder",'<@'+doc.author+'>')
       .setColor(colors.none)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=guilds&state='+doc.id).setStyle('LINK').setLabel("Backup Link"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=guilds%20identify&state='+doc.id).setStyle('LINK').setLabel("Backup Link"),
       );
       
       await inter.reply({embeds: [embed], components: [row]})
@@ -328,16 +328,23 @@ app.get('/backup', async function(req, res){
   let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
   response = await response.json();
   console.log(response)
-  let user = await fetch('https://discordapp.com/api/users/@me',{ headers: {'Authorization': `Bearer ${response.access_token}`}})
-  if (!user) return res.status(400).send({error: "Invalid User Data"})
-  console.log(user)
+  let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
+  if (user.status !== 200) return res.status(400).send({error: "Invalid User Data",msg: user.statusText})
+  user = await user.json();
   let doc = await guildModel.findOne({id: req.query.state})
   if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
-  doc.users.push({
+  let userData = await doc.users.find(u => u.id === user.id)
+  if (userData) {
+    userData.access_token = response.access_token
+    userData.refresh_token = response.refresh_token
+  }
+  else {
+    doc.users.push({
     id: user.id,
     access_token: response.access_token,
     refresh_token: response.refresh_token,
   })
+  }
   await doc.save();
   res.status(200).send({text: "You have been succesfully verified!"});
 });
