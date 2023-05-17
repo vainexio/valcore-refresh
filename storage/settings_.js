@@ -19,9 +19,9 @@ let emojis = {
   gude_cheer: '<:gude_cheer:1056588910794387466>',
   gude_smile: '<:gude_smile:1056580031536697424>',
   //
-  check: '✅',
-  x: '🔴',
-  loading: '⌛',
+  check: '<a:check:969936488739512340> ',
+  x: '<a:Xmark:969401924736651284>',
+  loading: '<a:loading2:976650648600854538>',
   warning: '⚠️',
   online: '<:online_:1004014930959286342>',
   idle: '<:Idle_:1004014897417424938>',

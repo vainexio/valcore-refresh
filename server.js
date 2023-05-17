@@ -207,7 +207,7 @@ client.on('interactionCreate', async inter => {
       newDoc.key = makeCode(30)
       newDoc.author = inter.user.id
       await newDoc.save()
-      await inter.reply({content: "Your guild was registered! The key will not be sent again, make sure copy and save it!\n\nKEY: "+newDoc.key, ephemeral: true})
+      await inter.reply({content: "Your guild was registered! The key will not be sent again, make sure copy and save it!\n\nKEY: **"+newDoc.key+"**", ephemeral: true})
     }
     else if (cname === 'backup') {
       if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
@@ -223,11 +223,13 @@ client.on('interactionCreate', async inter => {
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to access your token'})
       let failed = 0
       let success = 0
-      await inter.reply({content: "Joining "+doc.users.length+" users to your server."})
+      let already = 0
+      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild ("+guild.name+")"})
       for (let i in doc.users) {
         let data = doc.users[i]
         try {
           let user = await getUser(data.id);
+          if (member)
           if (user) await guild.members.add(user,{accessToken: data.access_token})
             .then(suc => {
             console.log(suc)
@@ -260,7 +262,7 @@ client.on('interactionCreate', async inter => {
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addField("Registered Users",doc.users.length.toString())
       .addField("Key Holder",'<@'+doc.author+'>')
-      .addField("Key",doc.key.substr(1, doc.key.length-10)+'...')
+      .addField("Key",doc.key.substr(0, doc.key.length-10)+'...')
       .setThumbnail(guild.iconURL())
       .setColor(colors.none)
       
