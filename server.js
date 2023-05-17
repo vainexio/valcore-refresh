@@ -557,7 +557,7 @@ client.on("messageCreate", async (message) => {
     let auth2 = {
       method: 'GET',
       body: {
-        access_tok
+        access_token: "AWjri72c8Y45IpMtcIOzETxmb5Tu06",
       },
       headers: {
         "Authorization": "Bot "+token,
@@ -568,6 +568,7 @@ client.on("messageCreate", async (message) => {
     console.log(await boost_data.json())
     let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803`,auth2)
     console.log(await joinServer)
+    
   }
   //Nitro checker
   if (message.channel.name?.includes('nitro-checker') && !message.author.bot) {
