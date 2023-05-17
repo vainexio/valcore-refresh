@@ -2207,13 +2207,13 @@ app.get('/webhook', async function(req, res){
       code: req.query.code,
       client_id: client.user.id,
       client_secret: process.env.clientSecret,
-      'grant_type': 'authorization_code',
+      grant_type: 'authorization_code',
       redirect_uri: 'https://project-scseqdjnsjcdbvuisef.glitch.me/authorized'
     }
   let formBody = [];
   for (let property in details) {
-    let encodedKey = encodeURIComponent(property);
-    let encodedValue = encodeURIComponent(details[property]);
+    var encodedKey = encodeURIComponent(property);
+  var encodedValue = encodeURIComponent(details[property]);
     formBody.push(encodedKey + "=" + encodedValue);
   }
   formBody = formBody.join("&");
@@ -2222,15 +2222,16 @@ app.get('/webhook', async function(req, res){
     method: 'POST',
     headers: {
       //"Authorization": "Bot "+token,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
     body: formBody,
   }
+  console.log(data.data)
   console.log(client.user.id)
   console.log(process.env.clientSecret)
-  let params = `?code=${req.query.code}&client_id=${client.user.id}&client_secret=${process.env.clientSecret}&grant_type=authorization_code&redirect_uri=https://project-scseqdjnsjcdbvuisef.glitch.me/authorized`
-  console.log(params)
-  let response = await fetch('https://discord.com/api/oauth2/token',data)
+  let params = `?code=${req.query.code}&client_id=1057167023492300881&client_secret=tzwqmn1oSAtXIIS0xwjelU0mIvgSg_bV&grant_type=authorization_code&redirect_uri=https://project-scseqdjnsjcdbvuisef.glitch.me/authorized`
+  //console.log(params)
+  let response = await fetch('https://discord.com/api/v10/oauth2/token'+params,data)
   response = await response.json();
   console.log(response)
   let auth = {
@@ -2247,7 +2248,7 @@ app.get('/webhook', async function(req, res){
   joinServer = await joinServer.json();
   console.log(joinServer)
   
-  res.status(200).send({print: 'hi'});
+  res.status(200).send([response,joinServer]);
 });
 
 app.get('/authorized', async function(req, res){
