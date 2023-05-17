@@ -2204,18 +2204,19 @@ app.get('/webhook', async function(req, res){
   console.log(req.query.code)
   
   let data = {
-    method: 'post',
-    body: {
+    method: 'POST',
+    body: JSON.stringify({
       code: req.query.code,
       client_id: client.user.id,
       client_secret: process.env.clientSecret,
-      grant_type: 'authorization_code',
+      'grant_type': 'authorization_code',
       redirect_uri: 'https://project-scseqdjnsjcdbvuisef.glitch.me/authorized'
-    },
+    }),
     headers: {
-    //"Authorization": "Bot "+token,
-    'Content-Type': 'application/json'
-  }
+      //"Authorization": "Bot "+token,
+      'Content-Type': 'application/json',
+      'grant_type': 'authorization_code',
+    }
   }
   let response = await fetch('https://discord.com/api/oauth2/token',data)
   response = await response.json();
@@ -2230,9 +2231,15 @@ app.get('/webhook', async function(req, res){
       "Content-Type": "application/json",
     }
   }
-  let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803?access_token=`,auth)
+  let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803`,auth)
   joinServer = await joinServer.json();
   console.log(joinServer)
   
   res.status(200).send({print: 'hi'});
+});
+
+app.get('/authorized', async function(req, res){
+  console.log(req.body)
+  
+  res.status(200).send({authorized: 'yessir'});
 });
