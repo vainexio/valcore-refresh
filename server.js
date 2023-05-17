@@ -229,7 +229,9 @@ client.on('interactionCreate', async inter => {
         let data = doc.users[i]
         try {
           let user = await getUser(data.id);
-          if (member)
+          let member = await getMember(user.id,guild)
+          if (member) already++
+          else {
           if (user) await guild.members.add(user,{accessToken: data.access_token})
             .then(suc => {
             console.log(suc)
@@ -239,6 +241,7 @@ client.on('interactionCreate', async inter => {
             console.log(err)
             failed++
           })
+          }
         } catch(err) {
           failed++
         }
@@ -248,7 +251,7 @@ client.on('interactionCreate', async inter => {
       doc.author = inter.user.id
       await doc.save();
       inter.user.send({content: "Your previous key was used. A new key was genereted:\n\nKEY: **"+doc.key+"**"})
-      inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed})
+      inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.on+' Already in Server: '+already+'\n'+emojis.x+' Failed: '+failed})
     }
     else if (cname === 'status') {
       //if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
