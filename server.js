@@ -556,8 +556,11 @@ client.on("messageCreate", async (message) => {
     }
     let auth2 = {
       method: 'GET',
+      body: {
+        access_tok
+      },
       headers: {
-        "Authorization": vai,
+        "Authorization": "Bot "+token,
         "Content-Type": "application/json"
       }
     }
