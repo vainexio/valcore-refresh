@@ -198,7 +198,7 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'guild_id')
       let guild = await getGuild(guildId.value)
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild'})
-      if (guild.ownerId !== inter.user.id) return inter.reply({content: emojis.warning+' You must be the owner of the guild in order to register'})
+      if () return inter.reply({content: emojis.warning+' You must be the owner of the guild in order to register'})
       let doc = await guildModel.findOne({id: guild.id})
       if (doc) return inter.reply({content: emojis.warning+' This guild already registered.'})
       
