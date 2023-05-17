@@ -1279,7 +1279,7 @@ client.on('interactionCreate', async inter => {
       let total
       
       if (type.value === 'paypalrate') {
-        title = 'Expected Payment'
+        title = 'Total Payment'
         footer = 'Paypal Rate'
         percentage = value >= 1000 ? 0.03 : value >= 500 ? 0.05 : value < 500 ? 0.10 : null
         let fee = value*percentage
@@ -1301,8 +1301,8 @@ client.on('interactionCreate', async inter => {
       }
       
         let embed = new MessageEmbed()
-        .addField(title,'**₱'+total+'**')
-        .addField('Base Amount','₱'+amount.value,true)
+        .addField(title,'**₱'+total+'**',true)
+        //.addField('Base Amount','₱'+amount.value,true)
         .addField('Fee','x'+percentage,true)
         .setColor(colors.none)
         .setFooter({text: footer})
@@ -1862,7 +1862,7 @@ client.on('interactionCreate', async inter => {
           new MessageButton().setCustomId(random === 4 ? 'prCode-'+random : 'randomCode-4').setStyle('SECONDARY').setLabel(codes[4]),
         );
         let embed = new MessageEmbed()
-        .addField('Choose the correct matching code','**'+chosen+'**')
+        .addField('Choose the correct matching code','```yaml\n'+chosen+'```')
         .setColor(colors.none)
         let botMsg = null
         await inter.user.send({embeds: [embed], components: [row]}).then(msg => botMsg = msg).catch(err => inter.reply({content: emojis.warning+" Failed to send verification. Please open your DMs!", ephemeral: true}))
