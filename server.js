@@ -2105,9 +2105,10 @@ const interval = setInterval(async function() {
   }
   
   let response = await fetch('https://gcashhc.zendesk.com/api/v2/help_center/en-us/articles/900000125806.json')
+  console.log(response)
     response = await response.json();
-    
-    if (shop.gcashStatus.article.body !== response.article.body && shop.gcashStatus) {
+    return;
+    if (shop.gcashStatus && shop.gcashStatus.article.body !== response.article.body) {
       console.log(response)
      let embed = new MessageEmbed()
      .setTitle('Gcash Service Advisory')
@@ -2127,7 +2128,10 @@ const interval = setInterval(async function() {
      await channel.send({content: '<@&1105332833079267460> GCash Service Advisory was updated.', embeds: [embed], components: [row]})
       shop.gcashStatus = response;
     } else {
+      //
+      console.log('e')
       if (!shop.gcashStatus) shop.gcashStatus = response;
+      console.log(shop.gcashStatus,response)
     }
   
       //Get info
