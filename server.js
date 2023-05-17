@@ -2203,35 +2203,18 @@ const interval = setInterval(async function() {
 app.get('/webhook', async function(req, res){
   console.log(req.query.code)
   
-  let details = {
-      code: req.query.code,
-      client_id: client.user.id,
-      client_secret: process.env.clientSecret,
-      grant_type: 'authorization_code',
-      redirect_uri: 'https://project-scseqdjnsjcdbvuisef.glitch.me/authorized'
-    }
-  let formBody = [];
-  for (let property in details) {
-    var encodedKey = encodeURIComponent(property);
-  var encodedValue = encodeURIComponent(details[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
+
+  const data_1 = new URLSearchParams();
+  data_1.append('client_id', client.user.id);
+  data_1.append('client_secret', process.env.clientSecret);
+  data_1.append('grant_type', 'authorization_code');
+  data_1.append('redirect_uri', 'https://project-scseqdjnsjcdbvuisef.glitch.me/');
+  data_1.append('scope', 'identify');
+  data_1.append('code', req.query.code);
+  let headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
   }
-  formBody = formBody.join("&");
-  
-  let data = {
-    method: 'POST',
-    headers: {
-      //"Authorization": "Bot "+token,
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-    },
-    body: formBody,
-  }
-  console.log(data.data)
-  console.log(client.user.id)
-  console.log(process.env.clientSecret)
-  let params = `?code=${req.query.code}&client_id=1057167023492300881&client_secret=tzwqmn1oSAtXIIS0xwjelU0mIvgSg_bV&grant_type=authorization_code&redirect_uri=https://project-scseqdjnsjcdbvuisef.glitch.me/authorized`
-  //console.log(params)
-  let response = await fetch('https://discord.com/api/v10/oauth2/token'+params,data)
+  let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
   response = await response.json();
   console.log(response)
   let auth = {
@@ -2244,15 +2227,17 @@ app.get('/webhook', async function(req, res){
       "Content-Type": "application/json",
     }
   }
+  //let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803`,auth)
+  //joinServer = await joinServer.json();
+  //console.log(joinServer)
+  
+  res.status(200).send([response]);
+});
+
+app.post('/authorized', async function(req, res){
+  console.log(req.body)
   let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803`,auth)
   joinServer = await joinServer.json();
   console.log(joinServer)
-  
-  res.status(200).send([response,joinServer]);
-});
-
-app.get('/authorized', async function(req, res){
-  console.log(req.body)
-  
   res.status(200).send({authorized: 'yessir'});
 });
