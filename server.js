@@ -67,7 +67,7 @@ client.on("ready", async () => {
         "name": 'guild_id',
         "description": 'Guild ID',
         "type": 3,
-        "required": true,
+        "required": false,
       },
     ],
   }
@@ -134,14 +134,11 @@ async function getPerms(member, level) {
   
   if (highestPerms) return highestPerms;
 }
-async function guildPerms(message, perms) {
-  if (message.member.permissions.has(perms)) {
+async function guildPerms(member, perms) {
+  if (member.permissions.has(perms)) {
 	return true;
 } else {
-  let embed = new MessageEmbed()
-  .addField('Insufficient Permissions',emojis.x+" You don't have the required server permissions to use this command.\n\n`"+perms.toString().toUpperCase()+"`")
-  .setColor(colors.red)
-  message.channel.send({embeds: [embed]})
+  return false;
 }
 }
 function noPerms(message) {
@@ -198,7 +195,7 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'guild_id')
       let guild = await getGuild(guildId.value)
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild'})
-      if () return inter.reply({content: emojis.warning+' You must be the owner of the guild in order to register'})
+      if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission within the guild in order to register it'})
       let doc = await guildModel.findOne({id: guild.id})
       if (doc) return inter.reply({content: emojis.warning+' This guild already registered.'})
       
@@ -258,14 +255,15 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let guildId = options.find(a => a.name === 'guild_id')
-      let doc = await guildModel.findOne({id: guildId.value})
-      let guild = await getGuild(guildId.value)
+      
+      let doc = await guildModel.findOne({id: guildId ? guildId.value : inter.guild.id})
+      let guild = guildId ? await getGuild(guildId.value) : inter.guild
       if (!doc || !guild) return inter.reply({content: emojis.warning+' Unregistered Guild ID'})
       let embed = new MessageEmbed()
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addField("Registered Users",doc.users.length.toString())
       .addField("Key Holder",'<@'+doc.author+'>')
-      .addField("Key",doc.key.substr(0, doc.key.length-10)+'...')
+      .addField("Key",doc.key.substr(0, doc.key.length-20)+'...')
       .setThumbnail(guild.iconURL())
       .setColor(colors.none)
       
