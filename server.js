@@ -247,7 +247,7 @@ client.on('interactionCreate', async inter => {
       doc.key = makeCode(30)
       doc.author = inter.user.id
       await doc.save();
-      inter.user.send({content: "Your previous key was used. A new key was genereted:\n\nKEY: **"+doc.key+"**"})
+      inter.user.send({content: "Your previous key was used. A new key was generated:\n\nKEY: **"+doc.key+"**"})
       inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.on+' Already in Server: '+already+'\n'+emojis.x+' Failed: '+failed})
     }
     else if (cname === 'status') {
