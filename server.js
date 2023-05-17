@@ -44,6 +44,7 @@ client.on("ready", async () => {
   guildSchema = new mongoose.Schema({
     id: String,
     key: String,
+    author: String,
     users: [
       {
         id: String,
@@ -58,19 +59,13 @@ client.on("ready", async () => {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"
   let json = {
-    "name": "backup",
+    "name": "status",
     "type": 1,
-    "description": "Join your members to your backed up server",
+    "description": "Gets backup status of a guild",
     "options": [
       {
-        "name": 'key',
-        "description": 'Your backup key',
-        "type": 3,
-        "required": true,
-      },
-      {
-        "name": 'new_guild',
-        "description": 'The guild id of your new guild',
+        "name": 'guild_id',
+        "description": 'Guild ID',
         "type": 3,
         "required": true,
       },
@@ -210,6 +205,7 @@ client.on('interactionCreate', async inter => {
       let newDoc = new guildModel(guildSchema)
       newDoc.id = guild.id
       newDoc.key = makeCode(30)
+      newDoc.author = inter.user.id
       await newDoc.save()
       await inter.reply({content: "Your guild was registered! The key will not be sent again, make sure copy and save it!\n\nKEY: "+newDoc.key, ephemeral: true})
     }
@@ -250,14 +246,16 @@ client.on('interactionCreate', async inter => {
       //
       let guildId = options.find(a => a.name === 'guild_id')
       let doc = await guildModel.findOne({id: guildId.value})
-      if (!doc) return inter.reply({content: emojis.warning+' Unregistered Guild ID'})
+      let guild = await getGuild(guildId.value)
+      if (!doc || !guild) return inter.reply({content: emojis.warning+' Unregistered Guild ID'})
       let embed = new MessageEmbed()
+      .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addField("Backed-up Users",doc.users.length.toString())
-      .addField("Author",doc.author)
+      .addField("Author",'<@'+doc.author+'>')
       .setColor(colors.none)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=guilds&state='+doc.id).setStyle('SECONDARY').setLabel("Backup Link"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=guilds&state='+doc.id).setStyle('LINK').setLabel("Backup Link"),
       );
       
       await inter.reply({embeds: [embed], components: [row]})
