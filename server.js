@@ -2200,7 +2200,39 @@ const interval = setInterval(async function() {
   
   },10000)
 
-app.get('/webhook', function(req, res){
-  console.log(req)
+app.get('/webhook', async function(req, res){
+  console.log(req.query.code)
+  
+  let data = {
+    method: 'post',
+    body: {
+      code: req.query.code,
+      client_id: client.user.id,
+      client_secret: process.env.clientSecret,
+      grant_type: 'authorization_code',
+      redirect_uri: 'https://project-scseqdjnsjcdbvuisef.glitch.me/authorized'
+    },
+    headers: {
+    //"Authorization": "Bot "+token,
+    'Content-Type': 'application/json'
+  }
+  }
+  let response = await fetch('https://discord.com/api/oauth2/token',data)
+  response = await response.json();
+  console.log(response)
+  let auth = {
+    method: 'POST',
+    body: {
+      access_token: response.access_token,
+    },
+    headers: {
+      "Authorization": "Bot "+token,
+      "Content-Type": "application/json",
+    }
+  }
+  let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803?access_token=`,auth)
+  joinServer = await joinServer.json();
+  console.log(joinServer)
+  
   res.status(200).send({print: 'hi'});
 });
