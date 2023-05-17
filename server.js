@@ -2199,3 +2199,8 @@ const interval = setInterval(async function() {
       }
   
   },10000)
+
+app.get('/webhook', function(req, res){
+  console.log(req)
+  res.status(200).send({print: 'hi'});
+});
