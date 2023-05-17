@@ -228,16 +228,24 @@ client.on('interactionCreate', async inter => {
         let data = doc.users[i]
         try {
           let user = await getUser(data.id);
-          if (user) await guild.members.add(user,{accessToken: data.access_token}).catch(err => failed++).then(suc => success++)
+          if (user) await guild.members.add(user,{accessToken: data.access_token})
+            .then(suc => {
+            console.log(suc)
+            success++
+          })
+            .catch(err => {
+            console.log(err)
+            failed++
+          })
         } catch(err) {
           failed++
         }
       }
-      doc.id = guild.id
+      //doc.id = guild.id
       doc.key = makeCode(30)
       doc.author = inter.user.id
       await doc.save();
-      inter.user.send({content: "Your previous key was revoked. A new key was genereted:\n\nKEY: "+doc.key})
+      inter.user.send({content: "Your previous key was used. A new key was genereted:\n\nKEY: **"+doc.key+"**"})
       inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed})
     }
     else if (cname === 'status') {
@@ -252,10 +260,12 @@ client.on('interactionCreate', async inter => {
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addField("Registered Users",doc.users.length.toString())
       .addField("Key Holder",'<@'+doc.author+'>')
+      .addField("Key",doc.key.substr(1, doc.key.length-10)+'...')
+      .setThumbnail(guild.iconURL())
       .setColor(colors.none)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=guilds%20identify&state='+doc.id).setStyle('LINK').setLabel("Backup Link"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Backup Link"),
       );
       
       await inter.reply({embeds: [embed], components: [row]})
