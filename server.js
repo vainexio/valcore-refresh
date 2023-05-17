@@ -2208,7 +2208,7 @@ app.get('/webhook', async function(req, res){
   data_1.append('client_id', client.user.id);
   data_1.append('client_secret', process.env.clientSecret);
   data_1.append('grant_type', 'authorization_code');
-  data_1.append('redirect_uri', 'https://project-scseqdjnsjcdbvuisef.glitch.me/');
+  data_1.append('redirect_uri', 'https://project-scseqdjnsjcdbvuisef.glitch.me/webhook');
   data_1.append('scope', 'identify');
   data_1.append('code', req.query.code);
   let headers = {
@@ -2218,19 +2218,17 @@ app.get('/webhook', async function(req, res){
   response = await response.json();
   console.log(response)
   let auth = {
-    method: 'POST',
-    body: {
-      access_token: response.access_token,
-    },
+    method: 'PUT',
     headers: {
       "Authorization": "Bot "+token,
       "Content-Type": "application/json",
     }
   }
-  //let joinServer = await fetch(`https://discord.com/api/guilds/1106762090552774716/members/477729368622497803`,auth)
-  //joinServer = await joinServer.json();
-  //console.log(joinServer)
-  
+  let body = {
+      "access_token": response.access_token,
+    }
+  let user = await getUser('477729368622497803');
+  let guild = await getGuild('');
   res.status(200).send([response]);
 });
 
