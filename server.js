@@ -285,10 +285,25 @@ client.on('interactionCreate', async inter => {
       try {
         let guild = await getGuild(guildId.value)
         let doc = await guildModel.findOne({key: key.value})
+        //let data = doc.users.find(u => u.id === user.user.id)
+        
+        if (!guild) return inter.reply(emojis.warning+' Invalid guild ID')
+        if (!doc) return inter.reply(emojis.warning+' Invalid key was provided')
+        
         let data = doc.users.find(u => u.id === user.user.id)
-        console.log(data.access_token)
-        let joinMem = await guild.members.add(user.user,{access_token: data.access_token})
-        inter.reply({content: "Joined "+user.user.tag+" to "+guild.name})
+        let joinMem = await guild.members.add(user.user,{accessToken: data.access_token})
+        await inter.reply({content: emojis.on+" Successfully joined **"+user.user.tag+"** to "+guild.name})
+        
+        doc.key = makeCode(30)
+        doc.author = inter.user.id
+        await doc.save();
+        let embed = new MessageEmbed()
+        .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
+        .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`')
+        .addField("Registered Users",doc.users.length.toString())
+        .setColor(colors.none)
+        
+        inter.user.send({content: doc.key, embeds: [embed]})
       }
       catch (err) {
         console.log(err)
