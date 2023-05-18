@@ -310,20 +310,6 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
-let ready = true;
-let randomTime = null;
-
-let streamers = [
-    /*{
-      name: 'Kdrysss',
-      live: false,
-    },*/
-    {
-      name: '105695088538055',
-      live: false,
-    },
-  ]
-
 const interval = setInterval(async function() {
   let guilds = await guildModel.find()
   let data = {
@@ -390,9 +376,9 @@ app.get('/backup', async function(req, res){
   }
   await doc.save();
   res.status(200).send({text: "You have been succesfully verified!"});
-  let guild = await getGuild(req.query.guild)
+  let guild = await getGuild(req.query.state)
   let member = await getMember(user.id,guild)
   await addRole(member,["backup"],guild)
-  //let logs = await getChannel("1102770742799650896")
-  //logs.send(user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
+  let logs = await getChannel("1102770742799650896")
+  logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
 });
