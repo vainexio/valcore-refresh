@@ -315,7 +315,7 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
-let one = false
+let one = true
 const interval = setInterval(async function() {
   if (one) return;
   one = true
@@ -337,9 +337,7 @@ const interval = setInterval(async function() {
         data_1.append('client_id', client.user.id);
         data_1.append('client_secret', process.env.clientSecret);
         data_1.append('grant_type', 'refresh_token');
-        data_1.append('redirect_uri', process.env.live);
         data_1.append('refresh_token', user.refresh_token);
-        data_1.append('scope', 'identify');
         let headers = {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -413,7 +411,7 @@ app.get('/backup', async function (req, res) {
     await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
     //redirect
     res.redirect('https://discord.com/channels/@me/'+req.query.state)
-  } 
+  }
   catch (err) {
     console.log(err)
     res.status(400).send({'error': err})

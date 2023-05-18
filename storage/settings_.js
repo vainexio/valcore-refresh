@@ -49,6 +49,11 @@ let keys = [
   'canva',
 ]
 module.exports = {
+  settings: {
+    channels: {
+      chat: '1047454193595732055',
+    },
+  },
   auth: {
     method: 'GET',
     headers: {
