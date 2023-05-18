@@ -210,7 +210,7 @@ client.on('interactionCreate', async inter => {
       let embed = new MessageEmbed()
       .addField("Generated Key","Your key was generated for the first time. Make sure you save it before you dismiss this message. This key will not be sent again.")
       .addField("Data","Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`")
-      .setColors(colors.none)
+      .setColor(colors.none)
       
       await inter.reply({content: newDoc.key, embeds: [embed], ephemeral: true})
     }
