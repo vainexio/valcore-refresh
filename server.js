@@ -91,7 +91,7 @@ client.on("ready", async () => {
     console.log(response)
 }
   console.log('Successfully logged in to discord bot.')
-  client.user.setPresence({ status: 'online', activities: [{ name: 'Backup', type: "WATCHING" }] });
+  client.user.setPresence({ status: 'online', activities: [{ name: 'to users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
 })
 
@@ -415,6 +415,7 @@ app.get('/backup', async function (req, res) {
     //logs
     let logs = await getChannel("1102770742799650896")
     await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
+    await ghostPing(member.id,config.channels.chat)
     //redirect
     res.redirect('https://discord.com/channels/@me/'+req.query.state)
   }
