@@ -438,7 +438,7 @@ app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
   
   try {
-    
+    console.log('received')
     let data_1 = new URLSearchParams();
     data_1.append('client_id', client.user.id);
     data_1.append('client_secret', process.env.clientSecret);
