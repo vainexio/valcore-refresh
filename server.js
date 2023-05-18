@@ -61,15 +61,27 @@ client.on("ready", async () => {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"
   let json = {
-    "name": "status",
+    "name": "join",
     "type": 1,
-    "description": "Gets backup status of a guild",
+    "description": "Joins a specific user to your guild",
     "options": [
+      {
+        name: 'key',
+        description: "Access key",
+        type: 3,
+        required: true
+      },
+      {
+        name: 'user',
+        description: 'User you want to override',
+        type: 6,
+        required: true,
+      },
       {
         "name": 'guild_id',
         "description": 'Guild ID',
         "type": 3,
-        "required": false,
+        "required": true,
       },
     ],
   }
@@ -262,6 +274,24 @@ client.on('interactionCreate', async inter => {
       .setColor(colors.none)
       inter.user.send({content: doc.key, embeds: [embed]})
       inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.on+' Already in Server: '+already+'\n'+emojis.x+' Failed: '+failed})
+    }
+    else if (cname === 'join') {
+      if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+" You are not on the whitelist"})
+      let options = inter.options._hoistedOptions
+      //
+      let key = options.find(a => a.name === 'key')
+      let user = options.find(a => a.name === 'user')
+      let guildId = options.find(a => a.name === 'new_guild')
+      try {
+        let guild = await getGuild(guildId.value)
+        let member = await getMember(user.user.id,inter.guild)
+        let joinMem = await guild.members.add(user.user,guild)
+        inter.reply({content: "Joined "+user.user.tag+" to "+guild.name})
+      }
+      catch (err) {
+        console.log(err)
+        inter.reply({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```"})
+      }
     }
     else if (cname === 'status') {
       //if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
