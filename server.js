@@ -196,10 +196,10 @@ client.on('interactionCreate', async inter => {
       //
       let guildId = options.find(a => a.name === 'guild_id')
       let guild = await getGuild(guildId.value)
-      if (!guild) return inter.reply({content: emojis.warning+' Invalid guild'})
-      if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission within the guild in order to register it'})
+      if (!guild) return inter.reply({content: emojis.warning+' Cannot find guild. Make sure that the bot is on the server that you wish to register.'})
+      if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission within the guild in order to register it.'})
       let doc = await guildModel.findOne({id: guild.id})
-      if (doc) return inter.reply({content: emojis.warning+' This guild already registered.'})
+      if (doc) return inter.reply({content: emojis.warning+' This guild was already registered.'})
       
       let newDoc = new guildModel(guildSchema)
       newDoc.id = guild.id
@@ -376,7 +376,7 @@ app.get('/backup', async function(req, res){
     userData = doc.users.find(u => u.id === user.id)
   }
   await doc.save();
-  res.status(200).send({text: "You have been succesfully verified!"});
+  res.status(200).send({text: "You have been succesfully verified! Redirecting back to the server.."});
   let guild = await getGuild(req.query.state)
   let member = await getMember(user.id,guild)
   await addRole(member,["backup"],guild)
