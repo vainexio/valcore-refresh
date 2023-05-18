@@ -229,11 +229,11 @@ client.on('interactionCreate', async inter => {
       let key = options.find(a => a.name === 'key')
       let guildId = options.find(a => a.name === 'new_guild')
       let guild = await getGuild(guildId.value);
-      if (!guild) return inter.reply({content: emojis.warning+' Invalid guild'})
+      if (!guild) return inter.reply({content: emojis.warning+' Invalid guild', ephemeral: true})
       let doc = await guildModel.findOne({key: key.value})
-      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key'})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key', ephemeral: true})
       
-      if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to access your token'})
+      if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0
       let already = 0
@@ -263,13 +263,15 @@ client.on('interactionCreate', async inter => {
       doc.key = makeCode(30)
       doc.author = inter.user.id
       await doc.save();
+      
+      inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already})
+      
       let embed = new MessageEmbed()
       .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
       .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
       .addField("Registered Users",doc.users.length.toString(),true)
       .setColor(colors.none)
       inter.user.send({content: doc.key, embeds: [embed]})
-      inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.on+' Already in Server: '+already+'\n'+emojis.x+' Failed: '+failed})
     }
     else if (cname === 'join') {
       if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+" You are not on the whitelist"})
