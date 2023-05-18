@@ -270,7 +270,7 @@ client.on('interactionCreate', async inter => {
       .setColor(colors.none)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Backup Link"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
       );
       
       await inter.reply({embeds: [embed], components: [row]})
@@ -358,7 +358,7 @@ app.get('/backup', async function(req, res){
   user = await user.json();
   let doc = await guildModel.findOne({id: req.query.state})
   if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
-  let userData = await doc.users.find(u => u.id === user.id)
+  let userData = doc.users.find(u => u.id === user.id)
   if (userData) {
     userData.access_token = response.access_token
     userData.refresh_token = response.refresh_token
@@ -373,6 +373,7 @@ app.get('/backup', async function(req, res){
       createdAt: getTime(new Date()),
       expiresAt: getTime(new Date().getTime()+(response.expires_in*1000)),
   })
+    userData = doc.users.find(u => u.id === user.id)
   }
   await doc.save();
   res.status(200).send({text: "You have been succesfully verified!"});
