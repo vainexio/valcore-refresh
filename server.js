@@ -326,6 +326,28 @@ let streamers = [
 
 const interval = setInterval(async function() {
   let guilds = await guildModel.find()
+  let data = {
+    refreshed: 0,
+    tokens: 0,
+    failed: 0,
+  }
+  for (let i in guilds) {
+    let guild = guilds[i]
+    let users = guild.users
+    for (let i in users) {
+      let user = users[i]
+      let time = getTime(new Date())
+      if (time >= user.expiresAt) {
+        console.log("expired")
+      }
+    }
+  }
+  let logs = await getChannel("1102770742799650896")
+  let embed = new MessageEmbed()
+  .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}`)
+  .setColor(colors.none)
+  
+  logs.send({embeds: [embed]})
 },21600000)
 
 app.get('/backup', async function(req, res){
