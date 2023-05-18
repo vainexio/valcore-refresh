@@ -315,7 +315,10 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
+let one = false
 const interval = setInterval(async function() {
+  if (one) return;
+  one = true
   let guilds = await guildModel.find()
   let data = {
     refreshed: 0,
@@ -328,8 +331,22 @@ const interval = setInterval(async function() {
     for (let i in users) {
       let user = users[i]
       let time = getTime(new Date())
-      if (time >= user.expiresAt) {
-        console.log("expired")
+      if (time <= user.expiresAt) {
+        console.log('expired',user)
+        let data_1 = new URLSearchParams();
+        data_1.append('client_id', client.user.id);
+        data_1.append('client_secret', process.env.clientSecret);
+        data_1.append('grant_type', 'refresh_token');
+        data_1.append('redirect_uri', process.env.live);
+        data_1.append('refresh_token', user.refresh_token);
+        data_1.append('scope', 'identify');
+        let headers = {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+        //fetch token
+        let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
+        response = await response.json();
+        console.log('new',response)
       }
     }
   }
@@ -339,14 +356,14 @@ const interval = setInterval(async function() {
   .setColor(colors.none)
   
   logs.send({embeds: [embed]})
-},21600000)
+},10000) //21600000
 
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
   
   try {
     
-    const data_1 = new URLSearchParams();
+    let data_1 = new URLSearchParams();
     data_1.append('client_id', client.user.id);
     data_1.append('client_secret', process.env.clientSecret);
     data_1.append('grant_type', 'authorization_code');
@@ -356,21 +373,25 @@ app.get('/backup', async function (req, res) {
     let headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
+    //fetch token
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
     response = await response.json();
     console.log(response)
+    //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
-    if (user.status !== 200) return res.status(400).send({error: "Invalid User Data",msg: user.statusText})
     user = await user.json();
+    //fetch model
     let doc = await guildModel.findOne({id: req.query.state})
     if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
     let userData = doc.users.find(u => u.id === user.id)
+    //
     if (userData) {
       userData.access_token = response.access_token
       userData.refresh_token = response.refresh_token
       userData.createdAt = getTime(new Date())
       userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
     }
+    //
     else {
       doc.users.push({
         id: user.id,
@@ -390,8 +411,12 @@ app.get('/backup', async function (req, res) {
     //logs
     let logs = await getChannel("1102770742799650896")
     await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
-  } catch (err) {
-    
+    //redirect
+    res.redirect('https://discord.com/channels/@me/'+req.query.state)
+  } 
+  catch (err) {
+    console.log(err)
+    res.status(400).send({'error': err})
   }
   //
 });

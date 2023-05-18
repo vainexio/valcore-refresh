@@ -15,58 +15,7 @@ const {getTemplate} = cmdHandler
 const get = require('../functions/get.js')
 const {getRandom, getChannel} = get
 
-const makeButton = async function (id, label, style, emoji) {
-  //emoji = emoji ? emoji : ''
-  style = style.toUpperCase()
-  let button = new MessageButton()
-				.setLabel(label)
-				.setStyle(style.toUpperCase())
-  
-  if (style === 'LINK') {
-    button = new MessageButton(button)
-    .setURL(id)
-  }
-  else {
-    button = new MessageButton(button)
-    .setCustomId(id)
-  }
-  if (emoji) {
-    button = new MessageButton(button)
-    .setEmoji(emoji)
-  }
-  
-  const row = new MessageActionRow()
-			.addComponents(
-        button
-        );
-  return button;
-}
-const makeRow = async function (id, label, style, emoji) {
-  //emoji = emoji ? emoji : ''
-  style = style.toUpperCase()
-  let button = new MessageButton()
-				.setLabel(label)
-				.setStyle(style.toUpperCase())
-  
-  if (style === 'LINK') {
-    button = new MessageButton(button)
-    .setURL(id)
-  }
-  else {
-    button = new MessageButton(button)
-    .setCustomId(id)
-  }
-  if (emoji) {
-    button = new MessageButton(button)
-    .setEmoji(emoji)
-  }
-  
-  const row = new MessageActionRow()
-			.addComponents(
-        button
-        );
-  return row;
-}
+
 module.exports = {
   makeCode: function (length) {
     var result           = '';
@@ -88,7 +37,7 @@ module.exports = {
     msg = msg + "\n}\`\`\`"
     return msg;
   },
-  sleep: function (miliseconds) {
+  sleep: async function (miliseconds) {
     var currentTime = new Date().getTime();
     while (currentTime + miliseconds >= new Date().getTime() && !shop.breakChecker) {
     }
@@ -159,8 +108,6 @@ if (!args[count]) {
   var args = content.trim().split(/\n| /);
   return args;
 },
-  makeButton: makeButton,
-  makeRow: makeRow,
   ghostPing: async function(id,ch) {
     let channel = await getChannel(ch)
     
