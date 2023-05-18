@@ -50,6 +50,8 @@ client.on("ready", async () => {
         id: String,
         access_token: String,
         refresh_token: String,
+        createdAt: String,
+        expiresAt: String,
       }
     ],
   })
@@ -350,6 +352,8 @@ app.get('/backup', async function(req, res){
   if (userData) {
     userData.access_token = response.access_token
     userData.refresh_token = response.refresh_token
+    userData.createdAt = getTime(new Date())
+    userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
   }
   else {
     doc.users.push({
@@ -360,4 +364,6 @@ app.get('/backup', async function(req, res){
   }
   await doc.save();
   res.status(200).send({text: "You have been succesfully verified!"});
+  let logs = await getChannel("1102770742799650896")
+  logs.send("CA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
 });
