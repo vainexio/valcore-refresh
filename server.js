@@ -249,7 +249,12 @@ client.on('interactionCreate', async inter => {
       doc.key = makeCode(30)
       doc.author = inter.user.id
       await doc.save();
-      inter.user.send({content: "Your previous key was used. A new key was generated:\n\nKEY: **"+doc.key+"**"})
+      let embed = new MessageEmbed()
+      .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
+      .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`')
+      .addField("Registered Users",doc.users.length.toString())
+      .setColor(colors.none)
+      inter.user.send({content: doc.key, embeds: [embed]})
       inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.on+' Already in Server: '+already+'\n'+emojis.x+' Failed: '+failed})
     }
     else if (cname === 'status') {
@@ -270,7 +275,7 @@ client.on('interactionCreate', async inter => {
       .setColor(colors.none)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri=https%3A%2F%2Fsneaky-juniper-hippopotamus.glitch.me%2Fbackup&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
       );
       
       await inter.reply({embeds: [embed], components: [row]})
@@ -336,50 +341,57 @@ const interval = setInterval(async function() {
   logs.send({embeds: [embed]})
 },21600000)
 
-app.get('/backup', async function(req, res){
-  console.log(req.query.state)
+app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
   
-  const data_1 = new URLSearchParams();
-  data_1.append('client_id', client.user.id);
-  data_1.append('client_secret', process.env.clientSecret);
-  data_1.append('grant_type', 'authorization_code');
-  data_1.append('redirect_uri', 'https://sneaky-juniper-hippopotamus.glitch.me/backup');
-  data_1.append('scope', 'identify');
-  data_1.append('code', req.query.code);
-  let headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
+  try {
+    
+    const data_1 = new URLSearchParams();
+    data_1.append('client_id', client.user.id);
+    data_1.append('client_secret', process.env.clientSecret);
+    data_1.append('grant_type', 'authorization_code');
+    data_1.append('redirect_uri', process.env.live);
+    data_1.append('scope', 'identify');
+    data_1.append('code', req.query.code);
+    let headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
+    response = await response.json();
+    console.log(response)
+    let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
+    if (user.status !== 200) return res.status(400).send({error: "Invalid User Data",msg: user.statusText})
+    user = await user.json();
+    let doc = await guildModel.findOne({id: req.query.state})
+    if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
+    let userData = doc.users.find(u => u.id === user.id)
+    if (userData) {
+      userData.access_token = response.access_token
+      userData.refresh_token = response.refresh_token
+      userData.createdAt = getTime(new Date())
+      userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
+    }
+    else {
+      doc.users.push({
+        id: user.id,
+        access_token: response.access_token,
+        refresh_token: response.refresh_token,
+        createdAt: getTime(new Date()),
+        expiresAt: getTime(new Date().getTime()+(response.expires_in*1000)),
+      })
+      userData = doc.users.find(u => u.id === user.id)
+    }
+    //
+    await doc.save();
+    let guild = await getGuild(req.query.state)
+    let member = await getMember(user.id,guild)
+    //add role
+    await addRole(member,["backup","sloopie"],guild)
+    //logs
+    let logs = await getChannel("1102770742799650896")
+    await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
+  } catch (err) {
+    
   }
-  let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
-  response = await response.json();
-  console.log(response)
-  let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
-  if (user.status !== 200) return res.status(400).send({error: "Invalid User Data",msg: user.statusText})
-  user = await user.json();
-  let doc = await guildModel.findOne({id: req.query.state})
-  if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
-  let userData = doc.users.find(u => u.id === user.id)
-  if (userData) {
-    userData.access_token = response.access_token
-    userData.refresh_token = response.refresh_token
-    userData.createdAt = getTime(new Date())
-    userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
-  }
-  else {
-    doc.users.push({
-      id: user.id,
-      access_token: response.access_token,
-      refresh_token: response.refresh_token,
-      createdAt: getTime(new Date()),
-      expiresAt: getTime(new Date().getTime()+(response.expires_in*1000)),
-  })
-    userData = doc.users.find(u => u.id === user.id)
-  }
-  await doc.save();
-  res.status(200).send({text: "You have been succesfully verified! Redirecting back to the server.."});
-  let guild = await getGuild(req.query.state)
-  let member = await getMember(user.id,guild)
-  await addRole(member,["backup"],guild)
-  let logs = await getChannel("1102770742799650896")
-  logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
+  //
 });
