@@ -49,7 +49,7 @@ let keys = [
   'canva',
 ]
 module.exports = {
-  settings: {
+  config: {
     channels: {
       chat: '1047454193595732055',
     },

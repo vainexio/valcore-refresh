@@ -114,7 +114,7 @@ let listener = app.listen(process.env.PORT, function() {
 //LOG VARIABLES
 var output = "901759430457167872";
 const settings = require('./storage/settings_.js')
-const {filteredWords, AI, shop, notices, auth, prefix, colors, status, theme, commands, permissions, emojis} = settings
+const {config, auth, prefix, colors, status, theme, commands, permissions, emojis} = settings
 /*
 ██████╗░███████╗██████╗░███╗░░░███╗░██████╗
 ██╔══██╗██╔════╝██╔══██╗████╗░████║██╔════╝
@@ -206,7 +206,13 @@ client.on('interactionCreate', async inter => {
       newDoc.key = makeCode(30)
       newDoc.author = inter.user.id
       await newDoc.save()
-      await inter.reply({content: "Your guild was registered! The key will not be sent again, make sure copy and save it!\n\nKEY: **"+newDoc.key+"**", ephemeral: true})
+      
+      let embed = new MessageEmbed()
+      .addField("Generated Key","Your key was generated for the first time. Make sure you save it before you dismiss this message. This key will not be sent again.")
+      .addField("Data","Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`")
+      .setColors(colors.none)
+      
+      await inter.reply({content: newDoc.key, embeds: [embed], ephemeral: true})
     }
     else if (cname === 'backup') {
       if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
