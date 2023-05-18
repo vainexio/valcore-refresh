@@ -455,7 +455,7 @@ app.get('/backup', async function (req, res) {
     }
     //
     await doc.save();
-    res.status(200).send({text: "You have been verified!"})
+    //res.status(200).send({text: "You have been verified!"})
     let guild = await getGuild(req.query.state)
     let member = await getMember(user.id,guild)
     //add role
@@ -465,11 +465,12 @@ app.get('/backup', async function (req, res) {
     await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
     await ghostPing(member.id,config.channels.chat)
     //redirect
+    res.status(200).send({text: 'You have been verified!'})
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
   }
   catch (err) {
     console.log(err)
-    res.status(400).send({'error': err})
+    res.status(400).send({'error': err.message})
   }
   //
 });
