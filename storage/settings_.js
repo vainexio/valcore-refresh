@@ -52,6 +52,7 @@ module.exports = {
   config: {
     channels: {
       chat: '1047454193595732055',
+      templates: '1079712339122720768',
     },
   },
   auth: {
@@ -79,7 +80,7 @@ module.exports = {
       level: 2,
     },
     {
-      id: '',
+      id: '1047454193184682040', //handler
       level: 2
     },
     {

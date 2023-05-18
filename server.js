@@ -370,8 +370,6 @@ process.on('unhandledRejection', async error => {
 //Loop
 let one = true
 const interval = setInterval(async function() {
-  if (one) return;
-  one = true
   let guilds = await guildModel.find()
   let data = {
     refreshed: 0,
@@ -379,12 +377,14 @@ const interval = setInterval(async function() {
     failed: 0,
   }
   for (let i in guilds) {
-    let guild = guilds[i]
-    let users = guild.users
+    let doc = guilds[i]
+    let users = doc.users
     for (let i in users) {
+      data.tokens++
       let user = users[i]
       let time = getTime(new Date())
-      if (time <= user.expiresAt) {
+      //get expiration
+      if (time >= user.expiresAt) {
         console.log('expired',user)
         let data_1 = new URLSearchParams();
         data_1.append('client_id', client.user.id);
@@ -397,17 +397,30 @@ const interval = setInterval(async function() {
         //fetch token
         let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
         response = await response.json();
-        console.log('new',response)
+        let userData = doc.users.find(u => u.id === user.id)
+        //
+        if (userData) {
+          userData.access_token = response.access_token
+          userData.refresh_token = response.refresh_token
+          userData.createdAt = getTime(new Date())
+          userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
+          data.refreshed++
+        } else {
+          data.failed++
+        }
       }
     }
+    //save
+    await doc.save();
   }
+  
   let logs = await getChannel("1102770742799650896")
   let embed = new MessageEmbed()
   .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}`)
   .setColor(colors.none)
   
   logs.send({embeds: [embed]})
-},10000) //21600000
+},21600000)
 
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
@@ -427,7 +440,6 @@ app.get('/backup', async function (req, res) {
     //fetch token
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
     response = await response.json();
-    console.log(response)
     //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
@@ -461,9 +473,18 @@ app.get('/backup', async function (req, res) {
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
-    let logs = await getChannel("1102770742799650896")
-    await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
-    await ghostPing(member.id,config.channels.chat)
+    //let logs = await getChannel("1102770742799650896")
+    //await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
+    //await ghostPing(member.id,config.channels.chat)
+    let channel = await getChannel(config.channels.chat)
+    let template = await getChannel(config.channels.templates)
+    let msg = await template.messages.fetch('1094934512879812608')
+    let content = msg.content.replace('{user}','<@'+user.id+'>')
+    let row = new MessageActionRow().addComponents(
+    new MessageButton().setURL('https://discord.com/channels/1047454193159503904/1047454193197252644').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
+      new MessageButton().setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
+    );
+    channel.send({content: content, components: [row]})
     //redirect
     res.status(200).send({text: 'You have been verified!'})
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
