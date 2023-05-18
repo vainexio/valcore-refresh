@@ -324,7 +324,9 @@ let streamers = [
     },
   ]
 
-//const interval = setInterval(async function() {},10000)
+const interval = setInterval(async function() {
+  let guilds = await guildModel.find()
+},21600000)
 
 app.get('/backup', async function(req, res){
   console.log(req.query.state)
@@ -357,13 +359,18 @@ app.get('/backup', async function(req, res){
   }
   else {
     doc.users.push({
-    id: user.id,
-    access_token: response.access_token,
-    refresh_token: response.refresh_token,
+      id: user.id,
+      access_token: response.access_token,
+      refresh_token: response.refresh_token,
+      createdAt: getTime(new Date()),
+      expiresAt: getTime(new Date().getTime()+(response.expires_in*1000)),
   })
   }
   await doc.save();
   res.status(200).send({text: "You have been succesfully verified!"});
-  let logs = await getChannel("1102770742799650896")
-  logs.send("CA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
+  let guild = await getGuild(req.query.guild)
+  let member = await getMember(user.id,guild)
+  await addRole(member,["backup"],guild)
+  //let logs = await getChannel("1102770742799650896")
+  //logs.send(user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
 });
