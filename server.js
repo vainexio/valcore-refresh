@@ -183,10 +183,6 @@ const {makeCode, stringJSON, fetchKey, ghostPing, sleep, moderate, getPercentage
 //Roles Handler
 const roles = require('./functions/roles.js')
 const {getRole, addRole, removeRole, hasRole} = roles
-//Tickets Handler
-const tickets = require('./functions/tickets.js')
-const {makeTicket} = tickets
-//const {} = boostbot
 /*
 ░█████╗░██╗░░░░░██╗███████╗███╗░░██╗████████╗  ███╗░░░███╗███████╗░██████╗░██████╗░█████╗░░██████╗░███████╗
 ██╔══██╗██║░░░░░██║██╔════╝████╗░██║╚══██╔══╝  ████╗░████║██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝░██╔════╝
@@ -269,8 +265,8 @@ client.on('interactionCreate', async inter => {
       await doc.save();
       let embed = new MessageEmbed()
       .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
-      .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`')
-      .addField("Registered Users",doc.users.length.toString())
+      .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
+      .addField("Registered Users",doc.users.length.toString(),true)
       .setColor(colors.none)
       inter.user.send({content: doc.key, embeds: [embed]})
       inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.on+' Already in Server: '+already+'\n'+emojis.x+' Failed: '+failed})
@@ -292,6 +288,7 @@ client.on('interactionCreate', async inter => {
         
         let data = doc.users.find(u => u.id === user.user.id)
         let joinMem = await guild.members.add(user.user,{accessToken: data.access_token})
+        if (!joinMem) return inter.reply({content: emojis.warning+" Failed to join **"+user.user.tag+"** to "+guild.name})
         await inter.reply({content: emojis.on+" Successfully joined **"+user.user.tag+"** to "+guild.name})
         
         doc.key = makeCode(30)
@@ -299,8 +296,8 @@ client.on('interactionCreate', async inter => {
         await doc.save();
         let embed = new MessageEmbed()
         .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
-        .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`')
-        .addField("Registered Users",doc.users.length.toString())
+        .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
+        .addField("Registered Users",doc.users.length.toString(),true)
         .setColor(colors.none)
         
         inter.user.send({content: doc.key, embeds: [embed]})
@@ -368,7 +365,6 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
-let one = true
 const interval = setInterval(async function() {
   let guilds = await guildModel.find()
   let data = {
@@ -376,7 +372,8 @@ const interval = setInterval(async function() {
     tokens: 0,
     failed: 0,
   }
-  for (let i in guilds) {
+  try {
+    for (let i in guilds) {
     let doc = guilds[i]
     let users = doc.users
     for (let i in users) {
@@ -396,16 +393,24 @@ const interval = setInterval(async function() {
         }
         //fetch token
         let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
+        //if valid
+        if (response.status === 200) {
         response = await response.json();
         let userData = doc.users.find(u => u.id === user.id)
-        //
+        //get userData
         if (userData) {
           userData.access_token = response.access_token
           userData.refresh_token = response.refresh_token
           userData.createdAt = getTime(new Date())
           userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
           data.refreshed++
-        } else {
+        } 
+        else {
+          data.failed++
+        }
+        }
+        //if not valid
+        else {
           data.failed++
         }
       }
@@ -420,6 +425,11 @@ const interval = setInterval(async function() {
   .setColor(colors.none)
   
   logs.send({embeds: [embed]})
+  } catch (err) {
+    console.log(err)
+    let logs = await getChannel("1102770742799650896")
+    logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
+  }
 },21600000)
 
 app.get('/backup', async function (req, res) {
