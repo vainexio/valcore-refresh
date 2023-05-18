@@ -281,11 +281,13 @@ client.on('interactionCreate', async inter => {
       //
       let key = options.find(a => a.name === 'key')
       let user = options.find(a => a.name === 'user')
-      let guildId = options.find(a => a.name === 'new_guild')
+      let guildId = options.find(a => a.name === 'guild_id')
       try {
         let guild = await getGuild(guildId.value)
-        let member = await getMember(user.user.id,inter.guild)
-        let joinMem = await guild.members.add(user.user,guild)
+        let doc = await guildModel.findOne({key: key.value})
+        let data = doc.users.find(u => u.id === user.user.id)
+        console.log(data.access_token)
+        let joinMem = await guild.members.add(user.user,{access_token: data.access_token})
         inter.reply({content: "Joined "+user.user.tag+" to "+guild.name})
       }
       catch (err) {
