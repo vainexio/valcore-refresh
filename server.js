@@ -238,7 +238,7 @@ client.on('interactionCreate', async inter => {
         .addFields(
           {name: "Guild", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"},
           {name: "Registered Users", value: doc.users.length.toString(), inline: true},
-          {name: "Registrant", value: '<@'+doc.author+'>', inline: true},
+          {name: "Author", value: '<@'+doc.author+'>', inline: true},
           {name: "Access Key", value: '```diff\n- '+doc.key.substr(0, doc.key.length-20)+'```'},
         )
         
@@ -327,7 +327,7 @@ client.on('interactionCreate', async inter => {
       .addFields(
         {name: "Guild", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"},
         {name: "Registered Users", value: doc.users.length.toString(), inline: true},
-        {name: "Registrant", value: '<@'+doc.author+'>', inline: true},
+        {name: "Author", value: '<@'+doc.author+'>', inline: true},
         {name: "Access Key", value: '```yaml\n'+doc.key.substr(0, doc.key.length-20)+'...```'},
       )
       .setThumbnail(guild.iconURL())
