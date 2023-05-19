@@ -8,6 +8,8 @@ const moment = require('moment')
 const HttpsProxyAgent = require('https-proxy-agent');
 const url = require('url');
 const discordTranscripts = require('discord-html-transcripts');
+const wait = require('node:timers/promises').setTimeout;
+
 //
 //Discord
 const Discord = require('discord.js');
@@ -213,7 +215,7 @@ client.on('interactionCreate', async inter => {
       if (!guild) return inter.reply({content: emojis.warning+' Cannot find guild. Make sure that the bot is on the server that you wish to register.'})
       if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission within the guild in order to register it.'})
       let doc = await guildModel.findOne({id: guild.id})
-      if (doc) return inter.reply({content: emojis.warning+' This guild was already registered.'})
+      if (doc) return inter.reply({content: emojis.warning+' This guild was already registered'})
       
       let newDoc = new guildModel(guildSchema)
       newDoc.id = guild.id
@@ -221,12 +223,33 @@ client.on('interactionCreate', async inter => {
       newDoc.author = inter.user.id
       await newDoc.save()
       
+      await inter.reply({content: emojis.check+" Guild registered\nSending your key in DMs"})
+      
       let embed = new MessageEmbed()
-      .addField("Generated Key","Your key was generated for the first time. Make sure you save it before you dismiss this message. This key will not be sent again.")
+      .addField("Generated Key","Your key was generated for the first time. Make sure you save it.")
       .addField("Data","Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`")
       .setColor(colors.none)
       
-      await inter.reply({content: newDoc.key, embeds: [embed], ephemeral: true})
+      await inter.user.send({content: newDoc.key, embeds: [embed], ephemeral: true}).catch(err => {
+        console.log(err)
+        inter.followUp({content: emojis.warning+' Unable to send the key in your DMs\n```diff\n-'+err+'```', ephemeral: true})
+      }).then(msg => {
+        inter.followUp({content: emojis.check+' The key was sent in DMs', ephemeral: true})
+      })
+    }
+    else if (cname === 'unregister') {
+      //if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
+      let options = inter.options._hoistedOptions
+      //
+      let key = options.find(a => a.name === 'key')
+      
+      let doc = await guildModel.findOne({key: key})
+      if (doc) {
+        await inter.reply({content: emojis.check+' Your guild was unregistered\nTotal users: **'+doc.users.length+'**\nGuild ID: `'+doc.id+'`'})
+        await guildModel.deleteOne({key: key})
+      } else {
+        await inter.reply({content: emojis.warning+' Invalid key was provided'})
+      }
     }
     else if (cname === 'backup') {
       let options = inter.options._hoistedOptions
@@ -318,7 +341,7 @@ client.on('interactionCreate', async inter => {
       let embed = new MessageEmbed()
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addField("Registered Users",doc.users.length.toString())
-      .addField("registrant",'<@'+doc.author+'>')
+      .addField("Registrant",'<@'+doc.author+'>')
       .addField("Key",doc.key.substr(0, doc.key.length-20)+'...')
       .setThumbnail(guild.iconURL())
       .setColor(colors.none)
@@ -329,6 +352,7 @@ client.on('interactionCreate', async inter => {
       
       await inter.reply({embeds: [embed], components: [row]})
     }
+    
   }
   //BUTTONS
   else if (inter.isButton() || inter.isSelectMenu()) {
