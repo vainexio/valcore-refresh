@@ -470,14 +470,13 @@ app.get('/backup', async function (req, res) {
     }
     //
     else {
-      doc.users.push({
+      userData = doc.users.push({
         id: user.id,
         access_token: response.access_token,
         refresh_token: response.refresh_token,
         createdAt: getTime(new Date()),
         expiresAt: getTime(new Date().getTime()+(response.expires_in*1000)),
       })
-      userData = doc.users.find(u => u.id === user.id)
     }
     //
     await doc.save();
