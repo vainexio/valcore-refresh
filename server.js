@@ -72,16 +72,22 @@ client.on("ready", async () => {
         required: true
       },
       {
-        name: 'user',
-        description: 'User you want to override',
-        type: 6,
-        required: true,
-      },
-      {
         "name": 'guild_id',
         "description": 'Guild ID',
         "type": 3,
         "required": true,
+      },
+      {
+        name: 'user',
+        description: 'User you want to override',
+        type: 6,
+        required: false,
+      },
+      {
+        name: 'user_id',
+        description: 'User ID you want to override',
+        type: 3,
+        required: false,
       },
     ],
   }
@@ -223,7 +229,6 @@ client.on('interactionCreate', async inter => {
       await inter.reply({content: newDoc.key, embeds: [embed], ephemeral: true})
     }
     else if (cname === 'backup') {
-      if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
       let options = inter.options._hoistedOptions
       //
       let key = options.find(a => a.name === 'key')
@@ -231,13 +236,13 @@ client.on('interactionCreate', async inter => {
       let guild = await getGuild(guildId.value);
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild', ephemeral: true})
       let doc = await guildModel.findOne({key: key.value})
-      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key', ephemeral: true})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid key', ephemeral: true})
       
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0
       let already = 0
-      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild ("+guild.name+")"})
+      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**", ephemeral: true})
       for (let i in doc.users) {
         let data = doc.users[i]
         try {
@@ -259,50 +264,42 @@ client.on('interactionCreate', async inter => {
           failed++
         }
       }
-      //doc.id = guild.id
-      doc.key = makeCode(30)
-      doc.author = inter.user.id
-      await doc.save();
       
       inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already})
-      
-      let embed = new MessageEmbed()
-      .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
-      .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
-      .addField("Registered Users",doc.users.length.toString(),true)
-      .setColor(colors.none)
-      inter.user.send({content: doc.key, embeds: [embed]})
     }
     else if (cname === 'join') {
-      if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+" You are not on the whitelist"})
       let options = inter.options._hoistedOptions
       //
       let key = options.find(a => a.name === 'key')
       let user = options.find(a => a.name === 'user')
+      let userId = options.find(a => a.name === 'user_id')
       let guildId = options.find(a => a.name === 'guild_id')
+      
+      !user ? user = await getUser(userId.value) : user = user.user
+      if (!user) return inter.reply({content: emojis.warning+' Invalid user', ephemeral: true})
       try {
         let guild = await getGuild(guildId.value)
         let doc = await guildModel.findOne({key: key.value})
-        //let data = doc.users.find(u => u.id === user.user.id)
         
-        if (!guild) return inter.reply(emojis.warning+' Invalid guild ID')
-        if (!doc) return inter.reply(emojis.warning+' Invalid key was provided')
+        if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemerral: true})
+        if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
-        let data = doc.users.find(u => u.id === user.user.id)
-        let joinMem = await guild.members.add(user.user,{accessToken: data.access_token})
-        if (!joinMem) return inter.reply({content: emojis.warning+" Failed to join **"+user.user.tag+"** to "+guild.name})
-        await inter.reply({content: emojis.on+" Successfully joined **"+user.user.tag+"** to "+guild.name})
+        let data = doc.users.find(u => u.id === user.id)
+        let joinMem = await guild.members.add(user,{accessToken: data.access_token})
+        if (!joinMem) return inter.reply({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name})
+        console.log(joinMem)
+        await inter.reply({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name, ephemeral: true})
         
-        doc.key = makeCode(30)
-        doc.author = inter.user.id
-        await doc.save();
-        let embed = new MessageEmbed()
-        .addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
-        .addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
-        .addField("Registered Users",doc.users.length.toString(),true)
-        .setColor(colors.none)
+        //doc.key = makeCode(30)
+        //doc.author = inter.user.id
+        //await doc.save();
+        //let embed = new MessageEmbed()
+        //.addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
+        //.addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
+        //.addField("Registered Users",doc.users.length.toString(),true)
+        //.setColor(colors.none)
         
-        inter.user.send({content: doc.key, embeds: [embed]})
+        //inter.user.send({content: doc.key, embeds: [embed]})
       }
       catch (err) {
         console.log(err)
@@ -321,7 +318,7 @@ client.on('interactionCreate', async inter => {
       let embed = new MessageEmbed()
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addField("Registered Users",doc.users.length.toString())
-      .addField("Key Holder",'<@'+doc.author+'>')
+      .addField("registrant",'<@'+doc.author+'>')
       .addField("Key",doc.key.substr(0, doc.key.length-20)+'...')
       .setThumbnail(guild.iconURL())
       .setColor(colors.none)
