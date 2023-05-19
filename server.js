@@ -455,6 +455,8 @@ app.get('/backup', async function (req, res) {
     //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
+    console.log(user)
+    if (!user) return res.status(400).send({error: 'Invalid user', json: user})
     //fetch model
     let doc = await guildModel.findOne({id: req.query.state})
     if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
@@ -482,12 +484,10 @@ app.get('/backup', async function (req, res) {
     //res.status(200).send({text: "You have been verified!"})
     let guild = await getGuild(req.query.state)
     let member = await getMember(user.id,guild)
+    if (!member) return res.status(400).send({error: 'Invalid member', json: member})
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
-    //let logs = await getChannel("1102770742799650896")
-    //await logs.send(member.user.toString()+"\nCA: <t:"+userData.createdAt+":f> (<t:"+userData.createdAt+":R>)\nEA: <t:"+userData.expiresAt+":f> (<t:"+userData.expiresAt+":R>)")
-    //await ghostPing(member.id,config.channels.chat)
     let channel = await getChannel(config.channels.chat)
     let template = await getChannel(config.channels.templates)
     let msg = await template.messages.fetch('1094934512879812608')
