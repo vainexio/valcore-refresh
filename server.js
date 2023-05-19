@@ -63,35 +63,17 @@ client.on("ready", async () => {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"
   let json = {
-    "name": "join",
+    "name": "unregister",
     "type": 1,
-    "description": "Joins a specific user to your guild",
+    "description": "Unregister your guild",
     "options": [
       {
-        name: 'key',
-        description: "Access key",
-        type: 3,
-        required: true
-      },
-      {
-        "name": 'guild_id',
-        "description": 'Guild ID',
+        "name": 'key',
+        "description": 'Access key',
         "type": 3,
         "required": true,
       },
-      {
-        name: 'user',
-        description: 'User you want to override',
-        type: 6,
-        required: false,
-      },
-      {
-        name: 'user_id',
-        description: 'User ID you want to override',
-        type: 3,
-        required: false,
-      },
-    ],
+      ],
   }
   
   let headers = {
@@ -212,8 +194,8 @@ client.on('interactionCreate', async inter => {
       //
       let guildId = options.find(a => a.name === 'guild_id')
       let guild = await getGuild(guildId.value)
-      if (!guild) return inter.reply({content: emojis.warning+' Cannot find guild. Make sure that the bot is on the server that you wish to register.'})
-      if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission within the guild in order to register it.'})
+      if (!guild) return inter.reply({content: emojis.warning+' Cannot find guild. Make sure that the bot is on the server that you wish to register'})
+      if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission in the server that you want to register'})
       let doc = await guildModel.findOne({id: guild.id})
       if (doc) return inter.reply({content: emojis.warning+' This guild was already registered'})
       
@@ -226,7 +208,7 @@ client.on('interactionCreate', async inter => {
       await inter.reply({content: emojis.check+" Guild registered\nSending your key in DMs"})
       
       let embed = new MessageEmbed()
-      .addField("Generated Key","Your key was generated for the first time. Make sure you save it.")
+      .addField("Generated Key","This key was generated for the first time. Make sure you save it.")
       .addField("Data","Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`")
       .setColor(colors.none)
       
@@ -243,10 +225,15 @@ client.on('interactionCreate', async inter => {
       //
       let key = options.find(a => a.name === 'key')
       
-      let doc = await guildModel.findOne({key: key})
+      let doc = await guildModel.findOne({key: key.value})
       if (doc) {
-        await inter.reply({content: emojis.check+' Your guild was unregistered\nTotal users: **'+doc.users.length+'**\nGuild ID: `'+doc.id+'`'})
-        await guildModel.deleteOne({key: key})
+        let embed = new MessageEmbed()
+        .addFields(
+          
+          {name: "Data"}
+        )
+        await inter.reply({content: emojis.off+' Your guild was unregistered\n\n**Deleted Data**\nTotal users: **'+doc.users.length+'**\nGuild ID: `'+doc.id+'`'})
+        await guildModel.deleteOne({key: key.value})
       } else {
         await inter.reply({content: emojis.warning+' Invalid key was provided'})
       }
@@ -257,15 +244,15 @@ client.on('interactionCreate', async inter => {
       let key = options.find(a => a.name === 'key')
       let guildId = options.find(a => a.name === 'new_guild')
       let guild = await getGuild(guildId.value);
-      if (!guild) return inter.reply({content: emojis.warning+' Invalid guild', ephemeral: true})
+      if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
       let doc = await guildModel.findOne({key: key.value})
-      if (!doc) return inter.reply({content: emojis.warning+' Invalid key', ephemeral: true})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
       
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0
       let already = 0
-      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**", ephemeral: true})
+      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**"})
       for (let i in doc.users) {
         let data = doc.users[i]
         try {
@@ -288,7 +275,7 @@ client.on('interactionCreate', async inter => {
         }
       }
       
-      inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already})
+      await inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already})
     }
     else if (cname === 'join') {
       let options = inter.options._hoistedOptions
@@ -299,30 +286,19 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'guild_id')
       
       !user ? user = await getUser(userId.value) : user = user.user
-      if (!user) return inter.reply({content: emojis.warning+' Invalid user', ephemeral: true})
+      if (!user) return inter.reply({content: emojis.warning+' Invalid user was provided', ephemeral: true})
       try {
         let guild = await getGuild(guildId.value)
         let doc = await guildModel.findOne({key: key.value})
         
         if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemerral: true})
-        if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
+        if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
         
         let data = doc.users.find(u => u.id === user.id)
         let joinMem = await guild.members.add(user,{accessToken: data.access_token})
         if (!joinMem) return inter.reply({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name})
         console.log(joinMem)
         await inter.reply({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name, ephemeral: true})
-        
-        //doc.key = makeCode(30)
-        //doc.author = inter.user.id
-        //await doc.save();
-        //let embed = new MessageEmbed()
-        //.addField("Generated Key","Your key was revoked as a one-time use policy. As a result, new key was generated.")
-        //.addField("Data",'Guild ID `'+guild.id+'`\nGuild Name `'+guild.name+'`',true)
-        //.addField("Registered Users",doc.users.length.toString(),true)
-        //.setColor(colors.none)
-        
-        //inter.user.send({content: doc.key, embeds: [embed]})
       }
       catch (err) {
         console.log(err)
