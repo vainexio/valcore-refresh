@@ -208,8 +208,10 @@ client.on('interactionCreate', async inter => {
       await inter.reply({content: emojis.on+" Your guild was registered"})
       
       let embed = new MessageEmbed()
-      .addField("Generated Key","This key was generated for the first time. Make sure you save it.")
-      .addField("Data","Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`")
+      .addFields(
+        {name: "Generated Key", value: "This key was generated for the first time. Make sure you save it."},
+        {name: "Data", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"}
+      )
       .setColor(theme)
       
       await inter.user.send({content: newDoc.key, embeds: [embed], ephemeral: true})
@@ -227,14 +229,17 @@ client.on('interactionCreate', async inter => {
       let key = options.find(a => a.name === 'key')
       
       let doc = await guildModel.findOne({key: key.value})
+      let guild = await getGuild(doc.id)
+      if (!guild) inter.reply({content: emojis.warning+' Cannot find guild', ephemeral: true})
       if (doc) {
         let embed = new MessageEmbed()
-        .setDescription(emojis.off+' Your guild data was removed')
+        .setDescription(emojis.off+' Your guild data was terminated')
         .setColor(colors.red)
         .addFields(
-          {name: "Registered Users", value: doc.users.length.toString()},
-          {name: "Registrant", value: '<@'+doc.author+'>'},
-          {name: "Access Key", value: doc.key},
+          {name: "Guild", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"},
+          {name: "Registered Users", value: doc.users.length.toString(), inline: true},
+          {name: "Registrant", value: '<@'+doc.author+'>', inline: true},
+          {name: "Access Key", value: '```diff\n- '+doc.key.substr(0, doc.key.length-20)+'```'},
         )
         
         await inter.reply({embeds: [embed]})
@@ -300,13 +305,13 @@ client.on('interactionCreate', async inter => {
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
         let data = doc.users.find(u => u.id === user.id)
-        let joinMem = await guild.members.add(user,{accessToken: data.access_token})
-        if (!joinMem) return inter.reply({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name})
-        console.log(joinMem)
-        await inter.reply({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name, ephemeral: true})
+        let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
+          console.log(err)
+          inter.reply({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name+'\n```diff\n-'+err+'```', ephemeral: true})
+        }).then(msg => inter.reply({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name, ephemeral: true}))
       }
       catch (err) {
-        inter.reply({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```"})
+        inter.reply({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```", ephemeral: true})
       }
     }
     else if (cname === 'status') {
@@ -317,16 +322,16 @@ client.on('interactionCreate', async inter => {
       
       let doc = await guildModel.findOne({id: guildId ? guildId.value : inter.guild.id})
       let guild = guildId ? await getGuild(guildId.value) : inter.guild
-      if (!doc || !guild) return inter.reply({content: emojis.warning+' Unergistered guild'})
+      if (!doc || !guild) return inter.reply({content: emojis.warning+' Unergistered guild ID'})
       let embed = new MessageEmbed()
-      .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .addFields(
-        {name: "Registered Users", value: doc.users.length.toString()},
-        {name: "Registrant", value: '<@'+doc.author+'>'},
-        {name: "Access Key", value: doc.key.substr(0, doc.key.length-20)+'...'},
+        {name: "Guild", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"},
+        {name: "Registered Users", value: doc.users.length.toString(), inline: true},
+        {name: "Registrant", value: '<@'+doc.author+'>', inline: true},
+        {name: "Access Key", value: '```yaml\n'+doc.key.substr(0, doc.key.length-20)+'...```'},
       )
       .setThumbnail(guild.iconURL())
-      .setColor(colors.none)
+      .setColor(theme)
       
       let row = new MessageActionRow().addComponents(
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
