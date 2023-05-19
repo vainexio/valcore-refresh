@@ -205,18 +205,19 @@ client.on('interactionCreate', async inter => {
       newDoc.author = inter.user.id
       await newDoc.save()
       
-      await inter.reply({content: emojis.check+" Guild registered\nSending your key in DMs"})
+      await inter.reply({content: emojis.on+" Your guild was registered"})
       
       let embed = new MessageEmbed()
       .addField("Generated Key","This key was generated for the first time. Make sure you save it.")
       .addField("Data","Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`")
-      .setColor(colors.none)
+      .setColor(theme)
       
-      await inter.user.send({content: newDoc.key, embeds: [embed], ephemeral: true}).catch(err => {
+      await inter.user.send({content: newDoc.key, embeds: [embed], ephemeral: true})
+        .then(msg => inter.followUp({content: emojis.check+' Your access key has been sent via direct message'}))
+        .catch(async err => {
         console.log(err)
-        inter.followUp({content: emojis.warning+' Unable to send the key in your DMs\n```diff\n-'+err+'```', ephemeral: true})
-      }).then(msg => {
-        inter.followUp({content: emojis.check+' The key was sent in DMs', ephemeral: true})
+        inter.followUp({content: emojis.warning+' Unable to send access key via direct message\n```diff\n-'+err+'```'})
+        await guildModel.deleteOne({key: newDoc.key})
       })
     }
     else if (cname === 'unregister') {
@@ -228,14 +229,18 @@ client.on('interactionCreate', async inter => {
       let doc = await guildModel.findOne({key: key.value})
       if (doc) {
         let embed = new MessageEmbed()
+        .setDescription(emojis.off+' Your guild data was removed')
+        .setColor(colors.red)
         .addFields(
-          
-          {name: "Data"}
+          {name: "Registered Users", value: doc.users.length.toString()},
+          {name: "Registrant", value: '<@'+doc.author+'>'},
+          {name: "Access Key", value: doc.key},
         )
-        await inter.reply({content: emojis.off+' Your guild was unregistered\n\n**Deleted Data**\nTotal users: **'+doc.users.length+'**\nGuild ID: `'+doc.id+'`'})
+        
+        await inter.reply({embeds: [embed]})
         await guildModel.deleteOne({key: key.value})
       } else {
-        await inter.reply({content: emojis.warning+' Invalid key was provided'})
+        await inter.reply({content: emojis.warning+' Invalid access key'})
       }
     }
     else if (cname === 'backup') {
@@ -286,13 +291,13 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'guild_id')
       
       !user ? user = await getUser(userId.value) : user = user.user
-      if (!user) return inter.reply({content: emojis.warning+' Invalid user was provided', ephemeral: true})
+      if (!user) return inter.reply({content: emojis.warning+' Invalid user ID', ephemeral: true})
       try {
         let guild = await getGuild(guildId.value)
         let doc = await guildModel.findOne({key: key.value})
         
-        if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemerral: true})
-        if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
+        if (!doc) return inter.reply({content: emojis.warning+' Invalid access key', ephemerral: true})
+        if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
         let data = doc.users.find(u => u.id === user.id)
         let joinMem = await guild.members.add(user,{accessToken: data.access_token})
@@ -301,7 +306,6 @@ client.on('interactionCreate', async inter => {
         await inter.reply({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name, ephemeral: true})
       }
       catch (err) {
-        console.log(err)
         inter.reply({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```"})
       }
     }
@@ -313,12 +317,14 @@ client.on('interactionCreate', async inter => {
       
       let doc = await guildModel.findOne({id: guildId ? guildId.value : inter.guild.id})
       let guild = guildId ? await getGuild(guildId.value) : inter.guild
-      if (!doc || !guild) return inter.reply({content: emojis.warning+' Unregistered Guild ID'})
+      if (!doc || !guild) return inter.reply({content: emojis.warning+' Unergistered guild'})
       let embed = new MessageEmbed()
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
-      .addField("Registered Users",doc.users.length.toString())
-      .addField("Registrant",'<@'+doc.author+'>')
-      .addField("Key",doc.key.substr(0, doc.key.length-20)+'...')
+      .addFields(
+        {name: "Registered Users", value: doc.users.length.toString()},
+        {name: "Registrant", value: '<@'+doc.author+'>'},
+        {name: "Access Key", value: doc.key.substr(0, doc.key.length-20)+'...'},
+      )
       .setThumbnail(guild.iconURL())
       .setColor(colors.none)
       

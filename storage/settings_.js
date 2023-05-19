@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const {Client, Intents, MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} = Discord;
 let colors = {
   red: "#ea3737",
-  blue: "#1200ff",
+  blue: "#6b8eff",
   green: "#00ff04",
   yellow: "#fff4a1",
   orange: "#ff6300",
@@ -117,6 +117,6 @@ module.exports = {
     model: "gpt-3.5-turbo"//  
   },
   colors: colors,
-  theme: colors.none,
+  theme: colors.blue,
   emojis: emojis,
 };
