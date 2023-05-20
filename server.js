@@ -295,7 +295,7 @@ client.on('interactionCreate', async inter => {
       let userId = options.find(a => a.name === 'user_id')
       let guildId = options.find(a => a.name === 'guild_id')
       
-      !user ? user = await getUser(userId.value) : user = user.user
+      !user ? userId ? user = await getUser(userId.value) : user = null : user = user.user
       if (!user) return inter.reply({content: emojis.warning+' Invalid user ID', ephemeral: true})
       try {
         let guild = await getGuild(guildId.value)
