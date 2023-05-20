@@ -304,6 +304,7 @@ client.on('interactionCreate', async inter => {
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key', ephemerral: true})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
+        inter.reply({content: emojis.loading+' Joining *'+user.tag+'})
         let data = doc.users.find(u => u.id === user.id)
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
