@@ -81,7 +81,7 @@ module.exports = {
       level: 2
     },
     {
-      id: '',
+      id: '1109342180918702090', //whitelist 2
       level: 2
     },
     {
