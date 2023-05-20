@@ -304,15 +304,15 @@ client.on('interactionCreate', async inter => {
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key', ephemerral: true})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
-        inter.reply({content: emojis.loading+' Joining *'+user.tag+'})
+        inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = doc.users.find(u => u.id === user.id)
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
-          inter.reply({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name+'\n```diff\n-'+err+'```', ephemeral: true})
-        }).then(msg => inter.reply({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name, ephemeral: true}))
+          inter.followUp({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name+'\n```diff\n-'+err+'```'})
+        }).then(msg => inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}))
       }
       catch (err) {
-        inter.reply({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```", ephemeral: true})
+        inter.followUp({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```"})
       }
     }
     else if (cname === 'status') {
