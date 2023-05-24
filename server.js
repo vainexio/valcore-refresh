@@ -183,6 +183,12 @@ const {getRole, addRole, removeRole, hasRole} = roles
 //ON CLIENT MESSAGE
 
 client.on("messageCreate", async (message) => {
+  if (message.content.toLowerCase() === ';invite') {
+    let row = new MessageActionRow().addComponents(
+        new MessageButton().setURL('https://discord.com/oauth2/authorize?client_id=1108412309308719197&permissions=141667200105&scope=bot').setStyle('LINK').setLabel("Invite Bot"),
+      );
+    message.reply({components: [row]})
+  }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
