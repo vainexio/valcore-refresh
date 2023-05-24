@@ -304,7 +304,7 @@ client.on('interactionCreate', async inter => {
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key', ephemerral: true})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
-        inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
+        await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = doc.users.find(u => u.id === user.id)
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
@@ -312,7 +312,8 @@ client.on('interactionCreate', async inter => {
         }).then(msg => inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}))
       }
       catch (err) {
-        inter.followUp({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```"})
+        console.log(err)
+        inter.channel.send({content: emojis.warning+" Unexpected error occurred\n```diff\n- "+err+"```"})
       }
     }
     else if (cname === 'status') {
