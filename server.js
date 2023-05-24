@@ -93,7 +93,7 @@ client.on("ready", async () => {
     console.log(response)
 }
   console.log('Successfully logged in to discord bot.')
-  client.user.setPresence({ status: 'online', activities: [{ name: 'to users', type: "LISTENING" }] });
+  client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
 })
 
