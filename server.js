@@ -312,10 +312,12 @@ client.on('interactionCreate', async inter => {
         
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = doc.users.find(u => u.id === user.id)
+        let err = false
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
+          err = true
           inter.followUp({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name+'\n```diff\n-'+err+'```'})
-        }).then(msg => inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}))
+        }).then(msg => !err ? inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}) : null)
       }
       catch (err) {
         console.log(err)
