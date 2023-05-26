@@ -201,7 +201,7 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'guild_id')
       let guild = await getGuild(guildId.value)
       if (!guild) return inter.reply({content: emojis.warning+' Cannot find guild. Make sure that the bot is on the server that you wish to register'})
-      if (!await guildPerms(inter.member,["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission in the server that you want to register'})
+      if (!await guildPerms(await getMember(inter.user.id,guild),["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission in the server that you want to register'})
       let doc = await guildModel.findOne({id: guild.id})
       if (doc) return inter.reply({content: emojis.warning+' This guild was already registered'})
       
