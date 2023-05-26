@@ -513,7 +513,7 @@ app.get('/backup', async function (req, res) {
     new MessageButton().setURL('https://discord.com/channels/1047454193159503904/1047454193197252644').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
       new MessageButton().setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
     );
-    channel.send({content: content, components: [row]})
+    //channel.send({content: content, components: [row]})
     //redirect
     res.status(200).send({text: 'You have been verified!'})
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
