@@ -73,7 +73,7 @@ client.on("ready", async () => {
       headers: headers
     });
     response = await response.json();
-    //console.log(response)
+    console.log(response)
   }
     for (let i in slashCmd.deleteSlashes) {
       let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"+slashCmd.deleteSlashes[i]
@@ -256,8 +256,8 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'target_server_id')
       let guild = await getGuild(guildId.value);
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
-      let doc = await guildModel.findOne({key: key.value})
-      if (!doc) doc = await guildModel.findOne({id: inter.user.id})
+      let doc = await guildModel.findOne({key: key?.value})
+      if (!doc) doc = await guildModel.findOne({author: inter.user.id})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
       
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
@@ -293,16 +293,17 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let key = options.find(a => a.name === 'key')
-      let user = options.find(a => a.name === 'user')
-      let userId = options.find(a => a.name === 'user_id')
-      let guildId = options.find(a => a.name === 'guild_id')
+      let user = options.find(a => a.name === 'target_user')
+      let userId = options.find(a => a.name === 'target_user_id')
+      let guildId = options.find(a => a.name === 'target_server_id')
       
       !user ? userId ? user = await getUser(userId.value) : user = null : user = user.user
       if (!user) return inter.reply({content: emojis.warning+' Invalid user ID', ephemeral: true})
       try {
         let guild = await getGuild(guildId.value)
-        let doc = await guildModel.findOne({key: key.value})
+        let doc = await guildModel.findOne({key: key?.value})
         
+        if (!doc) doc = await guildModel.findOne({author: inter.user.id})
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key'})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         

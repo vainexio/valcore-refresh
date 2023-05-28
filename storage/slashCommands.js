@@ -12,8 +12,8 @@ NUMBER - 10
 ATTACHMENT - 11
 */
 module.exports = {
-  register: false,
-  deleteSlashes: [],
+  register: true,
+  deleteSlashes: ['1108673951162445885','1108416466790916118'],
   slashes: [
     {
       "name": "joinall",
@@ -37,12 +37,25 @@ module.exports = {
     {
       "name": "join",
       "type": 1,
-      "description": "Shows a list of available stocks",
-      {
+      "description": "Joins a verified user to a server",
+      "options": [
+        {
           "name": 'target_server_id',
-          "description": 'The server you want your verified users to join',
+          "description": 'The server you want the user to join',
           "type": 3,
           "required": true,
+        },
+        {
+          "name": 'target_user',
+          "description": 'User you want to join',
+          "type": 6,
+          "required": false,
+        },
+        {
+          "name": 'target_user_id',
+          "description": 'User ID you want to join',
+          "type": 3,
+          "required": false,
         },
         {
           "name": 'key',
@@ -50,6 +63,7 @@ module.exports = {
           "type": 3,
           "required": false,
         },
+      ],
     }
   ],
 };
