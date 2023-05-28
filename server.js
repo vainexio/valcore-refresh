@@ -385,7 +385,7 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
-let repeat = true
+let repeat = false
 const interval = setInterval(async function() {
   if (repeat) return;
   repeat = true
@@ -400,9 +400,10 @@ const interval = setInterval(async function() {
     let doc = guilds[i]
     let guild = await getGuild(doc.id)
     let users = doc.users
-    for (let i in users) {
+    let removeIndex = []
+    for (let e in users) {
       data.tokens++
-      let user = users[i]
+      let user = users[e]
       let time = getTime(new Date())
       //get expiration
       if (time >= user.expiresAt) {
@@ -435,20 +436,26 @@ const interval = setInterval(async function() {
         }
         //if not valid
         else {
-          console.log(user,'⚠️ Failed: '+response.status+' - '+response.statusText)
+          removeIndex.push(e)
+          console.log(user.id,'⚠️ Failed: '+response.status+' - '+response.statusText)
           if (guild) {
            let member = await getMember(user.id,guild) 
-           if (member) {
-             await removeRole(member,['backup'])
-           }
-            let removeInd
-          } else {
+           if (member) await removeRole(member,['backup'])
+          } 
+          else {
             console.log('Non-existent guild: '+doc.id)
           }
           data.failed++
         }
       }
     }
+      removeIndex.sort((a, b) => (b-a))
+      console.log(removeIndex)
+      for (let a = removeIndex.length-1; i >= 0; i--) {
+        let index = removeIndex[a]
+        //console.log(doc.users[index].id)
+        //doc.users.splice(index,1)
+      }
     //save
     await doc.save();
   }
