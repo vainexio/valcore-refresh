@@ -385,10 +385,7 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
-let repeat = false
 const interval = setInterval(async function() {
-  if (repeat) return;
-  repeat = true
   let guilds = await guildModel.find()
   let data = {
     refreshed: 0,
@@ -451,10 +448,10 @@ const interval = setInterval(async function() {
     }
       removeIndex.sort((a, b) => (b-a))
       console.log(removeIndex)
-      for (let a = removeIndex.length-1; i >= 0; i--) {
+      for (let a in removeIndex) {
         let index = removeIndex[a]
-        //console.log(doc.users[index].id)
-        //doc.users.splice(index,1)
+        console.log(doc.users[index].id)
+        doc.users.splice(index,1)
       }
     //save
     await doc.save();
@@ -471,7 +468,7 @@ const interval = setInterval(async function() {
     let logs = await getChannel("1102770742799650896")
     logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
   }
-},10000) //21600000
+},21600000) //
 
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
