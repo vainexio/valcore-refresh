@@ -59,39 +59,31 @@ client.on("ready", async () => {
   })
   guildModel = mongoose.model("GuildBackup_Model", guildSchema);
 
-  if (cmd) {
+  if (slashCmd.register) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
-  let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"
-  let json = {
-    "name": "unregister",
-    "type": 1,
-    "description": "Unregister your guild",
-    "options": [
-      {
-        "name": 'key',
-        "description": 'Access key',
-        "type": 3,
-        "required": true,
-      },
-      ],
-  }
-  
   let headers = {
     "Authorization": "Bot "+token,
-    'Content-Type': 'application/json'
+    "Content-Type": 'application/json'
   }
-  let response = await fetch(discordUrl, {
-    method: 'post',
-    body: JSON.stringify(json),
-    headers: headers
-  });
-    /*let deleteRes = await fetch(deleteUrl, {
-      method: 'delete',
+  for (let i in slashes) {
+    let json = slashes[i]
+    let response = await fetch(discordUrl, {
+      method: 'post',
+      body: JSON.stringify(json),
       headers: headers
-    })*/
+    });
     response = await response.json();
-    console.log(response)
-}
+    //console.log(response)
+  }
+    for (let i in slashCmd.deleteSlashes) {
+      let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"+slashCmd.deleteSlashes[i]
+      let deleteRes = await fetch(deleteUrl, {
+        method: 'delete',
+        headers: headers
+      })
+      //console.log(deleteRes)
+    }
+  }
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
@@ -117,6 +109,9 @@ let listener = app.listen(process.env.PORT, function() {
 var output = "901759430457167872";
 const settings = require('./storage/settings_.js')
 const {config, auth, prefix, colors, status, theme, commands, permissions, emojis} = settings
+//Slash Commands
+const slashCmd = require("./storage/slashCommands.js");
+const { slashes } = slashCmd;
 /*
 ██████╗░███████╗██████╗░███╗░░░███╗░██████╗
 ██╔══██╗██╔════╝██╔══██╗████╗░████║██╔════╝
@@ -254,14 +249,15 @@ client.on('interactionCreate', async inter => {
         await inter.reply({content: emojis.warning+' Invalid access key'})
       }
     }
-    else if (cname === 'backup') {
+    else if (cname === 'joinall') {
       let options = inter.options._hoistedOptions
       //
       let key = options.find(a => a.name === 'key')
-      let guildId = options.find(a => a.name === 'new_guild')
+      let guildId = options.find(a => a.name === 'target_server_id')
       let guild = await getGuild(guildId.value);
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
       let doc = await guildModel.findOne({key: key.value})
+      if (!doc) doc = await guildModel.findOne({id: inter.user.id})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
       
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
@@ -307,7 +303,7 @@ client.on('interactionCreate', async inter => {
         let guild = await getGuild(guildId.value)
         let doc = await guildModel.findOne({key: key.value})
         
-        if (!doc) return inter.reply({content: emojis.warning+' Invalid access key', ephemerral: true})
+        if (!doc) return inter.reply({content: emojis.warning+' Invalid access key'})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
