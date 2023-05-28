@@ -385,7 +385,10 @@ process.on('unhandledRejection', async error => {
 });
 
 //Loop
+let repeat = true
 const interval = setInterval(async function() {
+  if (repeat) return;
+  repeat = true
   let guilds = await guildModel.find()
   let data = {
     refreshed: 0,
@@ -395,6 +398,7 @@ const interval = setInterval(async function() {
   try {
     for (let i in guilds) {
     let doc = guilds[i]
+    let guild = await getGuild(doc.id)
     let users = doc.users
     for (let i in users) {
       data.tokens++
@@ -402,7 +406,6 @@ const interval = setInterval(async function() {
       let time = getTime(new Date())
       //get expiration
       if (time >= user.expiresAt) {
-        console.log('expired',user)
         let data_1 = new URLSearchParams();
         data_1.append('client_id', client.user.id);
         data_1.append('client_secret', process.env.clientSecret);
@@ -424,13 +427,24 @@ const interval = setInterval(async function() {
           userData.createdAt = getTime(new Date())
           userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
           data.refreshed++
-        } 
+        }
         else {
+          
           data.failed++
         }
         }
         //if not valid
         else {
+          console.log(user,'⚠️ Failed: '+response.status+' - '+response.statusText)
+          if (guild) {
+           let member = await getMember(user.id,guild) 
+           if (member) {
+             await removeRole(member,['backup'])
+           }
+            let removeInd
+          } else {
+            console.log('Non-existent guild: '+doc.id)
+          }
           data.failed++
         }
       }
@@ -450,7 +464,7 @@ const interval = setInterval(async function() {
     let logs = await getChannel("1102770742799650896")
     logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
   }
-},21600000)
+},10000) //21600000
 
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
