@@ -87,7 +87,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
-  //handleTokens()
+  handleTokens()
 })
 
 module.exports = {
@@ -412,8 +412,8 @@ async function handleTokens() {
         user.createdAt = foundRef.createdAt
         user.expiresAt = foundRef.expiresAt
         await doc.save();
-        return;
-      }
+        console.log(foundRef,'multi')
+      } else {
       //get expiration
       if (time >= user.expiresAt) {
         let data_1 = new URLSearchParams();
@@ -457,6 +457,7 @@ async function handleTokens() {
           data.failed++
         }
       }
+    }
     }
       removeIndex.sort((a, b) => (b-a))
       console.log(removeIndex)
