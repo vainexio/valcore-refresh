@@ -87,6 +87,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
+  handleTokens()
 })
 
 module.exports = {
@@ -381,8 +382,8 @@ process.on('unhandledRejection', async error => {
   channel ? channel.send({embeds: [embed]}).catch(error => error) : null
 });
 
-//Loop
-const interval = setInterval(async function() {
+//Fetch tokens
+async function handleTokens() {
   let guilds = await guildModel.find()
   let data = {
     refreshed: 0,
@@ -465,6 +466,10 @@ const interval = setInterval(async function() {
     let logs = await getChannel("1102770742799650896")
     logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
   }
+}
+//Loop
+const interval = setInterval(async function() {
+  await handleTokens()
 },21600000) //
 
 app.get('/backup', async function (req, res) {
