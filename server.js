@@ -87,7 +87,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
@@ -311,7 +311,7 @@ client.on('interactionCreate', async inter => {
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = doc.users.find(u => u.id === user.id)
         let err = false
-        console.log(data)
+        console.log(doc.users.map(e => e.id).indexOf(user.id))
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
           err = true
@@ -390,8 +390,10 @@ async function handleTokens() {
     refreshed: 0,
     tokens: 0,
     failed: 0,
+    multiTokens: 0,
   }
   try {
+    let refreshedTokens = []
     for (let i in guilds) {
     let doc = guilds[i]
     let guild = await getGuild(doc.id)
@@ -401,6 +403,17 @@ async function handleTokens() {
       data.tokens++
       let user = users[e]
       let time = getTime(new Date())
+      
+      let foundRef = refreshedTokens.find(r => r.id === user.id)
+      if (foundRef) {
+        data.multiTokens++
+        user.access_token = foundRef.access_token
+        user.refresh_token = foundRef.refresh_token
+        user.createdAt = foundRef.createdAt
+        user.expiresAt = foundRef.expiresAt
+        await doc.save();
+        return;
+      }
       //get expiration
       if (time >= user.expiresAt) {
         let data_1 = new URLSearchParams();
@@ -424,9 +437,9 @@ async function handleTokens() {
           userData.createdAt = getTime(new Date())
           userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
           data.refreshed++
+          refreshedTokens.push(userData)
         }
         else {
-          
           data.failed++
         }
         }
@@ -458,7 +471,7 @@ async function handleTokens() {
   
   let logs = await getChannel("1102770742799650896")
   let embed = new MessageEmbed()
-  .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}`)
+  .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}\nMulti Refresh: ${data.multiTokens}`)
   .setColor(colors.none)
   
   logs.send({embeds: [embed]})

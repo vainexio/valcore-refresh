@@ -11,8 +11,9 @@ MENTIONABLE - 9
 NUMBER - 10
 ATTACHMENT - 11
 */
+
 module.exports = {
-  register: true,
+  register: false,
   deleteSlashes: ['1108673951162445885','1108416466790916118'],
   slashes: [
     {
