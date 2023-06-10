@@ -470,7 +470,7 @@ async function handleTokens() {
     await doc.save();
   }
   
-  let logs = await getChannel("1102770742799650896")
+  let logs = await getChannel("1116922703597817888")
   let embed = new MessageEmbed()
   .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}\nMulti Refresh: ${data.multiTokens}`)
   .setColor(colors.none)
@@ -478,7 +478,7 @@ async function handleTokens() {
   logs.send({embeds: [embed]})
   } catch (err) {
     console.log(err)
-    let logs = await getChannel("1102770742799650896")
+    let logs = await getChannel("1116922703597817888")
     logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
   }
 }
