@@ -38,9 +38,7 @@ module.exports = {
     return msg;
   },
   sleep: async function (miliseconds) {
-    var currentTime = new Date().getTime();
-    while (currentTime + miliseconds >= new Date().getTime() && !shop.breakChecker) {
-    }
+    return new Promise(resolve => setTimeout(resolve, miliseconds));
   },
   moderate: function(member,perms) {
     if (perms) return;

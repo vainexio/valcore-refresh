@@ -401,6 +401,7 @@ async function handleTokens() {
     let users = doc.users
     let removeIndex = []
     for (let e in users) {
+      sleep(100)
       data.tokens++
       let user = users[e]
       let time = getTime(new Date())
@@ -484,9 +485,9 @@ async function handleTokens() {
   }
 }
 //Loop
-const interval = setInterval(async function() {
+/*const interval = setInterval(async function() {
   await handleTokens()
-},21600000) //
+},21600000) //*/
 
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
