@@ -42,6 +42,7 @@ let guildModel
 
 //When bot is ready
 client.on("ready", async () => {
+  console.log('hi')
   await mongoose.connect(mongooseToken,{keepAlive: true});
   guildSchema = new mongoose.Schema({
     id: String,
@@ -87,7 +88,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
@@ -503,6 +504,7 @@ app.get('/backup', async function (req, res) {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
     //fetch token
+    //
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
     response = await response.json();
     //fetch user
