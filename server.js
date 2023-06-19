@@ -88,7 +88,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
-  //handleTokens()
+  handleTokens()
 })
 
 module.exports = {
@@ -452,7 +452,7 @@ async function handleTokens() {
           if (guild) {
            let member = await getMember(user.id,guild) 
            if (member) await removeRole(member,['backup'])
-          } 
+          }
           else {
             console.log('Non-existent guild: '+doc.id)
           }
@@ -485,9 +485,9 @@ async function handleTokens() {
   }
 }
 //Loop
-/*const interval = setInterval(async function() {
+const interval = setInterval(async function() {
   await handleTokens()
-},21600000) //*/
+},21600000) //
 
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send({error: "Invalid Guild ID"})
