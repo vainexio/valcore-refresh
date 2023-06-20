@@ -325,7 +325,6 @@ client.on('interactionCreate', async inter => {
       }
     }
     else if (cname === 'status') {
-      //if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+' You are not on the whitelist'});
       let options = inter.options._hoistedOptions
       //
       let guildId = options.find(a => a.name === 'guild_id')
@@ -354,20 +353,8 @@ client.on('interactionCreate', async inter => {
   //BUTTONS
   else if (inter.isButton() || inter.isSelectMenu()) {
     let id = inter.customId
-    console.log(id)
-    if (id === 'terms') {
-      let member = inter.member;
-      await addRole(member,['1077462108381388873','1094909481806205009'],inter.message.guild)
-      let row = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('claimed').setStyle('SECONDARY').setLabel('Terms Accepted').setDisabled(true).setEmoji(emojis.check),
-        );
-      inter.update({content: 'Terms Accepted : <@'+inter.user.id+'>', components: [row]})
-      let row2 = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('orderFormat').setStyle('SECONDARY').setLabel('Click me').setEmoji('<a:S_arrowright:1095503803761033276>'),
-      );
-      inter.channel.send({components: [row2]})
-      //inter.channel.setName(inter.channel.name.replace('ticket',inter.user.username.replace(/ /g,'')))
-    }
+    console.log('Not slash: '+id)
+    //
     }
 });
 process.on('unhandledRejection', async error => {
@@ -441,9 +428,7 @@ async function handleTokens() {
           data.refreshed++
           refreshedTokens.push(userData)
         }
-        else {
-          data.failed++
-        }
+        else data.failed++
         }
         //if not valid
         else {
