@@ -109,7 +109,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
-  //handleTokens()
+  handleTokens()
 })
 
 module.exports = {
@@ -438,9 +438,13 @@ async function handleTokens() {
         newUser.createdAt = user.createdAt
         newUser.expiresAt = user.expiresAt
         await newUser.save();
-        newGuildModel.users.push(user.id)
-        await newGuildModel.save();
       }
+      let foundUser2 = newGuildModel.users.find(u => u === user.id)
+        if (!foundUser2) {
+          console.log('push '+user.id+' to '+doc.id)
+          newGuildModel.users.push(user.id)
+          await newGuildModel.save();
+        }
       let foundRef = refreshedTokens.find(r => r.id === user.id)
       if (foundRef) {
         data.multiTokens++
