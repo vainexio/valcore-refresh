@@ -109,7 +109,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
@@ -407,28 +407,30 @@ async function handleTokens() {
     let doc = guilds[i]
     let guild = await getGuild(doc.id)
     
-    let newGuildModel = guildModel2.findOne({id: doc.id}) 
+    let newGuildModel = await guildModel2.findOne({id: doc.id}) 
     if (!newGuildModel) {
+      console.log('register new guild: '+doc.id)
       let newGuild = new guildModel2(guildSchema2)
       newGuild.id = doc.id
       newGuild.key = doc.key
       newGuild.author = doc.author
       newGuild.users = [] 
       await newGuild.save()
-      newGuildModel = guildModel2.findOne({id: doc.id}) 
+      newGuildModel = await guildModel2.findOne({id: doc.id}) 
     }
       
     let users = doc.users
     let removeIndex = []
     for (let e in users) {
-      sleep(100)
+      await sleep(100)
       
       data.tokens++
       let user = users[e]
       let time = getTime(new Date())
       
-      let foundNewUser = tokenModel.findOne({id: user.id})
+      let foundNewUser = await tokenModel.findOne({id: user.id})
       if (!foundNewUser) {
+        console.log('register new user: '+user.id)
         let newUser = new tokenModel(tokenSchema)
         newUser.id = user.id
         newUser.access_token = user.access_token
@@ -436,7 +438,7 @@ async function handleTokens() {
         newUser.createdAt = user.createdAt
         newUser.expiresAt = user.expiresAt
         await newUser.save();
-        newGuildModel.push(user.id)
+        newGuildModel.users.push(user.id)
         await newGuildModel.save();
       }
       let foundRef = refreshedTokens.find(r => r.id === user.id)
