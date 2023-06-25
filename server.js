@@ -307,7 +307,7 @@ client.on('interactionCreate', async inter => {
             failed++
           })
             } else {
-              inter.followUp({content: emojis.warning+' User data not found!'})
+              failed++
             }
           }
         } catch(err) {
@@ -629,9 +629,9 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user) return res.status(400).send({error: 'Invalid user', json: user})
+    if (!user || user.message.includes('401')) return res.status(400).send({error: 'Invalid user', json: user})
     //fetch model
-    let doc = await guildModel.findOne({id: req.query.state})
+    let doc = await guildModel2.findOne({id: req.query.state})
     if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
     let userData = await tokenModel.findOne({id: user.id})
     //
@@ -654,14 +654,16 @@ app.get('/backup', async function (req, res) {
     let foundUser = doc.users.find(u => u === user.id)
     if (!foundUser) {
       doc.users.push(user.id)
-    } 
-    else return res.status(400).send({error: 'User is already registered to this guild.', json: member})
+    }
+    else {
+      return res.status(400).send({error: 'User is already registered to this guild.', user: user})
+    }
     //
     await doc.save();
     //res.status(200).send({text: "You have been verified!"})
     let guild = await getGuild(req.query.state)
     let member = await getMember(user.id,guild)
-    if (!member) return res.status(400).send({error: 'Invalid member', json: member})
+    if (!member) return res.status(400).send({error: 'Invalid member', member: member})
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
