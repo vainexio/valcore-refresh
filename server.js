@@ -39,6 +39,11 @@ let cmd = true
 let guildSchema
 let guildModel
 
+let guildSchema2
+let guildModel2
+
+let tokenSchema
+let tokenModel
 
 //When bot is ready
 client.on("ready", async () => {
@@ -58,8 +63,24 @@ client.on("ready", async () => {
       }
     ],
   })
+  guildSchema2 = new mongoose.Schema({
+    id: String,
+    key: String,
+    author: String,
+    users: [],
+  })
+  tokenSchema = new mongoose.Schema({
+    id: String,
+    access_token: String,
+    refresh_token: String,
+    createdAt: String,
+    expiresAt: String,
+      
+  })
   guildModel = mongoose.model("GuildBackup_Model", guildSchema);
-
+  guildModel2 = mongoose.model("GuildBackup_Model2", guildSchema2);
+  tokenModel = mongoose.model("GuildBackup_Token", tokenSchema);
+  
   if (slashCmd.register) {
   let discordUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands"
   let headers = {
@@ -385,14 +406,39 @@ async function handleTokens() {
     for (let i in guilds) {
     let doc = guilds[i]
     let guild = await getGuild(doc.id)
+    
+    let newGuildModel = guildModel2.findOne({id: doc.id}) 
+    if (!newGuildModel) {
+      let newGuild = new guildModel2(guildSchema2)
+      newGuild.id = doc.id
+      newGuild.key = doc.key
+      newGuild.author = doc.author
+      newGuild.users = [] 
+      await newGuild.save()
+      newGuildModel = guildModel2.findOne({id: doc.id}) 
+    }
+      
     let users = doc.users
     let removeIndex = []
     for (let e in users) {
       sleep(100)
+      
       data.tokens++
       let user = users[e]
       let time = getTime(new Date())
       
+      let foundNewUser = tokenModel.findOne({id: user.id})
+      if (!foundNewUser) {
+        let newUser = new tokenModel(tokenSchema)
+        newUser.id = user.id
+        newUser.access_token = user.access_token
+        newUser.refresh_token = user.refresh_token
+        newUser.createdAt = user.createdAt
+        newUser.expiresAt = user.expiresAt
+        await newUser.save();
+        newGuildModel.push(user.id)
+        await newGuildModel.save();
+      }
       let foundRef = refreshedTokens.find(r => r.id === user.id)
       if (foundRef) {
         data.multiTokens++
