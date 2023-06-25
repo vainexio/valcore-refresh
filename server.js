@@ -289,12 +289,14 @@ client.on('interactionCreate', async inter => {
       let already = 0
       await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**"})
       for (let i in doc.users) {
-        let data = doc.users[i]
+        let userId = doc.users[i]
         try {
-          let user = await getUser(data.id);
+          let user = await getUser(userId);
           let member = await getMember(user.id,guild)
           if (member) already++
           else {
+            let data = await tokenModel.findOne({id: userId})
+            if (data) {
           if (user) await guild.members.add(user,{accessToken: data.access_token})
             .then(suc => {
             console.log(suc)
@@ -304,6 +306,9 @@ client.on('interactionCreate', async inter => {
             console.log(err)
             failed++
           })
+            } else {
+              inter.followUp({content: emojis.warning+' User data not found!'})
+            }
           }
         } catch(err) {
           failed++
@@ -331,7 +336,7 @@ client.on('interactionCreate', async inter => {
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
-        let data = doc.users.find(u => u.id === user.id)
+        let data = await tokenModel.findOne({id: user.id})
         let err = false
         console.log(doc.users.map(e => e.id).indexOf(user.id))
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
@@ -394,6 +399,81 @@ process.on('unhandledRejection', async error => {
 
 //Fetch tokens
 async function handleTokens() {
+  let tokens = await tokenModel.find()
+  let data = {
+    refreshed: 0,
+    tokens: 0,
+    failed: 0,
+    multiTokens: 0,
+  }
+  try {
+    let refreshedTokens = []
+    for (let i in tokens) {
+    let user = tokens[i]
+      await sleep(100)
+      data.tokens++
+      let time = getTime(new Date())
+      
+      let foundRef = refreshedTokens.find(r => r.id === user.id)
+      if (foundRef) {
+        data.multiTokens++
+        user.access_token = foundRef.access_token
+        user.refresh_token = foundRef.refresh_token
+        user.createdAt = foundRef.createdAt
+        user.expiresAt = foundRef.expiresAt
+        await user.save();
+        console.log(foundRef,'multi')
+      } else {
+      //get expiration
+      if (time >= user.expiresAt) {
+        let data_1 = new URLSearchParams();
+        data_1.append('client_id', client.user.id);
+        data_1.append('client_secret', process.env.clientSecret);
+        data_1.append('grant_type', 'refresh_token');
+        data_1.append('refresh_token', user.refresh_token);
+        let headers = {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+        //fetch token
+        let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
+        //if valid
+        if (response.status === 200) {
+        response = await response.json();
+        let userData = await tokenModel.findOne({id: user.id})
+        //get userData
+        if (userData) {
+          userData.access_token = response.access_token
+          userData.refresh_token = response.refresh_token
+          userData.createdAt = getTime(new Date())
+          userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
+          data.refreshed++
+          refreshedTokens.push(userData)
+        }
+        else data.failed++
+        }
+        //if not valid
+        else {
+          await tokenModel.deleteOne({id: user.id})
+          console.log(user.id,'⚠️ Failed: '+response.status+' - '+response.statusText)
+          data.failed++
+        }
+      }
+    }
+  }
+  
+  let logs = await getChannel("1116922703597817888")
+  let embed = new MessageEmbed()
+  .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}\nMulti Refresh: ${data.multiTokens}`)
+  .setColor(colors.none)
+  
+  logs.send({embeds: [embed]})
+  } catch (err) {
+    console.log(err)
+    let logs = await getChannel("1116922703597817888")
+    logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
+  }
+}
+async function handleTokens2() {
   let guilds = await guildModel.find()
   let data = {
     refreshed: 0,
@@ -553,7 +633,7 @@ app.get('/backup', async function (req, res) {
     //fetch model
     let doc = await guildModel.findOne({id: req.query.state})
     if (!doc) return res.status(400).send({error: "Invalid Guild Model"})
-    let userData = doc.users.find(u => u.id === user.id)
+    let userData = await tokenModel.findOne({id: user.id})
     //
     if (userData) {
       userData.access_token = response.access_token
@@ -563,14 +643,19 @@ app.get('/backup', async function (req, res) {
     }
     //
     else {
-      userData = doc.users.push({
-        id: user.id,
-        access_token: response.access_token,
-        refresh_token: response.refresh_token,
-        createdAt: getTime(new Date()),
-        expiresAt: getTime(new Date().getTime()+(response.expires_in*1000)),
-      })
+      let newUser = new tokenModel(tokenSchema)
+      newUser.id = user.id
+      newUser.access_token = response.access_token
+      newUser.refresh_token = response.refresh_token
+      newUser.createdAt = getTime(new Date())
+      newUser.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
+      await newUser.save()
     }
+    let foundUser = doc.users.find(u => u === user.id)
+    if (!foundUser) {
+      doc.users.push(user.id)
+    } 
+    else return res.status(400).send({error: 'User is already registered to this guild.', json: member})
     //
     await doc.save();
     //res.status(200).send({text: "You have been verified!"})
