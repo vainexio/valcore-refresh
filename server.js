@@ -87,6 +87,7 @@ client.on("ready", async () => {
     "Authorization": "Bot "+token,
     "Content-Type": 'application/json'
   }
+  
   for (let i in slashes) {
     let json = slashes[i]
     let response = await fetch(discordUrl, {
@@ -435,6 +436,7 @@ async function handleTokens() {
           user.createdAt = getTime(new Date())
           user.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
           data.refreshed++
+          await user.save();
         //if not valid
         }
         else {
