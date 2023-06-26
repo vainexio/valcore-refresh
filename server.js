@@ -470,7 +470,7 @@ function respond(data) {
   return '<body style="background-color:black;"><h1 style="color:'+data.color+';font-family:verdana;text-align:center;"><centre>'+data.text+'</centre></h1></body>'
 }
 app.get('/backup', async function (req, res) {
-  if (!req.query.state) return res.status(400).send(respond({text: "Invalid Guild ID", color: 'red'}))
+  if (!req.query.state) return res.status(400).send(respond({text: "GUILD NOT FOUND", color: 'red'}))
   
   try {
     console.log('received')
@@ -492,10 +492,10 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'Invalid user', color: 'red'}))
+    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID USER WAS COLLECTED', color: 'red'}))
     //fetch model
     let doc = await guildModel2.findOne({id: req.query.state})
-    if (!doc) return res.status(400).send(respond({text: "Invalid Guild Model", color: 'red'}))
+    if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red'}))
     let userData = await tokenModel.findOne({id: user.id})
     //
     if (userData) {
@@ -519,14 +519,14 @@ app.get('/backup', async function (req, res) {
       doc.users.push(user.id)
     }
     else {
-      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'persimmon'}))
+      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'orange'}))
     }
     //
     await doc.save();
     //res.status(200).send({text: "You have been verified!"})
     let guild = await getGuild(req.query.state)
     let member = await getMember(user.id,guild)
-    if (!member) return res.status(400).send(respond({text: "Please join the server that you tried to verify, otherwise what's the point? :/", color: 'red'}))
+    if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange'}))
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
@@ -540,7 +540,7 @@ app.get('/backup', async function (req, res) {
     );
     //channel.send({content: content, components: [row]})
     //redirect
-    res.status(200).send(respond({text: 'You have been verified to '+guild.name+'!', color: 'green'}))
+    res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green'}))
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
   }
   catch (err) {
