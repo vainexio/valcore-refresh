@@ -220,10 +220,10 @@ client.on('interactionCreate', async inter => {
       let guild = await getGuild(guildId.value)
       if (!guild) return inter.reply({content: emojis.warning+' Cannot find guild. Make sure that the bot is on the server that you wish to register'})
       if (!await guildPerms(await getMember(inter.user.id,guild),["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission in the server that you want to register'})
-      let doc = await guildModel.findOne({id: guild.id})
+      let doc = await guildModel2.findOne({id: guild.id})
       if (doc) return inter.reply({content: emojis.warning+' This guild was already registered'})
       
-      let newDoc = new guildModel(guildSchema)
+      let newDoc = new guildModel2(guildSchema)
       newDoc.id = guild.id
       newDoc.key = makeCode(30)
       newDoc.author = inter.user.id
@@ -243,7 +243,7 @@ client.on('interactionCreate', async inter => {
         .catch(async err => {
         console.log(err)
         inter.followUp({content: emojis.warning+' Unable to send access key via direct message\n```diff\n-'+err+'```'})
-        await guildModel.deleteOne({key: newDoc.key})
+        await guildModel2.deleteOne({key: newDoc.key})
       })
     }
     else if (cname === 'unregister') {
@@ -252,7 +252,7 @@ client.on('interactionCreate', async inter => {
       //
       let key = options.find(a => a.name === 'key')
       
-      let doc = await guildModel.findOne({key: key.value})
+      let doc = await guildModel2.findOne({key: key.value})
       let guild = await getGuild(doc.id)
       if (!guild) inter.reply({content: emojis.warning+' Cannot find guild', ephemeral: true})
       if (doc) {
@@ -267,7 +267,7 @@ client.on('interactionCreate', async inter => {
         )
         
         await inter.reply({embeds: [embed]})
-        await guildModel.deleteOne({key: key.value})
+        await guildModel2.deleteOne({key: key.value})
       } else {
         await inter.reply({content: emojis.warning+' Invalid access key'})
       }
@@ -279,8 +279,8 @@ client.on('interactionCreate', async inter => {
       let guildId = options.find(a => a.name === 'target_server_id')
       let guild = await getGuild(guildId.value);
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
-      let doc = await guildModel.findOne({key: key?.value})
-      if (!doc) doc = await guildModel.findOne({author: inter.user.id})
+      let doc = await guildModel2.findOne({key: key?.value})
+      if (!doc) doc = await guildModel2.findOne({author: inter.user.id})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
       
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
@@ -307,10 +307,12 @@ client.on('interactionCreate', async inter => {
             failed++
           })
             } else {
+              console.log('No data failed '+userId)
               failed++
             }
           }
         } catch(err) {
+          console.log('Code error: '+err)
           failed++
         }
       }
@@ -329,9 +331,9 @@ client.on('interactionCreate', async inter => {
       if (!user) return inter.reply({content: emojis.warning+' Invalid user ID', ephemeral: true})
       try {
         let guild = await getGuild(guildId.value)
-        let doc = await guildModel.findOne({key: key?.value})
+        let doc = await guildModel2.findOne({key: key?.value})
         
-        if (!doc) doc = await guildModel.findOne({author: inter.user.id})
+        if (!doc) doc = await guildModel2.findOne({author: inter.user.id})
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key'})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
@@ -428,22 +430,17 @@ async function handleTokens() {
         //if valid
         if (response.status === 200) {
         response = await response.json();
-        let userData = await tokenModel.findOne({id: user.id})
-        //get userData
-        if (userData) {
-          userData.access_token = response.access_token
-          userData.refresh_token = response.refresh_token
-          userData.createdAt = getTime(new Date())
-          userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
+          user.access_token = response.access_token
+          user.refresh_token = response.refresh_token
+          user.createdAt = getTime(new Date())
+          user.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
           data.refreshed++
-          refreshedTokens.push(userData)
-        }
-        else data.failed++
-        }
         //if not valid
+        }
         else {
-          await tokenModel.deleteOne({id: user.id})
           console.log(user.id,'⚠️ Failed: '+response.status+' - '+response.statusText)
+          console.log(user)
+          //await tokenModel.deleteOne({id: user.id})
           data.failed++
         }
       }
@@ -467,6 +464,9 @@ const interval = setInterval(async function() {
   await handleTokens()
 },21600000) //
 
+function respond(text) {
+  return '<h1>'+text+'</h1>'
+}
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send("<h1>Invalid Guild ID</h1>")
   
@@ -545,5 +545,9 @@ app.get('/backup', async function (req, res) {
     console.log(err)
     res.status(400).send({'error': err.message})
   }
+  //
+});
+app.get('/', async function (req, res) {
+  res.status(200).send(respond('hi'))
   //
 });
