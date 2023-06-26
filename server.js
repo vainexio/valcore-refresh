@@ -355,7 +355,7 @@ client.on('interactionCreate', async inter => {
       //
       let guildId = options.find(a => a.name === 'guild_id')
       
-      let doc = await guildModel.findOne({id: guildId ? guildId.value : inter.guild.id})
+      let doc = await guildModel2.findOne({id: guildId ? guildId.value : inter.guild.id})
       let guild = guildId ? await getGuild(guildId.value) : inter.guild
       if (!doc || !guild) return inter.reply({content: emojis.warning+' Unergistered guild ID'})
       let embed = new MessageEmbed()
