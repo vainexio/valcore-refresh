@@ -532,6 +532,7 @@ app.get('/backup', async function (req, res) {
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
+    //
     let channel = await getChannel(config.channels.chat)
     let template = await getChannel(config.channels.templates)
     let msg = await template.messages.fetch('1094934512879812608')
