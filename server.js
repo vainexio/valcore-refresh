@@ -346,7 +346,7 @@ client.on('interactionCreate', async inter => {
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = await tokenModel.findOne({id: user.id})
         let err = false
-        console.log(doc.users.map(e => e.id).indexOf(user.id))
+        console.log(doc.users.indexOf(user))
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
           err = true
