@@ -293,6 +293,7 @@ client.on('interactionCreate', async inter => {
         let userId = doc.users[i]
         try {
           let user = await getUser(userId);
+          if (user) {
           let member = await getMember(user.id,guild)
           if (member) already++
           else {
@@ -312,6 +313,10 @@ client.on('interactionCreate', async inter => {
               failed++
             }
           }
+        } else {
+          console.log('user not found '+userId)
+          failed++
+        }
         } catch(err) {
           console.log('Code error: '+err)
           failed++
