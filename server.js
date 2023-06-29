@@ -474,8 +474,7 @@ const interval = setInterval(async function() {
 function respond(data) {
   let link = 'https://cdn.wallpapersafari.com/7/42/xqlgfA.jpg'
   !data.color ? data.color = 'white' : null
-  //style="background-color:white;"
-  return '<head><link rel="stylesheet" href="hi.css"></head><body><h1 style="color:'+data.color+';font-family:verdana;text-align:center;">\n\n'+data.text+'</h1></body>'
+  return '<body style="background-color:black;"><h1 style="color:'+data.color+';font-family:verdana;text-align:center;">\n\n'+data.text+'</h1></body>'
 }
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send(respond({text: "GUILD NOT FOUND", color: 'red'}))
