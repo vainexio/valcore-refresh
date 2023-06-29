@@ -474,12 +474,14 @@ const interval = setInterval(async function() {
 function respond(data) {
   let link = 'https://cdn.wallpapersafari.com/7/42/xqlgfA.jpg'
   !data.color ? data.color = 'white' : null
-  return '<body style="background-color:black;"><h1 style="color:'+data.color+';font-family:verdana;text-align:center;">\n\n'+data.text+'</h1></body>'
+  let gIcon = data.guild.iconURL()
+  return '<body style="background-image:'+gIcon+';background-color:black;"><h1 style="color:'+data.color+';font-family:verdana;text-align:center;">\n\n'+data.text+'</h1></body>'
 }
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send(respond({text: "GUILD NOT FOUND", color: 'red'}))
   
   try {
+    let guild = await getGuild(req.query.state)
     console.log('received')
     let data_1 = new URLSearchParams();
     data_1.append('client_id', client.user.id);
@@ -499,10 +501,10 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID USER WAS COLLECTED', color: 'red'}))
+    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID USER WAS COLLECTED', color: 'red', guild: guild}))
     //fetch model
     let doc = await guildModel2.findOne({id: req.query.state})
-    if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red'}))
+    if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red', guild: guild}))
     let userData = await tokenModel.findOne({id: user.id})
     //
     if (userData) {
@@ -526,14 +528,13 @@ app.get('/backup', async function (req, res) {
       doc.users.push(user.id)
     }
     else {
-      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'green'}))
+      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'green', guild: guild}))
     }
     //
     await doc.save();
     //res.status(200).send({text: "You have been verified!"})
-    let guild = await getGuild(req.query.state)
     let member = await getMember(user.id,guild)
-    if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange'}))
+    if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange', guild: guild}))
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
@@ -548,7 +549,7 @@ app.get('/backup', async function (req, res) {
     );
     //channel.send({content: content, components: [row]})
     //redirect
-    res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green'}))
+    res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green', guild: guild}))
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
   }
   catch (err) {
