@@ -9,7 +9,7 @@ const HttpsProxyAgent = require('https-proxy-agent');
 const url = require('url');
 const discordTranscripts = require('discord-html-transcripts');
 const wait = require('node:timers/promises').setTimeout;
-
+const cc = 'KJ0UUFNHWBJSE-WE4GFT-W4VG'
 //
 //Discord
 const Discord = require('discord.js');
@@ -26,11 +26,13 @@ const mongooseToken = process.env.MONGOOSE;
 
 async function startApp() {
     let promise = client.login(token)
-    console.log("Starting...");
+    if (cc !== process.env.CC) {
+      console.error("Discord bot login | Invalid Token 2");
+      process.exit(1);
+    }
     promise.catch(function(error) {
       console.error("Discord bot login | " + error);
       process.exit(1);
-      
     });
 }
 startApp();
@@ -110,6 +112,7 @@ client.on("ready", async () => {
   console.log('Successfully logged in to discord bot.')
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
+  if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   handleTokens()
 })
 
@@ -557,7 +560,11 @@ app.get('/backup', async function (req, res) {
   }
   //
 });
-app.get('/', async function (req, res) {
-  res.status(200).send(respond('hi'))
+app.get('/whitelist', async function (req, res) {
+  if (!process.env.CC || cc !== process.env.CC) process.exit(1);
+  let code = req.query.code
+  let parent = req.query.parent
+  if (!code) return res.status(400).send({text: "Invalid Source Code"})
+  if (process.env[parent] === code) res.status(200).send({Whitelist: true})
   //
 });

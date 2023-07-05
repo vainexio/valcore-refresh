@@ -27,24 +27,6 @@ let emojis = {
   on: '<:on:1107664866484953178>',
   off: '<:off:1107664839372964010>',
 }
-let keys = [
-  'basic',
-  'netflix',
-  'nf',
-  'spoti',
-  'nitro',
-  'nb',
-  'swc',
-  'robux',
-  'pending',
-  'prem',
-  'comm',
-  'noted',
-  'sb',
-  'badge',
-  'db',
-  'canva',
-]
 module.exports = {
   config: {
     channels: {
