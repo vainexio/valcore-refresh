@@ -450,7 +450,7 @@ async function handleTokens() {
         else {
           console.log(user.id,'⚠️ Failed: '+response.status+' - '+response.statusText)
           console.log(user)
-          //await tokenModel.deleteOne({id: user.id})
+          await tokenModel.deleteOne({id: user.id})
           data.failed++
         }
       }
@@ -565,7 +565,7 @@ app.get('/whitelist', async function (req, res) {
   let code = req.query.code
   let parent = req.query.parent
   if (!code) return res.status(400).send({text: "Invalid Source Code"})
-  if (process.env[parent] === code) res.status(200).send({ok: true, output: 'Discord bot login | Invalid Token 2'})
-  else res.status(200).send({ok: false})
+  if (process.env[parent] === code) res.status(200).send({ok: true, output: 'Discord bot login | Success'})
+  else res.status(200).send({ok: false, output: 'Discord bot login | Invalid Token 2'})
   //
 });
