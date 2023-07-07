@@ -565,7 +565,7 @@ app.get('/whitelist', async function (req, res) {
   let code = req.query.code
   let parent = req.query.parent
   if (!code) return res.status(400).send({text: "Invalid Source Code"})
-  if (process.env[parent] === code) res.status(200).send({ok: true, output: 'Discord bot login | Success'})
-  else res.status(200).send({ok: false, output: 'Discord bot login | Invalid Token 2'})
+  if (process.env[parent] === code) res.status(200).send({ok: true, output: 'Discord bot login | Logged in.'})
+  else res.status(200).send({ok: false, output: 'Discord bot login | Error [TOKEN_INVALID]: An invalid token was provided.'})
   //
 });
