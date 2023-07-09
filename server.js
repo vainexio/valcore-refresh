@@ -113,7 +113,7 @@ client.on("ready", async () => {
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
