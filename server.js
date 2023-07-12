@@ -348,13 +348,13 @@ client.on('interactionCreate', async inter => {
         
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = await tokenModel.findOne({id: user.id})
-        let err = false
+        let error = false
         console.log(doc.users.indexOf(user))
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
-          err = true
+          error = true
           inter.followUp({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name+'\n```diff\n-'+err+'```'})
-        }).then(msg => !err ? inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}) : null)
+        }).then(msg => !error ? inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}) : null)
       }
       catch (err) {
         console.log(err)
@@ -514,6 +514,7 @@ app.get('/backup', async function (req, res) {
       userData.refresh_token = response.refresh_token
       userData.createdAt = getTime(new Date())
       userData.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
+      await userData.save()
     }
     //
     else {
