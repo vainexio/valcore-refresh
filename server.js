@@ -531,6 +531,7 @@ app.get('/backup', async function (req, res) {
       doc.users.push(user.id)
     }
     else {
+      await addRole(member,["backup","sloopie"],guild)
       return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'green', guild: guild}))
     }
     //
