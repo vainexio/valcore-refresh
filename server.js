@@ -508,6 +508,8 @@ app.get('/backup', async function (req, res) {
     let doc = await guildModel2.findOne({id: req.query.state})
     if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red', guild: guild}))
     let userData = await tokenModel.findOne({id: user.id})
+    let member = await getMember(user.id,guild)
+    if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange', guild: guild}))
     //
     if (userData) {
       userData.access_token = response.access_token
@@ -531,15 +533,12 @@ app.get('/backup', async function (req, res) {
       doc.users.push(user.id)
     }
     else {
-      let member = await getMember(user.id,guild)
       member ? await addRole(member,["backup","sloopie"],guild) : null
-      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'green', guild: guild}))
+      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'orange', guild: guild}))
     }
     //
     await doc.save();
     //res.status(200).send({text: "You have been verified!"})
-    let member = await getMember(user.id,guild)
-    if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange', guild: guild}))
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
