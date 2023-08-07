@@ -286,7 +286,11 @@ client.on('interactionCreate', async inter => {
       let doc = await guildModel2.findOne({key: key?.value})
       if (!doc) doc = await guildModel2.findOne({author: inter.user.id})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
-      doc.author = 
+      if (key) {
+        doc.author = inter.user.id
+        await doc.save();
+        inter.channel.send({content: emojis.check+' The author of this data was transferred to '+inter.user.toString()})
+      }
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0
@@ -346,6 +350,11 @@ client.on('interactionCreate', async inter => {
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key'})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
+        if (key) {
+          doc.author = inter.user.id
+          await doc.save();
+          inter.channel.send({content: emojis.check+' The author of this data was transferred to '+inter.user.toString()})
+        }
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = await tokenModel.findOne({id: user.id})
         let error = false
@@ -368,15 +377,15 @@ client.on('interactionCreate', async inter => {
       
       let doc = await guildModel2.findOne({id: guildId ? guildId.value : inter.guild.id})
       let guild = guildId ? await getGuild(guildId.value) : inter.guild
-      if (!doc || !guild) return inter.reply({content: emojis.warning+' Unergistered guild ID'})
+      if (!doc) return inter.reply({content: emojis.warning+' Unergistered guild ID'})
       let embed = new MessageEmbed()
       .addFields(
-        {name: "Guild", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"},
+        {name: "Guild", value: "Guild ID `"+guild?.id+"`\nGuild Name `"+guild?.name+"`"},
         {name: "Registered Users", value: doc.users.length.toString(), inline: true},
         {name: "Author", value: '<@'+doc.author+'>', inline: true},
         {name: "Access Key", value: '```yaml\n'+doc.key.substr(0, doc.key.length-20)+'...```'},
       )
-      .setThumbnail(guild.iconURL())
+      .setThumbnail(guild?.iconURL())
       .setColor(theme)
       
       let row = new MessageActionRow().addComponents(
@@ -394,6 +403,7 @@ client.on('interactionCreate', async inter => {
     //
     }
 });
+
 process.on('unhandledRejection', async error => {
   console.log(error);
   let caller_line = error.stack.split("\n");
