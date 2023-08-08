@@ -113,7 +113,7 @@ client.on("ready", async () => {
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
-  //handleTokens()
+  handleTokens()
 })
 
 module.exports = {
@@ -513,7 +513,7 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID USER WAS COLLECTED', color: 'red', guild: guild}))
+    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID DATA - PLEASE CLICK THE BUTTON AGAIN', color: 'red', guild: guild}))
     //fetch model
     let doc = await guildModel2.findOne({id: req.query.state})
     if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red', guild: guild}))
