@@ -401,14 +401,14 @@ client.on('interactionCreate', async inter => {
       let key = options.find(a => a.name === 'key')
       let doc = await guildModel2.findOne({key: key.value})
       
-      await inter.reply({content: emojis.loading+' Transferring server. Please wait.', ephemeral: true})
+      await inter.reply({content: emojis.loading+' Transferring data. Please wait.', ephemeral: true})
       
       let guild = newServer ? await getGuild(newServer.value) : inter.guild
-      if (!doc) return inter.channel.send({content: emojis.warning+' Unergistered guild'})
+      if (!doc || !guild) return inter.channel.send({content: emojis.warning+' Invalid guild/key'})
       let embed = new MessageEmbed()
       .addFields(
-        { name: 'Guild Transfer', value: 'Old: '+doc.id+'\n\nNew:'+newServer.id+'\n'+guild.name},
-        { name: 'Author Transfer', value: 'Old: '+doc.author+'\n\nNew:'+inter.user.id+'\n'+inter.user.toString()},
+        { name: 'Guild Transfer', value: 'Old: '+doc.id+'\n\nNew: '+newServer.value+'\n'+guild.name},
+        { name: 'Author Transfer', value: 'Old: '+doc.author+'\n\nNew: '+inter.user.id+'\n'+inter.user.toString()},
       )
       .setColor(colors.blue)
       

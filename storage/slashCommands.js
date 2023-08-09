@@ -72,12 +72,6 @@ module.exports = {
       "description": "Transfer_data",
       "options": [
         {
-          "name": 'old_server_id',
-          "description": 'Old server ID',
-          "type": 3,
-          "required": true,
-        },
-        {
           "name": 'new_server_id',
           "description": 'New server ID',
           "type": 3,
