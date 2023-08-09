@@ -449,10 +449,8 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let server = options.find(a => a.name === 'server_id')
-      let doc = await guildModel2.findOne({key: server.value})
-      
-      await inter.reply({content: emojis.loading+' Transferring data. Please wait.', ephemeral: true})
-      
+      let doc = await guildModel2.findOne({id: server.value})
+            
       if (!doc) return inter.reply({content: emojis.warning+' Invalid guild data'})
       inter.reply({content: doc.key, ephemeral: true})
     }
