@@ -604,6 +604,15 @@ app.get('/backup', async function (req, res) {
     let userData = await tokenModel.findOne({id: user.id})
     let member = await getMember(user.id,guild)
     if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange', guild: guild}))
+    //MSG
+    let channel = await getChannel('1109020436026634265')
+    let template = await getChannel('1109020434810294344')
+    let msg = await template.messages.fetch('1138624335326756954')
+    let content = msg.content.replace('{user}','<@'+member.id+'>')
+    let row = new MessageActionRow().addComponents(
+      new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020434978054226').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
+      new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020435754000423').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
+    );
     //
     if (userData) {
       userData.access_token = response.access_token
@@ -628,6 +637,7 @@ app.get('/backup', async function (req, res) {
     }
     else {
       member ? await addRole(member,["backup","sloopie"],guild) : null
+      if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
       return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'orange', guild: guild}))
     }
     //
@@ -635,19 +645,8 @@ app.get('/backup', async function (req, res) {
     //res.status(200).send({text: "You have been verified!"})
     //add role
     await addRole(member,["backup","sloopie"],guild)
+    if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
     //logs
-    console.log(guild.id)
-    if (guild.id == '1109020434449575936') {
-      let channel = await getChannel('1109020436026634265')
-      let template = await getChannel('1109020434810294344')
-      let msg = await template.messages.fetch('1138624335326756954')
-      let content = msg.content.replace('{user}','<@'+member.id+'>')
-      let row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020434978054226').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
-        new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020435754000423').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
-      );
-      channel.send({content: content, components: [row]})
-    }
     //redirect
     res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green', guild: guild}))
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
