@@ -636,8 +636,18 @@ app.get('/backup', async function (req, res) {
     //add role
     await addRole(member,["backup","sloopie"],guild)
     //logs
-    //
-    //channel.send({content: content, components: [row]})
+    console.log(guild.id)
+    if (guild.id == '1109020434449575936') {
+      let channel = await getChannel('1109020436026634265')
+      let template = await getChannel('1109020434810294344')
+      let msg = await template.messages.fetch('1138624335326756954')
+      let content = msg.content.replace('{user}','<@'+member.id+'>')
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020434978054226').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
+        new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020435754000423').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
+      );
+      channel.send({content: content, components: [row]})
+    }
     //redirect
     res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green', guild: guild}))
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
