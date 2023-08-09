@@ -286,17 +286,12 @@ client.on('interactionCreate', async inter => {
       let doc = await guildModel2.findOne({key: key?.value})
       if (!doc) doc = await guildModel2.findOne({author: inter.user.id})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
-      if (key) {
-        doc.author = inter.user.id
-        await doc.save();
-        inter.channel.send({content: emojis.check+' The author of this data was transferred to '+inter.user.toString()})
-      }
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0
       let already = 0
       let toDelete = []
-      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**"})
+      await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**", ephemeral: true})
       for (let i in doc.users) {
         let userId = doc.users[i]
         try {
@@ -362,11 +357,6 @@ client.on('interactionCreate', async inter => {
         if (!doc) return inter.reply({content: emojis.warning+' Invalid access key'})
         if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID', ephemeral: true})
         
-        if (key) {
-          doc.author = inter.user.id
-          await doc.save();
-          inter.channel.send({content: emojis.check+' The author of this data was transferred to '+inter.user.toString()})
-        }
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = await tokenModel.findOne({id: user.id})
         let error = false
