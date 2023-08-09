@@ -394,7 +394,29 @@ client.on('interactionCreate', async inter => {
       
       await inter.reply({embeds: [embed], components: [row]})
     }
-    
+    else if (cname === 'transfer') {
+      let options = inter.options._hoistedOptions
+      //
+      let newServer = options.find(a => a.name === 'new_server_id')
+      let key = options.find(a => a.name === 'key')
+      let doc = await guildModel2.findOne({key: key.value})
+      
+      await inter.reply({content: emojis.loading+' Transferring server. Please wait.', ephemeral: true})
+      
+      let guild = newServer ? await getGuild(newServer.value) : inter.guild
+      if (!doc) return inter.channel.send({content: emojis.warning+' Unergistered guild'})
+      let embed = new MessageEmbed()
+      .addFields(
+        { name: 'Guild Transfer', value: 'Old: '+doc.id+'\n\nNew:'+newServer.id+'\n'+guild.name},
+        { name: 'Author Transfer', value: 'Old: '+doc.author+'\n\nNew:'+inter.user.id+'\n'+inter.user.toString()},
+      )
+      .setColor(colors.blue)
+      
+      doc.id = guild.id
+      doc.author = inter.user.id
+      await doc.save()
+      await inter.channel.send({content: emojis.check+' Data Transferred', embeds: [embed]})
+    }
   }
   //BUTTONS
   else if (inter.isButton() || inter.isSelectMenu()) {

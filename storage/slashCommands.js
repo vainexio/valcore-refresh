@@ -13,7 +13,7 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: false,
+  register: true,
   deleteSlashes: ['1108673951162445885','1108416466790916118'],
   slashes: [
     {
@@ -63,6 +63,31 @@ module.exports = {
           "description": 'Access key',
           "type": 3,
           "required": false,
+        },
+      ],
+    },
+    {
+      "name": "transfer",
+      "type": 1,
+      "description": "Transfer_data",
+      "options": [
+        {
+          "name": 'old_server_id',
+          "description": 'Old server ID',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'new_server_id',
+          "description": 'New server ID',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'key',
+          "description": 'Access key',
+          "type": 3,
+          "required": true,
         },
       ],
     }
