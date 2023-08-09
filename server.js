@@ -295,6 +295,7 @@ client.on('interactionCreate', async inter => {
       let failed = 0
       let success = 0
       let already = 0
+      let toDelete = []
       await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**"})
       for (let i in doc.users) {
         let userId = doc.users[i]
@@ -316,21 +317,31 @@ client.on('interactionCreate', async inter => {
             failed++
           })
             } else {
+              toDelete.push(i)
               console.log('No data failed '+userId)
               failed++
             }
           }
         } else {
+          toDelete.push(i)
+          await tokenModel.deleteOne({id: userId})
           console.log('user not found '+userId)
           failed++
         }
         } catch(err) {
+          toDelete.push(i)
+          await tokenModel.deleteOne({id: userId})
           console.log('Code error: '+err)
           failed++
         }
       }
-      
-      await inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already})
+      toDelete.sort((a, b) => b-a);
+      for (let i in toDelete) {
+        let index = toDelete[i]
+        doc.users.splice(index,1)
+      }
+      await doc.save();
+      await inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already+'\n🔑 Total Tokens: '+doc.users.length})
     }
     else if (cname === 'join') {
       let options = inter.options._hoistedOptions
@@ -431,56 +442,6 @@ client.on('interactionCreate', async inter => {
         console.log(err)
         inter.followUp({content: emojis.warning+' Unable to send access key via direct message. Sending here...\n'+doc.key, embeds: [embed2], ephemeral: true})
       })
-    }
-    else if (cname === 'calibrate') {
-      if (!await getPerms(inter.member,5)) return inter.reply({content: emojis.warning+' Idot'});
-      let options = inter.options._hoistedOptions
-      //
-      let server = options.find(a => a.name === 'server_id')
-      let doc = await guildModel2.findOne({key: server.value})
-      
-      let guild = server ? await getGuild(server.value) : inter.guild
-      if (!doc || !guild) return inter.channel.send({content: emojis.warning+' Invalid guild/key'})
-      
-      await inter.reply({content: emojis.loading+' Calibrating tokens'})
-      
-      let failed = 0
-      let success = 0
-      let already = 0
-      
-      for (let i in doc.users) {
-        let userId = doc.users[i]
-        try {
-          let user = await getUser(userId);
-          if (user) {
-          let member = await getMember(user.id,guild)
-          if (member) already++
-          else {
-            let data = await tokenModel.findOne({id: userId})
-            if (data) {
-          if (user) await guild.members.add(user,{accessToken: data.access_token})
-            .then(suc => {
-            console.log(suc)
-            success++
-          })
-            .catch(err => {
-            console.log(err)
-            failed++
-          })
-            } else {
-              console.log('No data failed '+userId)
-              failed++
-            }
-          }
-        } else {
-          console.log('user not found '+userId)
-          failed++
-        }
-        } catch(err) {
-          console.log('Code error: '+err)
-          failed++
-        }
-      }
     }
   }
   //BUTTONS
