@@ -447,8 +447,10 @@ client.on('interactionCreate', async inter => {
     else if (cname === 'addroles') {
       let options = inter.options._hoistedOptions
       //
-      let doc = await guildModel2.findOne({id: inter.guild.id})
-      if (!doc) return inter.reply({content: emojis.warning+' Unregistered guild', ephemeral: true})
+      let key = options.find(a => a.name === 'key')
+      
+      let doc = await guildModel2.findOne({key: key.value})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key', ephemeral: true})
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0

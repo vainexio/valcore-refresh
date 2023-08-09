@@ -102,6 +102,14 @@ module.exports = {
       "name": "addroles",
       "type": 1,
       "description": "Add backup role",
+      "options": [
+        {
+          "name": 'key',
+          "description": 'Access Key',
+          "type": 3,
+          "required": true,
+        },
+      ],
     }
   ],
 };
