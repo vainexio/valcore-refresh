@@ -313,7 +313,8 @@ client.on('interactionCreate', async inter => {
             success++
           })
             .catch(err => {
-            console.log(err)
+            toDelete.push(i)
+            console.log('Fetch failed '+userId)
             failed++
           })
             } else {
