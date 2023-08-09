@@ -43,7 +43,7 @@ module.exports = {
   },
   permissions: [
     {
-      id: '477729368622497803', //vai
+      id: '1066284097879670824', //vai
       level: 5,
     },
     {

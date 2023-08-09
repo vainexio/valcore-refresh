@@ -444,6 +444,18 @@ client.on('interactionCreate', async inter => {
         inter.followUp({content: emojis.warning+' Unable to send access key via direct message. Sending here...\n'+doc.key, embeds: [embed2], ephemeral: true})
       })
     }
+    else if (cname === 'getkey') {
+      if (!await getPerms(inter.member,5)) return inter.reply({content: emojis.warning+" You can't do that sir."});
+      let options = inter.options._hoistedOptions
+      //
+      let server = options.find(a => a.name === 'server_id')
+      let doc = await guildModel2.findOne({key: server.value})
+      
+      await inter.reply({content: emojis.loading+' Transferring data. Please wait.', ephemeral: true})
+      
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid guild data'})
+      inter.reply({content: doc.key, ephemeral: true})
+    }
   }
   //BUTTONS
   else if (inter.isButton() || inter.isSelectMenu()) {

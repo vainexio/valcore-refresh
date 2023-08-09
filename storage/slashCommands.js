@@ -84,6 +84,19 @@ module.exports = {
           "required": true,
         },
       ],
+    },
+    {
+      "name": "getkey",
+      "type": 1,
+      "description": "Get server key",
+      "options": [
+        {
+          "name": 'server_id',
+          "description": 'Server ID',
+          "type": 3,
+          "required": true,
+        },
+      ],
     }
   ],
 };
