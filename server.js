@@ -447,47 +447,26 @@ client.on('interactionCreate', async inter => {
     else if (cname === 'addroles') {
       let options = inter.options._hoistedOptions
       //
-      let key = options.find(a => a.name === 'key')
-      let doc = await guildModel2.findOne({key: key.value})
-      if (!doc) doc = await guildModel2.findOne({author: inter.user.id})
-      if (!doc) return inter.reply({content: emojis.warning+' Invalid key was provided', ephemeral: true})
+      let doc = await guildModel2.findOne({id: inter.guild.id})
+      if (!doc) return inter.reply({content: emojis.warning+' Unregistered guild', ephemeral: true})
       if (doc.users.length === 0) return inter.reply({content: emojis.warning+' No users have yet verified to your server', ephemeral: true})
       let failed = 0
       let success = 0
       let already = 0
-      let toDelete = []
-      await inter.reply({content: emojis.loading+" Adding roles to "+doc.users.length+" users", ephemeral: true})
+      await inter.reply({content: emojis.loading+" Adding **backup** role to "+doc.users.length+" users", ephemeral: true})
       for (let i in doc.users) {
         let userId = doc.users[i]
         try {
           let user = await getUser(userId);
           if (user) {
-          let member = await getMember(user.id,guild)
-          if (member) already++
-          else {
-            let data = await tokenModel.findOne({id: userId})
-            if (data) {
-          if (user) await guild.members.add(user,{accessToken: data.access_token})
-            .then(suc => {
-            console.log(suc)
+          let member = await getMember(user.id,inter.guild)
+          if (member) {
             success++
-          })
-            .catch(err => {
-            toDelete.push(i)
-            console.log('Fetch failed '+userId)
+            if (await hasRole(member,['backup'])) already++ 
+            else await addRole(member,['backup'],inter.guild)
+          } else {
             failed++
-          })
-            } else {
-              toDelete.push(i)
-              console.log('No data failed '+userId)
-              failed++
-            }
           }
-        } else {
-          toDelete.push(i)
-          await tokenModel.deleteOne({id: userId})
-          console.log('user not found '+userId)
-          failed++
         }
         } catch(err) {
           toDelete.push(i)
@@ -495,14 +474,10 @@ client.on('interactionCreate', async inter => {
           console.log('Code error: '+err)
           failed++
         }
+        console.log(success+', '+already+', '+failed)
       }
-      toDelete.sort((a, b) => b-a);
-      for (let i in toDelete) {
-        let index = toDelete[i]
-        doc.users.splice(index,1)
-      }
-      await doc.save();
-      await inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already+'\n🔑 Total Tokens: '+doc.users.length})
+
+      await inter.channel.send({content: emojis.check+' Added: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already Added: '+already})
     }
   }
   //BUTTONS

@@ -97,6 +97,11 @@ module.exports = {
           "required": true,
         },
       ],
+    },
+    {
+      "name": "addroles",
+      "type": 1,
+      "description": "Add backup role",
     }
   ],
 };
