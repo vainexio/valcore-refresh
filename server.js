@@ -113,7 +113,7 @@ client.on("ready", async () => {
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
@@ -407,15 +407,30 @@ client.on('interactionCreate', async inter => {
       if (!doc || !guild) return inter.channel.send({content: emojis.warning+' Invalid guild/key'})
       let embed = new MessageEmbed()
       .addFields(
-        { name: 'Guild Transfer', value: 'Old: '+doc.id+'\n\nNew: '+newServer.value+'\n'+guild.name},
-        { name: 'Author Transfer', value: 'Old: '+doc.author+'\n\nNew: '+inter.user.id+'\n'+inter.user.toString()},
+        { name: 'Guild Transfer', value: '🔴 OLD\nID `'+doc.id+'`\n\n🔵 NEW\nID `'+newServer.value+'`\nName **'+guild.name+'**'},
+        { name: 'Author Transfer', value: '🔴 OLD\nID `'+doc.author+'`\n\n🔵 NEW\nID `'+inter.user.id+'`\nPing '+inter.user.toString()},
       )
       .setColor(colors.blue)
       
       doc.id = guild.id
       doc.author = inter.user.id
+      doc.key = makeCode(30)
       await doc.save()
       await inter.channel.send({content: emojis.check+' Data Transferred', embeds: [embed]})
+      
+      let embed2 = new MessageEmbed()
+      .addFields(
+        {name: "Generated Key", value: "This key was generated for the first time. Make sure you save it."},
+        {name: "Data", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"}
+      )
+      .setColor(theme)
+      
+      await inter.user.send({content: doc.key, embeds: [embed2]})
+        .then(msg => inter.followUp({content: emojis.check+' Your new access key has been sent via direct message'}))
+        .catch(async err => {
+        console.log(err)
+        inter.followUp({content: emojis.warning+' Unable to send access key via direct message. Sending here...\n'+doc.key, embeds: [embed2], ephemeral: true})
+      })
     }
   }
   //BUTTONS
