@@ -553,14 +553,6 @@ app.get('/backup', async function (req, res) {
     await addRole(member,["backup","sloopie"],guild)
     //logs
     //
-    let channel = await getChannel(config.channels.chat)
-    let template = await getChannel(config.channels.templates)
-    let msg = await template.messages.fetch('1094934512879812608')
-    let content = msg.content.replace('{user}','<@'+user.id+'>')
-    let row = new MessageActionRow().addComponents(
-    new MessageButton().setURL('https://discord.com/channels/1047454193159503904/1047454193197252644').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
-      new MessageButton().setURL('https://discord.com/channels/1047454193159503904/1054711675045036033/1060248361107722290').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
-    );
     //channel.send({content: content, components: [row]})
     //redirect
     res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green', guild: guild}))
