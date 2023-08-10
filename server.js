@@ -34,7 +34,7 @@ async function startApp() {
       console.error("Discord bot login | " + error);
       process.exit(1);
     });
-  
+}
 startApp();
 let cmd = true
 
