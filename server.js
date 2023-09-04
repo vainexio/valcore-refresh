@@ -650,7 +650,7 @@ app.get('/backup', async function (req, res) {
     if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
     //logs
     //redirect
-    res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: 'green', guild: guild}))
+    res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: '#b6ff84', guild: guild}))
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
   }
   catch (err) {
