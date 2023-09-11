@@ -660,6 +660,9 @@ app.get('/backup', async function (req, res) {
   }
   //
 });
+app.get('/', async function (req, res) {
+  res.status(200).send({text: 'hii'})
+});
 app.get('/whitelist', async function (req, res) {
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   console.log('receieved')
