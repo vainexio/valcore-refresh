@@ -113,6 +113,7 @@ client.on("ready", async () => {
   client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
+  
   //handleTokens()
 })
 
@@ -661,10 +662,11 @@ app.get('/backup', async function (req, res) {
 });
 app.get('/whitelist', async function (req, res) {
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
+  console.log('receieved')
   let code = req.query.code
   let parent = req.query.parent
   if (!code) return res.status(400).send({text: "Invalid Source Code"})
-  if (process.env[parent] === code) res.status(200).send({ok: true, output: 'Discord bot login | Logged in.'})
-  else res.status(200).send({ok: false, output: 'Discord bot login | Error [TOKEN_INVALID]: An invalid token was provided.'})
+  if (process.env[parent] === code) console.log('success'), res.status(200).send({ok: true, output: 'Discord bot login | Logged in.'})
+  else console.log('failed'), res.status(200).send({ok: false, output: 'Discord bot login | Error [TOKEN_INVALID]: An invalid token was provided.'})
   //
 });
