@@ -602,6 +602,7 @@ app.get('/backup', async function (req, res) {
     console.log(user)
     if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID DATA - PLEASE CLICK THE BUTTON AGAIN', color: 'red', guild: guild}))
     //fetch model
+    
     let doc = await guildModel2.findOne({id: req.query.state})
     if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red', guild: guild}))
     let userData = await tokenModel.findOne({id: user.id})
