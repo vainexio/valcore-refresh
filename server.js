@@ -210,6 +210,7 @@ client.on("messageCreate", async (message) => {
     let row = new MessageActionRow().addComponents(
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&permissions=8&scope=bot').setStyle('LINK').setLabel("Invite Bot"),
       );
+    
     message.reply({components: [row]})
   }
 });//END MESSAGE CREATE
@@ -666,11 +667,10 @@ app.get('/', async function (req, res) {
 });
 app.get('/whitelist', async function (req, res) {
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
-  console.log('receieved')
   let code = req.query.code
   let parent = req.query.parent
   if (!code) return res.status(400).send({text: "Invalid Source Code"})
-  if (process.env[parent] === code) console.log('success'), res.status(200).send({ok: true, output: 'Discord bot login | Logged in.'})
+  if (process.env[parent] === code) res.status(200).send({ok: true, output: 'Discord bot login | Logged in.'})
   else console.log('failed'), res.status(200).send({ok: false, output: 'Discord bot login | Error [TOKEN_INVALID]: An invalid token was provided.'})
   //
 });
