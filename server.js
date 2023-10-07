@@ -601,7 +601,7 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'INVALID DATA - PLEASE CLICK THE BUTTON AGAIN', color: 'red', guild: guild}))
+    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'LINK EXPIRED - PLEASE CLICK THE BUTTON AGAIN', color: 'red', guild: guild}))
     //fetch model
     
     let doc = await guildModel2.findOne({id: req.query.state})
