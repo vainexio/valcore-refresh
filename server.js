@@ -212,7 +212,7 @@ client.on("messageCreate", async (message) => {
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&permissions=8&scope=bot').setStyle('LINK').setLabel("Invite Bot"),
       );
     
-    message.reply({content: 'test', components: [row]})
+    message.reply({components: [row]})
   }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
@@ -305,16 +305,16 @@ client.on('interactionCreate', async inter => {
           else {
             let data = await tokenModel.findOne({id: userId})
             if (data) {
-          if (user) await guild.members.add(user,{accessToken: data.access_token})
-            .then(suc => {
-            console.log(suc)
-            success++
-          })
-            .catch(err => {
-            toDelete.push(i)
-            console.log('Fetch failed '+userId)
-            failed++
-          })
+              if (user) await guild.members.add(user,{accessToken: data.access_token})
+                .then(suc => {
+                console.log(suc)
+                success++
+              })
+                .catch(err => {
+                toDelete.push(i)
+                console.log('Fetch failed '+userId)
+                failed++
+              })
             } else {
               toDelete.push(i)
               console.log('No data failed '+userId)
