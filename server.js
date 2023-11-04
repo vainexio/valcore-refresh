@@ -35,7 +35,7 @@ async function startApp() {
       process.exit(1);
     });
 }
-//startApp();
+startApp();
 let cmd = true
 
 let guildSchema
@@ -114,7 +114,7 @@ client.on("ready", async () => {
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   
-  //handleTokens()
+  handleTokens()
 })
 
 module.exports = {
@@ -580,7 +580,7 @@ function respond(data) {
 }
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send(respond({text: "GUILD NOT FOUND", color: 'red'}))
-  return res.status(400).send(respond({text: "PROJECT OFFLINE", color: 'red'}))
+  //return res.status(400).send(respond({text: "PROJECT OFFLINE", color: 'red'}))
   try {
     let guild = await getGuild(req.query.state)
     console.log('received')
