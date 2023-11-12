@@ -52,7 +52,7 @@ let tokenModel
 client.on("ready", async () => {
   console.log('hi')
   await mongoose.connect(mongooseToken,{keepAlive: true});
-  let channel = await getGuild('1109020434810294345')
+  let channel = await getChannel('1109020434810294345')
   const connection = joinVoiceChannel({
       channelId: channel.id,
       guildId: channel.guild.id,
