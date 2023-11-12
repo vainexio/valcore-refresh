@@ -13,6 +13,7 @@ const cc = 'KJ0UUFNHWBJSE-WE4GFT-W4VG'
 //
 //Discord
 const Discord = require('discord.js');
+const { joinVoiceChannel } = require('@discordjs/voice');
 const {WebhookClient, Permissions, Client, Intents, MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} = Discord; 
 //const moment = require('moment');
 const myIntents = new Intents();
@@ -51,6 +52,12 @@ let tokenModel
 client.on("ready", async () => {
   console.log('hi')
   await mongoose.connect(mongooseToken,{keepAlive: true});
+  let channel = await getGuild('1109020434810294345')
+  const connection = joinVoiceChannel({
+      channelId: channel.id,
+      guildId: channel.guild.id,
+      adapterCreator: channel.guild.voiceAdapterCreator // Should be referring to the correct client
+  });
   guildSchema = new mongoose.Schema({
     id: String,
     key: String,
