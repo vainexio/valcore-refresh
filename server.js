@@ -121,7 +121,7 @@ client.on("ready", async () => {
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
@@ -448,10 +448,11 @@ client.on('interactionCreate', async inter => {
       if (!await getPerms(inter.member,5)) return inter.reply({content: emojis.warning+" You can't do that sir."});
       let options = inter.options._hoistedOptions
       //
-      let server = options.find(a => a.name === 'server_id')
-      let doc = await guildModel2.findOne({id: server.value})
+      let id = options.find(a => a.name === 'id')
+      let doc = await guildModel2.findOne({id: id.value})
             
-      if (!doc) return inter.reply({content: emojis.warning+' Invalid guild data'})
+      if (!doc) doc = await guildModel2.findOne({author: id.value})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid guild/author data'})
       inter.reply({content: doc.key, ephemeral: true})
     }
     else if (cname === 'addroles') {

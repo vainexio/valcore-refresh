@@ -13,7 +13,7 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: false,
+  register: true,
   deleteSlashes: ['1108673951162445885','1108416466790916118'],
   slashes: [
     {
@@ -88,11 +88,11 @@ module.exports = {
     {
       "name": "getkey",
       "type": 1,
-      "description": "Get server key",
+      "description": "Get data key",
       "options": [
         {
-          "name": 'server_id',
-          "description": 'Server ID',
+          "name": 'id',
+          "description": 'Server/Author ID',
           "type": 3,
           "required": true,
         },
