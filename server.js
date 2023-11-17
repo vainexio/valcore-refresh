@@ -347,7 +347,7 @@ client.on('interactionCreate', async inter => {
         doc.users.splice(index,1)
       }
       await doc.save();
-      await inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already in Server: '+already+'\n🔑 Total Tokens: '+doc.users.length})
+      await inter.channel.send({content: emojis.check+' Success: '+success+'\n'+emojis.x+' Deauthorized: '+failed+'\n'+emojis.on+' Already in Server: '+already+'\n🔑 Total Tokens: '+doc.users.length})
     }
     else if (cname === 'join') {
       let options = inter.options._hoistedOptions
