@@ -650,7 +650,8 @@ app.get('/backup', async function (req, res) {
       doc.users.push(user.id)
     }
     else {
-      member ? await addRole(member,["backup","sloopie"],guild) : null
+      let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
+      if (notAdded) console.log(notAdded)
       if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
       return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'orange', guild: guild}))
     }

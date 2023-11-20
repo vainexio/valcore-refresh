@@ -22,7 +22,7 @@ module.exports = {
     let notAdded = []
   for (let i in roles) {
     let role = await guild.roles.cache.find(role => role.name.toLowerCase() === roles[i].toLowerCase() || role.id === roles[i]);
-      role ? await member.roles.add(role).catch(e => notAdded.push(roles[i])) : notAdded.push(roles[i])
+      role ? await member.roles.add(role).catch(e => console.log(e), notAdded.push(roles[i])) : notAdded.push(roles[i])
   }
     if (notAdded.length > 0) {
       return notAdded;
