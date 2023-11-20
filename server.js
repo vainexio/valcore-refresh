@@ -474,9 +474,12 @@ client.on('interactionCreate', async inter => {
           if (user) {
           let member = await getMember(user.id,inter.guild)
           if (member) {
-            success++
             if (await hasRole(member,['backup'])) already++ 
-            else await addRole(member,['backup'],inter.guild)
+            else {
+              let notAdded = await addRole(member,['backup'],inter.guild)
+              if (notAdded) failed++
+              else success++
+            }
           } else {
             failed++
           }
