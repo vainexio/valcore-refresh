@@ -482,7 +482,6 @@ client.on('interactionCreate', async inter => {
           }
         }
         } catch(err) {
-          toDelete.push(i)
           await tokenModel.deleteOne({id: userId})
           console.log('Code error: '+err)
           failed++
@@ -651,7 +650,7 @@ app.get('/backup', async function (req, res) {
     }
     else {
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
-      if (notAdded) console.log(notAdded)
+      if (notAdded) console.log('Not added',notAdded)
       if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
       return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'orange', guild: guild}))
     }
