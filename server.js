@@ -401,6 +401,7 @@ client.on('interactionCreate', async inter => {
       .setColor(theme)
       
       let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('unverifPrompt').setStyle('DANGER').setLabel("Unverify"),
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
       );
       
@@ -419,8 +420,8 @@ client.on('interactionCreate', async inter => {
       if (!doc || !guild) return inter.channel.send({content: emojis.warning+' Invalid guild/key'})
       let embed = new MessageEmbed()
       .addFields(
-        { name: 'Guild Transfer', value: '🔴 OLD\nID `'+doc.id+'`\n\n🔵 NEW\nID `'+newServer.value+'`\nName **'+guild.name+'**'},
-        { name: 'Author Transfer', value: '🔴 OLD\nID `'+doc.author+'`\n\n🔵 NEW\nID `'+inter.user.id+'`\nPing '+inter.user.toString()},
+        { name: 'Guild Transfer', value: emojis.off+' OLD\nID `'+doc.id+'`\n\n'+emojis.on+' NEW\nID `'+newServer.value+'`\nName **'+guild.name+'**'},
+        { name: 'Author Transfer', value: emojis.off+' OLD\nID `'+doc.author+'`\n\n'+emojis.on+' NEW\nID `'+inter.user.id+'`\nPing '+inter.user.toString()},
       )
       .setColor(colors.blue)
       
@@ -498,8 +499,13 @@ client.on('interactionCreate', async inter => {
   //BUTTONS
   else if (inter.isButton() || inter.isSelectMenu()) {
     let id = inter.customId
-    console.log('Not slash: '+id)
-    //
+    if (id.startsWith("unverifPrompt")) {
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('unverify').setStyle('SUCCESS').setLabel("Yes"),
+        new MessageButton().setCustomId('delete').setStyle('DANGER').setLabel("No"),
+      );
+      await inter.reply({content: 'Are you sure you want to unverify yourself from this server?', ephemeral: true, components: [row]})
+    }
     }
 });
 
