@@ -425,6 +425,7 @@ client.on('interactionCreate', async inter => {
     else if (cname === 'status') {
       let options = inter.options._hoistedOptions
       //
+      let show_unverify = options.find(a => a.name === 'show_unverify')
       let guildId = options.find(a => a.name === 'guild_id')
       
       let doc = await guildModel2.findOne({id: guildId ? guildId.value : inter.guild.id})
@@ -439,11 +440,17 @@ client.on('interactionCreate', async inter => {
       )
       .setThumbnail(guild?.iconURL())
       .setColor(theme)
-      
-      let row = new MessageActionRow().addComponents(
+      let row = null
+      if (show_unverify?.value === false) {
+        row = new MessageActionRow().addComponents(
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
-        new MessageButton().setCustomId('unverifPrompt').setStyle('DANGER').setLabel("Unverify"),
       );
+      } else {
+        row = new MessageActionRow().addComponents(
+          new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
+          new MessageButton().setCustomId('unverifPrompt').setStyle('DANGER').setLabel("Unverify"),
+        );
+      }
       
       await inter.reply({embeds: [embed], components: [row]})
     }
@@ -556,6 +563,8 @@ client.on('interactionCreate', async inter => {
       doc.users.splice(doc.users.indexOf(id),1)
       await doc.save();
       await inter.update({content: emojis.off+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
+      await sleep(1000)
+      await removeRole(inter.member,["backup","sloopie"],inter.guild)
     }
     else if (id.startsWith('cancel')) {
       await inter.update({content: 'Interaction was cancelled.'})

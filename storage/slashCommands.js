@@ -86,6 +86,25 @@ module.exports = {
       ],
     },
     {
+      "name": "status",
+      "type": 1,
+      "description": "Get backup status of a guild",
+      "options": [
+        {
+          "name": 'show_unverify',
+          "description": 'Show unverify button',
+          "type": 5,
+          "required": false,
+        },
+        {
+          "name": 'guild_id',
+          "description": 'Guild ID',
+          "type": 3,
+          "required": false,
+        },
+      ],
+    },
+    {
       "name": "getkey",
       "type": 1,
       "description": "Get data key",
