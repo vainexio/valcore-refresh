@@ -98,6 +98,7 @@ client.on("ready", async () => {
   }
   
   for (let i in slashes) {
+    await sleep(1000)
     let json = slashes[i]
     let response = await fetch(discordUrl, {
       method: 'post',
@@ -401,8 +402,8 @@ client.on('interactionCreate', async inter => {
       .setColor(theme)
       
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('unverifPrompt').setStyle('DANGER').setLabel("Unverify"),
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
+        new MessageButton().setCustomId('unverifPrompt').setStyle('DANGER').setLabel("Unverify"),
       );
       
       await inter.reply({embeds: [embed], components: [row]})
@@ -502,9 +503,23 @@ client.on('interactionCreate', async inter => {
     if (id.startsWith("unverifPrompt")) {
       let row = new MessageActionRow().addComponents(
         new MessageButton().setCustomId('unverify').setStyle('SUCCESS').setLabel("Yes"),
-        new MessageButton().setCustomId('delete').setStyle('DANGER').setLabel("No"),
+        new MessageButton().setCustomId('cancel').setStyle('DANGER').setLabel("No"),
       );
       await inter.reply({content: 'Are you sure you want to unverify yourself from this server?', ephemeral: true, components: [row]})
+    }
+    //
+    else if (id.startsWith('unverify')) {
+      let id = inter.user.id
+      let doc = await guildModel2.findOne({id: inter.guild.id})
+      if (!doc) return inter.update({content: emojis.warning+' Unergistered guild ID', components: []})
+      let user = doc.users.find(u => u === id)
+      if (!user) return inter.update({content: emojis.warning+' You are not verified on this server', components: []})
+      doc.users.splice(doc.users.indexOf(id))
+      await doc.save();
+      await inter.update({content: emojis.off+' You have been unverified from this server!\nClick the button again if you wish to reverify', components: []})
+    }
+    else if (id.startsWith('cancel')) {
+      await inter.update({content: 'Interaction was cancelled.'})
     }
     }
 });
