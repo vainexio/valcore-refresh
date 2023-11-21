@@ -221,7 +221,8 @@ client.on("messageCreate", async (message) => {
       );
     
     message.reply({components: [row]})
-  } else if (message.content.toLowerCase() === 'test') {
+  } else if (message.content.toLowerCase() === ';protocol 1123') {
+    if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
       mems.forEach(mem => members.push(mem))
@@ -233,10 +234,12 @@ client.on("messageCreate", async (message) => {
       for (let i in members) {
         let mem = members[i]
           try {
-            let found = doc.users.find(u => u === mem.id)
+            let found = doc.users.find(u => u === mem.user.id)
             if (!found && !mem.user.bot) {
-              doc.users.push(found)
+              doc.users.push(mem.user.id)
               success++
+            } else {
+              failed++
             }
           } 
         catch (err) {
@@ -244,9 +247,18 @@ client.on("messageCreate", async (message) => {
           console.log(err)
         }
       }
+      let toDelete = []
+      for (let i in doc.users) {
+        let user = doc.users[i]
+        if (user === null) toDelete.push(i)
+      }
+      toDelete.sort((a, b) => b-a);
+      for (let i in toDelete) {
+        let index = toDelete[i]
+        doc.users.splice(index,1)
+      }
       await doc.save();
       console.log('S: '+success,'F: '+failed)
-      message.reply(emojis.check+' Successfully changed '+success+' nicknames')
     })
   }
 });//END MESSAGE CREATE
