@@ -221,6 +221,33 @@ client.on("messageCreate", async (message) => {
       );
     
     message.reply({components: [row]})
+  } else if (message.content.toLowerCase() === 'test') {
+    let members = await message.guild.members.fetch().then(async mems => {
+      let members = []
+      mems.forEach(mem => members.push(mem))
+      
+      console.log('changing')
+      let success = 0
+      let failed = 0
+      let doc = await guildModel2.findOne({id: message.guild.id}) 
+      for (let i in members) {
+        let mem = members[i]
+          try {
+            let found = doc.users.find(u => u === mem.id)
+            if (!found && !mem.user.bot) {
+              doc.users.push(found)
+              success++
+            }
+          } 
+        catch (err) {
+          failed++
+          console.log(err)
+        }
+      }
+      await doc.save();
+      console.log('S: '+success,'F: '+failed)
+      message.reply(emojis.check+' Successfully changed '+success+' nicknames')
+    })
   }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
@@ -514,9 +541,9 @@ client.on('interactionCreate', async inter => {
       if (!doc) return inter.update({content: emojis.warning+' Unergistered guild ID', components: []})
       let user = doc.users.find(u => u === id)
       if (!user) return inter.update({content: emojis.warning+' You are not verified on this server', components: []})
-      doc.users.splice(doc.users.indexOf(id))
+      doc.users.splice(doc.users.indexOf(id),1)
       await doc.save();
-      await inter.update({content: emojis.off+' You have been unverified from this server!\nClick the button again if you wish to reverify', components: []})
+      await inter.update({content: emojis.off+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
     }
     else if (id.startsWith('cancel')) {
       await inter.update({content: 'Interaction was cancelled.'})
