@@ -562,12 +562,12 @@ client.on('interactionCreate', async inter => {
       if (!user) return inter.update({content: emojis.warning+' You are not verified on this server', components: []})
       doc.users.splice(doc.users.indexOf(id),1)
       await doc.save();
-      await inter.update({content: emojis.off+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
+      await inter.update({content: emojis.check+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
       await sleep(1000)
       await removeRole(inter.member,["backup","sloopie"],inter.guild)
     }
     else if (id.startsWith('cancel')) {
-      await inter.update({content: 'Interaction was cancelled.'})
+      await inter.update({content: 'Interaction was cancelled.', components: []})
     }
     }
 });
