@@ -657,19 +657,17 @@ const interval = setInterval(async function() {
 function respond(res, data) {
   const htmlTemplate = fs.readFileSync('output.html', 'utf8');
 
-  // Replace placeholders with dynamic values
-  console.log(data.guild.iconURL(),'icon')
   const modifiedHtml = htmlTemplate
-  .replace('${pageTitle}', data.guild.name)
-  .replace('${imageUrl}', data.guild.iconURL() ? data.guild.iconURL() : 'https://images-ext-1.discordapp.net/external/4vOerAC0lF1iBFoyvX6e_YBijSjc92mdFZEaTABBi0w/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1108412309308719197/f2c803df2c33edb9faffe59eeaf25827.png?format=webp&width=671&height=671')
+  .replace('${pageTitle}', data.guild?.name ? data.guild.name : 'Error')
+  .replace('${imageUrl}', data.guild && data.guild.iconURL() ? data.guild.iconURL() : 'https://images-ext-1.discordapp.net/external/4vOerAC0lF1iBFoyvX6e_YBijSjc92mdFZEaTABBi0w/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1108412309308719197/f2c803df2c33edb9faffe59eeaf25827.png?format=webp&width=671&height=671')
   .replace('${subtext}',data.text.toUpperCase())
   .replace('${subtextColor}', data.color)
-  // Send the modified HTML as the response
+  
   res.send(modifiedHtml);
 }
 app.get('/backup', async function (req, res) {
-  if (!req.query.state) return respond(res, {text: "Cannot find this guild - The bot is no longer on the server", color: '#ff4b4b'})
-  //return res.status(400).send(respond({text: "PROJECT OFFLINE", color: 'red'}))
+  if (!req.query.state) return respond(res, {text: "Unknown server ID", color: '#ff4b4b'})
+  //return respond({text: "SYSTEM IS OFFLINE", color: 'red', guild: {name: func => return 'Error'}})
   try {
     let guild = await getGuild(req.query.state)
     console.log('received')
@@ -695,7 +693,7 @@ app.get('/backup', async function (req, res) {
     //fetch model
     
     let doc = await guildModel2.findOne({id: req.query.state})
-    if (!doc) return respond(res, {text: "Unregistered guild", color: '#ff4b4b', guild: guild})
+    if (!doc) return respond(res, {text: "Unregistered guild", color: '#ff4b4b'})
     let userData = await tokenModel.findOne({id: user.id})
     let member = await getMember(user.id,guild)
     if (!member) return respond(res, {text: "Not in the server", color: 'orange', guild: guild})
@@ -733,8 +731,7 @@ app.get('/backup', async function (req, res) {
     else {
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
-      if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
-      return respond(res, {text: 'Already verified', color: '#b6ff84', guild: guild})
+      return respond(res, {text: 'Already verified', color: 'orange', guild: guild})
     }
     //
     await doc.save();
