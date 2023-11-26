@@ -45,8 +45,8 @@
     }
 
     .icon {
-      width: 60px; /* Fixed width */
-      height: 60px; /* Fixed height */
+      width: 80px; /* Increased width */
+      height: 80px; /* Increased height */
       margin-right: 10px;
       border-radius: 50%;
     }
@@ -64,13 +64,13 @@
     }
 
     .title {
-      font-size: 24px; /* Fixed font size */
+      font-size: 32px; /* Increased font size */
       font-weight: bold;
       margin-bottom: 5px;
     }
 
     .subtext {
-      font-size: 14px; /* Fixed font size */
+      font-size: 18px; /* Increased font size */
       color: ${subtextColor};
       margin-top: 5px;
       margin-bottom: 20px;
@@ -86,16 +86,17 @@
       }
     }
 
-    .icons-container {
+    .copyright-container {
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 20px; /* Fixed margin at the bottom */
     }
 
     .icon {
-      width: 30px; /* Fixed width */
-      height: 30px; /* Fixed height */
-      margin-right: 10px;
+      width: 30px; /* Fixed width for the additional icon */
+      height: 30px; /* Fixed height for the additional icon */
+      margin-right: 10px; /* Margin between additional icon and copyright */
       border-radius: 50%;
     }
 
@@ -107,7 +108,6 @@
 
     .copyright {
       font-size: 12px; /* Fixed font size */
-      margin-bottom: 20px; /* Fixed margin at the bottom */
     }
   </style>
 </head>
@@ -124,17 +124,19 @@
     </div>
   </div>
 
-  <div class="icons-container">
+  <div class="copyright-container">
     <div class="icon">
-      <img src="${icon1Url}" alt="Icon 1">
+      <img src="https://logo.com/image-cdn/images/kts928pd/production/5b24e49fd89287ff1eb5bbc4cf93cb038c3384ef-512x512.png?w=1080&q=72" alt="Icon">
     </div>
-    <div class="icon">
-      <img src="${icon2Url}" alt="Icon 2">
+    <div class="copyright">
+      &copy; Developer: ianex_
     </div>
   </div>
-  
-  <div class="copyright">
-    &copy; vainexio
-  </div>
+  <script>
+    // Automatically scroll down to the bottom of the page
+    window.onload = function() {
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+  </script>
 </body>
 </html>
