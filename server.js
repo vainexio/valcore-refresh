@@ -10,6 +10,8 @@ const url = require('url');
 const discordTranscripts = require('discord-html-transcripts');
 const wait = require('node:timers/promises').setTimeout;
 const cc = 'KJ0UUFNHWBJSE-WE4GFT-W4VG'
+const fs = require('fs-extra')
+
 //
 //Discord
 const Discord = require('discord.js');
@@ -653,9 +655,16 @@ const interval = setInterval(async function() {
 },21600000) //
 
 function respond(data) {
-  let link = 'https://cdn.wallpapersafari.com/7/42/xqlgfA.jpg'
-  !data.color ? data.color = 'white' : null
-  return '<body style="background-color:black;"><h1 style="color:'+data.color+';font-family:verdana;text-align:center;">\n\n'+data.text+'</h1></body>'
+  const htmlTemplate = fs.readFileSync('path/to/template.html', 'utf8');
+
+  // Replace placeholders with dynamic values
+  const modifiedHtml = htmlTemplate
+  .replace('${pageTitle}', data.guild.iconURL())
+  .replace('${imageUrl}', 'path/to/dynamic-image.png')
+  .replace('${subtext}',data.text)
+
+  // Send the modified HTML as the response
+  return modifiedHtml;
 }
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return res.status(400).send(respond({text: "GUILD NOT FOUND", color: 'red'}))
