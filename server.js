@@ -691,14 +691,14 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired - Please click the button again', color: '#ff4b4b', guild: guild})
+    if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired', color: '#ff4b4b', guild: guild})
     //fetch model
     
     let doc = await guildModel2.findOne({id: req.query.state})
     if (!doc) return respond(res, {text: "Unregistered guild", color: '#ff4b4b', guild: guild})
     let userData = await tokenModel.findOne({id: user.id})
     let member = await getMember(user.id,guild)
-    if (!member) return respond(res, {text: "You must be in the server to verify", color: 'orange', guild: guild})
+    if (!member) return respond(res, {text: "Not in the server", color: 'orange', guild: guild})
     //MSG
     let channel = await getChannel('1109020436026634265')
     let template = await getChannel('1109020434810294344')
