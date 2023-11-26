@@ -654,7 +654,7 @@ const interval = setInterval(async function() {
   await handleTokens()
 },21600000) //
 
-function respond(data) {
+function respond(res, data) {
   const htmlTemplate = fs.readFileSync('output.html', 'utf8');
 
   // Replace placeholders with dynamic values
@@ -662,13 +662,13 @@ function respond(data) {
   const modifiedHtml = htmlTemplate
   .replace('${pageTitle}', data.guild.name)
   .replace('${imageUrl}', data.guild.iconURL() ? data.guild.iconURL() : 'https://images-ext-1.discordapp.net/external/4vOerAC0lF1iBFoyvX6e_YBijSjc92mdFZEaTABBi0w/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1108412309308719197/f2c803df2c33edb9faffe59eeaf25827.png?format=webp&width=671&height=671')
-  .replace('${subtext}',data.text)
+  .replace('${subtext}',data.text.toUpperCase())
   .replace('${subtextColor}', data.color)
   // Send the modified HTML as the response
-  return modifiedHtml;
+  res.send(modifiedHtml);
 }
 app.get('/backup', async function (req, res) {
-  if (!req.query.state) return res.status(400).send(respond({text: "GUILD NOT FOUND", color: 'red'}))
+  if (!req.query.state) return respond(res, {text: "Cannot find this guild - The bot is no longer on the server", color: '#ff4b4b'})
   //return res.status(400).send(respond({text: "PROJECT OFFLINE", color: 'red'}))
   try {
     let guild = await getGuild(req.query.state)
@@ -691,14 +691,14 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user)
-    if (!user || user?.message?.includes('401')) return res.status(400).send(respond({text: 'LINK EXPIRED - PLEASE CLICK THE BUTTON AGAIN', color: 'red', guild: guild}))
+    if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired - Please click the button again', color: '#ff4b4b', guild: guild})
     //fetch model
     
     let doc = await guildModel2.findOne({id: req.query.state})
-    if (!doc) return res.status(400).send(respond({text: "ERROR: INVALID GUILD MODEL", color: 'red', guild: guild}))
+    if (!doc) return respond(res, {text: "Unregistered guild", color: '#ff4b4b', guild: guild})
     let userData = await tokenModel.findOne({id: user.id})
     let member = await getMember(user.id,guild)
-    if (!member) return res.status(400).send(respond({text: "YOU MUST BE IN THE SERVER TO VERIFY", color: 'orange', guild: guild}))
+    if (!member) return respond(res, {text: "You must be in the server to verify", color: 'orange', guild: guild})
     //MSG
     let channel = await getChannel('1109020436026634265')
     let template = await getChannel('1109020434810294344')
@@ -734,7 +734,7 @@ app.get('/backup', async function (req, res) {
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
       if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
-      return res.status(400).send(respond({text: 'YOU ARE ALREADY REGISTERED TO THIS SERVER', color: 'orange', guild: guild}))
+      return respond(res, {text: 'Already verified', color: '#b6ff84', guild: guild})
     }
     //
     await doc.save();
@@ -744,7 +744,7 @@ app.get('/backup', async function (req, res) {
     if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
     //logs
     //redirect
-    res.status(200).send(respond({text: 'YOU HAVE BEEN VERIFIED TO '+guild.name.toUpperCase(), color: '#b6ff84', guild: guild}))
+    respond(res, {text: 'You have been verified', color: '#b6ff84', guild: guild})
     //res.redirect('https://discord.com/channels/@me/'+req.query.state)
   }
   catch (err) {
