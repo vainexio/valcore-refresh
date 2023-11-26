@@ -1,28 +1,29 @@
-<!-- template.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${pageTitle}</title>
+  <title>Server Backup</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      background-color: #333; /* Darker background color */
-      color: #fff; /* White text color for proper contrast */
+      min-height: 100vh;
+      background-color: #1b1b1b;
+      color: #fff;
     }
 
     .title-container {
-      text-align: center; /* Center-align the content */
-      opacity: 0; /* Initially invisible */
-      transform: scale(0.8); /* Initially smaller */
-      animation: fadeInAndScale 0.5s ease-out forwards; /* Animation for fade-in and scale */
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: fadeInAndScale 0.5s ease-out forwards;
+      margin-bottom: 20px;
     }
 
     @keyframes fadeInAndScale {
@@ -39,10 +40,9 @@
     }
 
     .icon {
-      width: 60px; /* Make the icon bigger */
-      height: 60px; /* Make the icon bigger */
-      margin-right: 10px; /* Added space between icon and title */
-      /* You can customize the icon's appearance here */
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
       border-radius: 50%;
     }
 
@@ -53,14 +53,21 @@
     }
 
     .title {
-      font-size: 36px; /* Make the text bigger */
+      font-size: 36px;
       font-weight: bold;
-      margin-bottom: 5px; /* Added space between title and subtext */
+      margin-bottom: 5px;
     }
 
     .subtext {
-      font-size: 18px; /* Customize the subtext font size */
-      color: ${subtextColor}; /* Use a variable for customizable color */
+      font-size: 18px;
+      color: ${subtextColor};
+      margin-top: 5px; /* Adjusted margin-top */
+      margin-bottom: 20px;
+    }
+
+    .copyright {
+      font-size: 14px;
+      margin-top: 50px;
     }
   </style>
 </head>
@@ -68,12 +75,17 @@
   <div class="title-container">
     <div class="icon-and-title">
       <div class="icon">
-        <!-- Replace 'your-icon.png' with the actual path to your image -->
-        <img src="${imageUrl}" alt="Profile Icon">
+        <img src="${imageUrl}" alt="⌛">
       </div>
-      <div class="title">${pageTitle}</div>
+      <div>
+        <div class="title">${pageTitle}</div>
+        <div class="subtext">${subtext}</div>
+      </div>
     </div>
-    <div class="subtext">${subtext}</div>
+  </div>
+  
+  <div class="copyright">
+    &copy; vainexio
   </div>
 </body>
 </html>
