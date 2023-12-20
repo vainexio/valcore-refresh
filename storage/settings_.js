@@ -29,6 +29,7 @@ let emojis = {
 }
 module.exports = {
   config: {
+    version: '2',
     channels: {
       chat: '1047454193595732055',
       templates: '1079712339122720768',

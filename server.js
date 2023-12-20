@@ -445,11 +445,11 @@ client.on('interactionCreate', async inter => {
       let row = null
       if (show_unverify?.value === false) {
         row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'version='+config.version).setStyle('LINK').setLabel("Verify"),
       );
       } else {
         row = new MessageActionRow().addComponents(
-          new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id).setStyle('LINK').setLabel("Verify"),
+          new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'version='+config.version).setStyle('LINK').setLabel("Verify"),
           new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('DANGER').setLabel("Unverify"),
         );
       }
@@ -559,12 +559,12 @@ client.on('interactionCreate', async inter => {
     //
     else if (id.startsWith('unverify-')) {
       let guildId = id.replace('unverify-','')
-      let id = inter.user.id
+      let userId = inter.user.id
       let doc = await guildModel2.findOne({id: guildId})
       if (!doc) return inter.update({content: emojis.warning+' Unergistered guild ID', components: []})
-      let user = doc.users.find(u => u === id)
+      let user = doc.users.find(u => u === userId)
       if (!user) return inter.update({content: emojis.warning+' You are not verified on this server', components: []})
-      doc.users.splice(doc.users.indexOf(id),1)
+      doc.users.splice(doc.users.indexOf(userId),1)
       await doc.save();
       await inter.update({content: emojis.check+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
       await sleep(1000)
@@ -669,6 +669,7 @@ function respond(res, data) {
 }
 app.get('/backup', async function (req, res) {
   if (!req.query.state) return respond(res, {text: "Unknown server ID", color: '#ff4b4b'})
+  if (!req.query.version || req.query.version !== config.version) return respond(res, {text: "Outdated Link", color: '#ff4b4b'})
   //return respond({text: "SYSTEM IS OFFLINE", color: 'red', guild: {name: func => return 'Error'}})
   try {
     let guild = await getGuild(req.query.state)
