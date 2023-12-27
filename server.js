@@ -741,7 +741,7 @@ app.get('/backup', async function (req, res) {
       userIndex === 1 ? nfth = 'st' : userIndex === 2 ? nfth = 'nd' : userIndex === 3 ? nfth = 'rd' : nfth = 'th'
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
-      return respond(res, {text: 'Already verified<br /><br />You are the '+userIndex+nfth+' member', color: 'orange', guild: guild})
+      return respond(res, {text: 'Already verified<br />You are the '+userIndex+nfth+' member', text2: 'You are the '+userIndex+nfth+' member' color: 'orange', guild: guild})
     }
     //
     await doc.save();
@@ -752,7 +752,7 @@ app.get('/backup', async function (req, res) {
     let userIndex = doc.users.indexOf(user.id)
     let nfth = ''
     userIndex === 1 ? nfth = 'st' : userIndex === 2 ? nfth = 'nd' : userIndex === 3 ? nfth = 'rd' : nfth = 'th'
-    respond(res, {text: 'You have been verified<br /><br />You are the '+userIndex+nfth+' member', color: '#b6ff84', guild: guild})
+    respond(res, {text: 'You have been verified', text2: 'You are the '+userIndex+nfth+' member', color: '#b6ff84', guild: guild})
   }
   catch (err) {
     console.log(err)

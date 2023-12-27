@@ -19,7 +19,7 @@
     }
 
     .title-container {
-      text-align: center;
+      text-align: justify;
       opacity: 0;
       transform: scale(0.8);
       animation: fadeInAndScale 0.5s ease-out forwards;
@@ -47,7 +47,7 @@
     .icon {
       width: 80px; /* Increased width */
       height: 80px; /* Increased height */
-      margin-right: 10px;
+      margin-right: 8px;
       border-radius: 50%;
     }
 
@@ -60,7 +60,7 @@
     .text-container {
       display: flex;
       flex-direction: column;
-      align-items: center; /* Center text */
+      align-items: left; /* Center text */
     }
 
     .title {
@@ -70,10 +70,16 @@
     }
 
     .subtext {
-      font-size: 18px; /* Increased font size */
+      font-size: 20px; /* Increased font size */
       color: ${subtextColor};
       margin-top: 5px;
-      margin-bottom: 20px;
+      margin-bottom: 2px;
+      animation: subtleLoop 3s infinite ease-in-out;
+    }
+    .subtext2 {
+      font-size: 15px; /* Increased font size */
+      margin-top: 3px;
+      margin-bottom: 10px;
       animation: subtleLoop 3s infinite ease-in-out;
     }
 
@@ -120,6 +126,7 @@
       <div class="text-container">
         <div class="title">${pageTitle}</div>
         <div class="subtext">${subtext}</div>
+        <div class="subtext2">${subtext2}</div>
       </div>
     </div>
   </div>
