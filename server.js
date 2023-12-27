@@ -729,27 +729,30 @@ app.get('/backup', async function (req, res) {
       await newUser.save()
     }
     let guildToken = config.guildTokens.find(g => g.id === req.query.state)
-    if (guildToken && doc.users.length >= guildToken.maxTokens) return respond(res, {text: 'Server reached max tokens ('+guild')', color: '#ff4b4b', guild: guild})
-    else if (doc.users.length >= 1500) return respond(res, {text: 'Server reached max tokens', color: '#ff4b4b', guild: guild})
+    if (guildToken && doc.users.length >= guildToken.maxTokens) return respond(res, {text: 'Reached maximum allowed tokens<br />('+doc.users.length+'/'+guildToken.maxTokens+')', color: '#ff4b4b', guild: guild})
+    else if (!guildToken && doc.users.length >= 1000) return respond(res, {text: 'Reached maximum allowed tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
     let foundUser = doc.users.find(u => u === user.id)
     if (!foundUser) {
       doc.users.push(user.id)
     }
     else {
+      let userIndex = doc.users.indexOf(user.id)
+      let nfth = ''
+      userIndex === 1 ? nfth = 'st' : userIndex === 2 ? nfth = 'nd' : userIndex === 3 ? nfth = 'rd' : nfth = 'th'
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
-      return respond(res, {text: 'Already verified', color: 'orange', guild: guild})
+      return respond(res, {text: 'Already verified<br /><br />You are the '+userIndex+nfth+' member', color: 'orange', guild: guild})
     }
     //
     await doc.save();
-    //res.status(200).send({text: "You have been verified!"})
     //add role
     await addRole(member,["backup","sloopie"],guild)
     if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
     //logs
-    //redirect
-    respond(res, {text: 'You have been verified', color: '#b6ff84', guild: guild})
-    //res.redirect('https://discord.com/channels/@me/'+req.query.state)
+    let userIndex = doc.users.indexOf(user.id)
+    let nfth = ''
+    userIndex === 1 ? nfth = 'st' : userIndex === 2 ? nfth = 'nd' : userIndex === 3 ? nfth = 'rd' : nfth = 'th'
+    respond(res, {text: 'You have been verified<br /><br />You are the '+userIndex+nfth+' member', color: '#b6ff84', guild: guild})
   }
   catch (err) {
     console.log(err)

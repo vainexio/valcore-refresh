@@ -31,7 +31,7 @@ module.exports = {
   config: {
     version: '2',
     guildTokens: [
-      { id: '1109020434449575936', maxTokens: 20000},
+      { id: '1109020434449575936', maxTokens: 100000},
     ],
     channels: {
       chat: '1047454193595732055',
