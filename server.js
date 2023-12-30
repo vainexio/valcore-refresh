@@ -278,7 +278,8 @@ client.on('interactionCreate', async inter => {
       if (!await guildPerms(await getMember(inter.user.id,guild),["ADMINISTRATOR"])) return inter.reply({content: emojis.warning+' You must have the **ADMINISTRATOR** permission in the server that you want to register'})
       let doc = await guildModel2.findOne({id: guild.id})
       if (doc) return inter.reply({content: emojis.warning+' This guild was already registered'})
-      
+      let docAuthor = await guildModel2.findOne({author: inter.user.id})
+      if (docAuthor) inter.reply({content: emojis.warning+' You are limited to register 1 guild per user'})
       let newDoc = new guildModel2(guildSchema)
       newDoc.id = guild.id
       newDoc.key = makeCode(30)
@@ -467,6 +468,8 @@ client.on('interactionCreate', async inter => {
       
       let guild = newServer ? await getGuild(newServer.value) : inter.guild
       if (!doc || !guild) return inter.channel.send({content: emojis.warning+' Invalid guild/key'})
+      let existingGuild = await guildModel2.findOne({id: guild.id})
+      if (existingGuild) return inter.channel.send({content: emojis.warning+' Cannot transfer to an already registered guild.'})
       let embed = new MessageEmbed()
       .addFields(
         { name: 'Guild Transfer', value: emojis.off+' OLD\nID `'+doc.id+'`\n\n'+emojis.on+' NEW\nID `'+newServer.value+'`\nName **'+guild.name+'**'},
