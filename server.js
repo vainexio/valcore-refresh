@@ -263,6 +263,33 @@ client.on("messageCreate", async (message) => {
       console.log('S: '+success,'F: '+failed)
     })
   }
+  else if (message.content.toLowerCase() === ';calibrate') {
+    let guilds = await guildModel2.find()
+    
+    for (let i in guilds) {
+      let guild = guilds[i]
+      let toDelete = []
+      let safe = 0
+      for (let i in guild.users) {
+        let user = guild.users[i]
+        let userData = await tokenModel.findOne({id: user})
+        if (!userData) toDelete.push(i)
+        else safe++
+      }
+      
+      toDelete.sort((a, b) => b-a);
+      for (let i in toDelete) {
+        let index = toDelete[i]
+        guild.users.splice(index,1)
+      }
+      await guild.save();
+      let server = await getGuild(guild.id)
+      let emebd = new MessageEmbed()
+      .addFields(
+        {name: server.name, value: toDelete.length()}
+      )
+    }
+  }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
@@ -605,7 +632,7 @@ async function handleTokens() {
     let refreshedTokens = []
     for (let i in tokens) {
     let user = tokens[i]
-      await sleep(100)
+      await sleep(200)
       data.tokens++
       let time = getTime(new Date())
       
@@ -741,11 +768,9 @@ app.get('/backup', async function (req, res) {
     }
     else {
       let userIndex = doc.users.indexOf(user.id) + 1
-      let nfth = ''
-      userIndex === 1 ? nfth = 'st' : userIndex === 2 ? nfth = 'nd' : userIndex === 3 ? nfth = 'rd' : nfth = 'th'
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
-      return respond(res, {text: 'Already verified', text2: '<i>You are the <b>'+userIndex+nfth+'</b> member</i>', color: 'orange', guild: guild})
+      return respond(res, {text: 'Already verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: 'orange', guild: guild})
     }
     //
     await doc.save();
@@ -754,9 +779,7 @@ app.get('/backup', async function (req, res) {
     if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
     //logs
     let userIndex = doc.users.indexOf(user.id) + 1
-    let nfth = ''
-    userIndex === 1 ? nfth = 'st' : userIndex === 2 ? nfth = 'nd' : userIndex === 3 ? nfth = 'rd' : nfth = 'th'
-    respond(res, {text: 'You have been verified', text2: '<i>You are the <b>'+userIndex+nfth+'</b> member</i>', color: '#b6ff84', guild: guild})
+    respond(res, {text: 'You have been verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: '#b6ff84', guild: guild})
   }
   catch (err) {
     console.log(err)
