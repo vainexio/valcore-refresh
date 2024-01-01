@@ -223,7 +223,8 @@ client.on("messageCreate", async (message) => {
       );
     
     message.reply({components: [row]})
-  } else if (message.content.toLowerCase() === ';protocol 1123') {
+  } 
+  else if (message.content.toLowerCase() === ';protocol 1123') {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
@@ -264,30 +265,44 @@ client.on("messageCreate", async (message) => {
     })
   }
   else if (message.content.toLowerCase() === ';calibrate') {
+    if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
+    await message.delete();
     let guilds = await guildModel2.find()
     
     for (let i in guilds) {
       let guild = guilds[i]
       let toDelete = []
       let safe = 0
+      let server = await getGuild(guild.id)
+      
       for (let i in guild.users) {
         let user = guild.users[i]
         let userData = await tokenModel.findOne({id: user})
-        if (!userData) toDelete.push(i)
+        if (!userData) {
+          toDelete.push(i)
+          if (server) {
+            let member = await getM
+            await removeRole(member,['backup'])
+          }
+        }
         else safe++
       }
+      let embed = new MessageEmbed()
+      .addFields(
+        {name: server?.name, value: guild.users.length+' >> '+(guild.users.length-toDelete.length)}
+      )
       
       toDelete.sort((a, b) => b-a);
       for (let i in toDelete) {
         let index = toDelete[i]
         guild.users.splice(index,1)
       }
-      await guild.save();
-      let server = await getGuild(guild.id)
-      let emebd = new MessageEmbed()
-      .addFields(
-        {name: server.name, value: toDelete.length()}
-      )
+      embed = new MessageEmbed(embed)
+      .addFields({name: 'Total Registered Users', value: guild.users.length.toString()})
+      .setColor(colors.none)
+      
+      message.channel.send({content: '<@'+guild.author+'>', embeds: [embed]})
+      //await guild.save();
     }
   }
 });//END MESSAGE CREATE
