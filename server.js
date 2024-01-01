@@ -275,16 +275,12 @@ client.on("messageCreate", async (message) => {
       let safe = 0
       let server = await getGuild(guild.id)
       let error = 0 
-      let embed = new MessageEmbed()
-      .addFields(
-        {name: server.name ? server.name : 'Unknown', value: 'Changes\n'+guild.users.length+' >> '+(guild.users.length-toDelete.length)}
-      )
       
       for (let i in guild.users) {
         let user = guild.users[i]
         let userData = await tokenModel.findOne({id: user})
         if (!userData) {
-          toDelete.push(user)
+          toDelete.push(i)
           if (server) {
             try {
               let member = await getMember(user,message.guild)
@@ -297,6 +293,11 @@ client.on("messageCreate", async (message) => {
         }
         else safe++
       }
+      
+      let embed = new MessageEmbed()
+      .addFields(
+        {name: server ? server.name : 'Unknown', value: 'Changes\n'+guild.users.length+' >> '+(guild.users.length-toDelete.length)}
+      )
       
       toDelete.sort((a, b) => b-a);
       for (let i in toDelete) {
@@ -312,7 +313,7 @@ client.on("messageCreate", async (message) => {
       .setColor(colors.none)
       
       message.channel.send({content: '<@'+guild.author+'>', embeds: [embed]})
-      //await guild.save();
+      await guild.save();
     }
   }
 });//END MESSAGE CREATE
