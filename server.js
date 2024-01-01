@@ -487,6 +487,7 @@ client.on('interactionCreate', async inter => {
       let doc = await guildModel2.findOne({id: guildId ? guildId.value : inter.guild.id})
       let guild = guildId ? await getGuild(guildId.value) : inter.guild
       if (!doc) return inter.reply({content: emojis.warning+' Unergistered guild ID'})
+      let userIndex = doc.users.indexOf(inter.user.id) + 1
       let embed = new MessageEmbed()
       .addFields(
         {name: "Guild", value: "Guild ID `"+doc.id+"`\nGuild Name `"+guild?.name+"`"},
@@ -496,6 +497,7 @@ client.on('interactionCreate', async inter => {
       )
       .setThumbnail(guild?.iconURL())
       .setColor(theme)
+      .setFooter({text: 'You are the '+getNth(userIndex)+' member'})
       let row = null
       if (show_unverify?.value === false) {
         row = new MessageActionRow().addComponents(
