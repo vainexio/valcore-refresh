@@ -13,7 +13,7 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: false,
+  register: true,
   deleteSlashes: ['1108673951162445885','1108416466790916118'],
   slashes: [
     {
@@ -91,9 +91,19 @@ module.exports = {
       "description": "Get backup status of a guild",
       "options": [
         {
-          "name": 'show_unverify',
+          "name": 'unverify_button',
           "description": 'Show unverify button',
-          "type": 5,
+          "type": 3,
+          "choices": [
+            {
+              name: 'show',
+              value: 'show',
+            },
+            {
+              name: 'hide',
+              value: 'hide',
+            },
+          ],
           "required": false,
         },
         {

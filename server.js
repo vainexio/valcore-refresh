@@ -481,7 +481,7 @@ client.on('interactionCreate', async inter => {
     else if (cname === 'status') {
       let options = inter.options._hoistedOptions
       //
-      let show_unverify = options.find(a => a.name === 'show_unverify')
+      let unverify_button = options.find(a => a.name === 'unverify_button')
       let guildId = options.find(a => a.name === 'guild_id')
       
       let doc = await guildModel2.findOne({id: guildId ? guildId.value : inter.guild.id})
@@ -499,7 +499,7 @@ client.on('interactionCreate', async inter => {
       .setColor(theme)
       .setFooter({text: 'You are the '+getNth(userIndex)+' member'})
       let row = null
-      if (show_unverify?.value === false) {
+      if (unverify_button?.value === 'hide') {
         row = new MessageActionRow().addComponents(
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'-'+config.version).setStyle('LINK').setLabel("Verify"),
       );
