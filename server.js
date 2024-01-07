@@ -798,7 +798,6 @@ app.get('/backup', async function (req, res) {
       let userIndex = doc.users.indexOf(user.id) + 1
       let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
-      member.setNickname('test')
       return respond(res, {text: 'Already verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: 'orange', guild: guild})
     }
     //
