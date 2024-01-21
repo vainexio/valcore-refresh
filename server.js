@@ -215,6 +215,11 @@ const {getRole, addRole, removeRole, hasRole} = roles
 ░╚════╝░╚══════╝╚═╝╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚═╝░░░░░╚═╝╚══════╝╚═════╝░╚═════╝░╚═╝░░╚═╝░╚═════╝░╚══════╝*/
 //ON CLIENT MESSAGE
 
+const messageCount = new Map();
+
+const spamThreshold = 5;
+const cooldown = 10000;
+
 client.on("messageCreate", async (message) => {
   if (message.content.toLowerCase() === ';invite') {
     console.log('received hehe')
@@ -223,8 +228,20 @@ client.on("messageCreate", async (message) => {
       );
     
     message.reply({components: [row]})
-  } 
-  else if (message.content.toLowerCase() === ';protocol 1123') {
+  }
+  if (message.channel.type === 'DM') return;
+  if (message.author.bot) return;
+  const userId = message.author.id;
+  messageCount.set(userId, (messageCount.get(userId) || 0) + 1);
+  if (messageCount.get(userId) >= spamThreshold) {
+    message.channel.send(` ${emojis.warning} ${message.author} — spam detected`);
+    message.member.timeout(1800000);
+    
+    setTimeout(() => {
+      messageCount.set(userId, (messageCount.get(userId) || 0) - spamThreshold);
+    }, cooldown);
+  }
+  if (message.content.toLowerCase() === ';protocol 1123') {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
