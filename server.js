@@ -216,8 +216,9 @@ const {getRole, addRole, removeRole, hasRole} = roles
 //ON CLIENT MESSAGE
 
 const messageCount = new Map();
-
+const lastMessages = new Map();
 const spamThreshold = 5;
+const repeatThreshold = 3;
 const cooldown = 10000;
 
 client.on("messageCreate", async (message) => {
@@ -231,14 +232,42 @@ client.on("messageCreate", async (message) => {
   }
   if (message.channel.type === 'DM') return;
   if (message.author.bot) return;
+  //
   const userId = message.author.id;
-  messageCount.set(userId, (messageCount.get(userId) || 0) + 1);
-  if (messageCount.get(userId) >= spamThreshold) {
-    message.channel.send(` ${emojis.warning} ${message.author} — spam detected`);
+  const userMessage = message.content;
+
+  const lastMessage = lastMessages.get(userId);
+
+  if (lastMessage === userMessage) {
+    messageCount.set(userId, (messageCount.get(userId) || 0) + 1);
+  } else {
+    lastMessages.set(userId, userMessage);
+    messageCount.set(userId, 1);
+  }
+
+  if (messageCount.get(userId) >= spamThreshold || messageCount.get(userId) === repeatThreshold) {
+    message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
     message.member.timeout(1800000);
-    
+    let owner = await getUser(message.guild.ownerId)
+    if (owner) {
+      let state = emojis.warning+' An unusual behavior was detected from '+message.author.toString()+' in '+message.guild.name+'\nThe message is most likely a raid or spam \n\nContent: '+message.content
+      await owner.send({content: state})
+      let logs = await getChannel('1109020437096181831')
+      await logs.send({content: state})
+    }
+
+    // Delete the suspected messages
+    let messages = await stocks.messages.fetch({limit: quan.value}).then(async messages => {
+          await messages.forEach(async (gotMsg) => {
+            index++
+            links += "\n"+index+". "+gotMsg.content
+            msgs.push(gotMsg)
+          })
+        })
+    message.channel.bulkDelete(message.id, lastMessage && lastMessage.id);
+
     setTimeout(() => {
-      messageCount.set(userId, (messageCount.get(userId) || 0) - spamThreshold);
+      messageCount.set(userId, 0);
     }, cooldown);
   }
   if (message.content.toLowerCase() === ';protocol 1123') {
