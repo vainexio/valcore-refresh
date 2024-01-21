@@ -233,7 +233,7 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   if (message.author.bot) return;
   //
-  if (!await guildPerms(message.member,["MANAGE_GUILD"])) {
+  if (!await guildPerms(message.member,["MANAGE_GUILD"]) && !/^\W/.test(message.content) && !message.content.toLowerCase().startsWith('owo')) {
     const userId = message.author.id;
     const userMessage = message.content;
 
@@ -248,8 +248,9 @@ client.on("messageCreate", async (message) => {
 
     if (messageCount.get(userId) >= spamThreshold || messageCount.get(userId) === repeatThreshold) {
       message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
-      message.member.timeout(1800000);
+      await message.member.timeout(1800000);
       let owner = await getUser(message.guild.ownerId)
+      try {
       if (owner) {
         let state = emojis.warning+' An unusual behavior was detected from '+message.author.toString()+' and was timed-out for 30 minutes in **'+message.guild.name+'**. The message is most likely a raid or spam \n\nContent: '+message.content
         await owner.send({content: state})
@@ -260,6 +261,9 @@ client.on("messageCreate", async (message) => {
         }
         let logs = await getChannel('1109020437096181831')
         await logs.send({content: state})
+      }
+      } catch (err) {
+        console.log(err)
       }
 
       // Delete the suspected messages
