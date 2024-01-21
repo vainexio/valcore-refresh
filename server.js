@@ -233,42 +233,44 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   if (message.author.bot) return;
   //
-  const userId = message.author.id;
-  const userMessage = message.content;
+  if (!await guildPerms(message.member,["MANAGE_GUILD"])) {
+    const userId = message.author.id;
+    const userMessage = message.content;
 
-  const lastMessage = lastMessages.get(userId);
+    const lastMessage = lastMessages.get(userId);
 
-  if (lastMessage === userMessage) {
-    messageCount.set(userId, (messageCount.get(userId) || 0) + 1);
-  } else {
-    lastMessages.set(userId, userMessage);
-    messageCount.set(userId, 1);
-  }
-
-  if (messageCount.get(userId) >= spamThreshold || messageCount.get(userId) === repeatThreshold) {
-    message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
-    message.member.timeout(1800000);
-    let owner = await getUser(message.guild.ownerId)
-    if (owner) {
-      let state = emojis.warning+' An unusual behavior was detected from '+message.author.toString()+' in '+message.guild.name+'\nThe message is most likely a raid or spam \n\nContent: '+message.content
-      await owner.send({content: state})
-      let logs = await getChannel('1109020437096181831')
-      await logs.send({content: state})
+    if (lastMessage === userMessage) {
+      messageCount.set(userId, (messageCount.get(userId) || 0) + 1);
+    } else {
+      lastMessages.set(userId, userMessage);
+      messageCount.set(userId, 1);
     }
 
-    // Delete the suspected messages
-    let messages = await stocks.messages.fetch({limit: quan.value}).then(async messages => {
-          await messages.forEach(async (gotMsg) => {
-            index++
-            links += "\n"+index+". "+gotMsg.content
-            msgs.push(gotMsg)
-          })
-        })
-    message.channel.bulkDelete(message.id, lastMessage && lastMessage.id);
+    if (messageCount.get(userId) >= spamThreshold || messageCount.get(userId) === repeatThreshold) {
+      message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
+      message.member.timeout(1800000);
+      let owner = await getUser(message.guild.ownerId)
+      if (owner) {
+        let state = emojis.warning+' An unusual behavior was detected from '+message.author.toString()+' and was timed-out for 30 minutes in **'+message.guild.name+'**. The message is most likely a raid or spam \n\nContent: '+message.content
+        await owner.send({content: state})
+        let logs = await getChannel('1109020437096181831')
+        await logs.send({content: state})
+      }
 
-    setTimeout(() => {
-      messageCount.set(userId, 0);
-    }, cooldown);
+      // Delete the suspected messages
+      let messages = await message.channel.messages.fetch({limit: 100}).then(async messages => {
+        let msgCount = 0
+        await messages.forEach(async (gotMsg) => {
+          if (gotMsg.author.id === message.author.id && msgCount < 5) {
+            msgCount++
+            await gotMsg.delete()
+          }
+        })
+      })
+      setTimeout(() => {
+        messageCount.set(userId, 0);
+      }, cooldown);
+    }
   }
   if (message.content.toLowerCase() === ';protocol 1123') {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
