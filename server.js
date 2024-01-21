@@ -253,6 +253,11 @@ client.on("messageCreate", async (message) => {
       if (owner) {
         let state = emojis.warning+' An unusual behavior was detected from '+message.author.toString()+' and was timed-out for 30 minutes in **'+message.guild.name+'**. The message is most likely a raid or spam \n\nContent: '+message.content
         await owner.send({content: state})
+        let doc = await guildModel2.findOne({id: message.guild.id})
+        if (doc) {
+          let user = await getUser(doc.author)
+          if (user.id !== owner.id) await user.send({content: state})
+        }
         let logs = await getChannel('1109020437096181831')
         await logs.send({content: state})
       }
