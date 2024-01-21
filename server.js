@@ -100,7 +100,7 @@ client.on("ready", async () => {
   }
   
   for (let i in slashes) {
-    await sleep(1000)
+    await sleep(2000)
     let json = slashes[i]
     let response = await fetch(discordUrl, {
       method: 'post',
@@ -108,7 +108,7 @@ client.on("ready", async () => {
       headers: headers
     });
     response = await response.json();
-    console.log(response)
+    //console.log(response)
   }
     for (let i in slashCmd.deleteSlashes) {
       let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"+slashCmd.deleteSlashes[i]
@@ -116,7 +116,7 @@ client.on("ready", async () => {
         method: 'delete',
         headers: headers
       })
-      //console.log(deleteRes)
+      console.log(deleteRes)
     }
   }
   console.log('Successfully logged in to discord bot.')
