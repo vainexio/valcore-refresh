@@ -217,8 +217,7 @@ const {getRole, addRole, removeRole, hasRole} = roles
 
 const messageCount = new Map();
 const lastMessages = new Map();
-const spamThreshold = 5;
-const repeatThreshold = 3;
+const spamThreshold = 8;
 const cooldown = 10000;
 
 client.on("messageCreate", async (message) => {
@@ -246,7 +245,7 @@ client.on("messageCreate", async (message) => {
       messageCount.set(userId, 1);
     }
 
-    if (messageCount.get(userId) >= spamThreshold || messageCount.get(userId) === repeatThreshold) {
+    if (messageCount.get(userId) >= spamThreshold) {
       message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
       await message.member.timeout(1800000);
       let owner = await getUser(message.guild.ownerId)
