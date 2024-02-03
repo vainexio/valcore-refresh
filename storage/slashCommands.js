@@ -128,6 +128,11 @@ module.exports = {
       ],
     },
     {
+      "name": "leaderboard",
+      "type": 1,
+      "description": "Get leaderboard",
+    },
+    {
       "name": "addroles",
       "type": 1,
       "description": "Add backup role",

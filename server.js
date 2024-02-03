@@ -658,6 +658,27 @@ client.on('interactionCreate', async inter => {
 
       await inter.channel.send({content: emojis.check+' Added: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already Added: '+already})
     }
+    else if (cname === 'leaderboard') {
+      let options = inter.options._hoistedOptions
+      let guilds = await guildModel2.find()
+      let list = []
+      let topTen = ""
+      let count = 0
+      for (let i in guilds) {
+        count++
+        if (count <= 10) {
+          let guild = guilds[i]
+          list.push(guild)
+        }
+      }
+      list.sort((a, b) => (b.users.length - a.users.length))
+      let indexCount = 0
+      for (let i in list) {
+        let data = list[i]
+        let guild = 
+        topTen += indexCount+'. '+
+      }
+  }
   }
   //BUTTONS
   else if (inter.isButton() || inter.isSelectMenu()) {
@@ -845,7 +866,7 @@ app.get('/backup', async function (req, res) {
     }
     let guildToken = config.guildTokens.find(g => g.id === req.query.state)
     if (guildToken && doc.users.length >= guildToken.maxTokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/'+guildToken.maxTokens+')', color: '#ff4b4b', guild: guild})
-    else if (!guildToken && doc.users.length >= 1500) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
+    else if (!guildToken && doc.users.length >= 2000) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
     let foundUser = doc.users.find(u => u === user.id)
     if (!foundUser) {
       doc.users.push(user.id)
