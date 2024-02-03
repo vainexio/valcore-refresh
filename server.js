@@ -107,8 +107,8 @@ client.on("ready", async () => {
       body: JSON.stringify(json),
       headers: headers
     });
+    console.log(response.status)
     response = await response.json();
-    //console.log(response)
   }
     for (let i in slashCmd.deleteSlashes) {
       let deleteUrl = "https://discord.com/api/v10/applications/"+client.user.id+"/commands/"+slashCmd.deleteSlashes[i]
@@ -116,7 +116,7 @@ client.on("ready", async () => {
         method: 'delete',
         headers: headers
       })
-      console.log(deleteRes)
+      console.log(deleteRes.status)
     }
   }
   console.log('Successfully logged in to discord bot.')
@@ -659,25 +659,31 @@ client.on('interactionCreate', async inter => {
       await inter.channel.send({content: emojis.check+' Added: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already Added: '+already})
     }
     else if (cname === 'leaderboard') {
-      let options = inter.options._hoistedOptions
+      await inter.deferReply();
       let guilds = await guildModel2.find()
       let list = []
       let topTen = ""
       let count = 0
       for (let i in guilds) {
         count++
-        if (count <= 10) {
-          let guild = guilds[i]
-          list.push(guild)
-        }
+        let guild = guilds[i]
+        list.push({id: guild.id, users: guild.users.length, author: guild.author})
       }
-      list.sort((a, b) => (b.users.length - a.users.length))
+      list.sort((a, b) => (b.users - a.users))
       let indexCount = 0
       for (let i in list) {
         let data = list[i]
-        let guild = 
-        topTen += indexCount+'. '+
+        let guild = await getGuild(data.id)
+        if (guild && indexCount < 10) {
+          topTen += '**'+indexCount+'. '+guild.name+'**Verified Users: '+data.users+'\nAuthor: <@'+data.author+">\n\n"
+          indexCount++
+        }
       }
+      let embed = new MessageEmbed()
+      .setTitle("Top Guilds")
+      .setDescription(topTen)
+      .setColor(colors.blue)
+      await inter.editReply({embeds: [embed]})
   }
   }
   //BUTTONS
