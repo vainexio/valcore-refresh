@@ -675,8 +675,8 @@ client.on('interactionCreate', async inter => {
         let data = list[i]
         let guild = await getGuild(data.id)
         if (guild && indexCount < 10) {
-          topTen += '**'+indexCount+'. '+guild.name+'**Verified Users: '+data.users+'\nAuthor: <@'+data.author+">\n\n"
           indexCount++
+          topTen += '**'+indexCount+'. '+guild.name+'**Verified Users: '+data.users+'\nAuthor: <@'+data.author+">\n\n"
         }
       }
       let embed = new MessageEmbed()
