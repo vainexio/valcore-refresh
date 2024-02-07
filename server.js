@@ -38,6 +38,7 @@ async function startApp() {
       process.exit(1);
     });
 }
+
 startApp();
 let cmd = true
 
@@ -743,7 +744,7 @@ async function handleTokens() {
     let refreshedTokens = []
     for (let i in tokens) {
     let user = tokens[i]
-      await sleep(200)
+      await sleep(500) // was 200ms
       data.tokens++
       let time = getTime(new Date())
       
@@ -830,6 +831,8 @@ app.get('/backup', async function (req, res) {
     //fetch token
     //
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
+    console.log(response)
+
     response = await response.json();
     //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
