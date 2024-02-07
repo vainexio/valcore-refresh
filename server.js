@@ -831,13 +831,13 @@ app.get('/backup', async function (req, res) {
     //fetch token
     //
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
-    console.log(response)
+    //console.log(response)
 
     response = await response.json();
     //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
-    console.log(user)
+    console.log(user?.username+' - '+user?.id)
     if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired', color: '#ff4b4b', guild: guild})
     //fetch model
     
