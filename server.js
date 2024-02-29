@@ -234,10 +234,7 @@ client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
   //
   let backupVouch = config.backupVouches.find(v => v.original === message.channel.id)
-  if (backupVouch) {
-    if (message.attachments.size === 0) return;
-    else {
-      //await removeRole(message.member,['1109020434533458016'])
+  if (backupVouch && backupVouch.condition(message)) {
       //
       let attachments = Array.from(message.attachments.values())
       let webhook = new WebhookClient({ url: backupVouch.backup})
@@ -251,7 +248,6 @@ client.on("messageCreate", async (message) => {
         avatarURL: message.author.avatarURL(),
         files: files,
       })
-    }
   }
   //
   if (!await guildPerms(message.member,["MANAGE_GUILD"]) && !/^\W/.test(message.content) && !message.content.toLowerCase().startsWith('owo')) {
