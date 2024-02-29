@@ -31,8 +31,8 @@ module.exports = {
   config: {
     backupVouches: [
       {
-        original: '',
-        backup: '',
+        original: '1138567779407114312',
+        backup: 'https://discord.com/api/webhooks/1212757258820259960/K69rjfqN3vipcbyn_YjQxgUFbODGOfaLBpXgFv5V8ipLU12GWwmsard2peZArVRU_CbW',
       }
     ],
     version: '2',
