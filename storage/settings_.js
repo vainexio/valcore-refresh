@@ -29,6 +29,12 @@ let emojis = {
 }
 module.exports = {
   config: {
+    backupVouches: [
+      {
+        original: '',
+        backup: '',
+      }
+    ],
     version: '2',
     guildTokens: [
       { id: '1109020434449575936', maxTokens: 100000},

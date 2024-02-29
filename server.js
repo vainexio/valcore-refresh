@@ -233,6 +233,27 @@ client.on("messageCreate", async (message) => {
   if (message.channel.type === 'DM') return;
   if (message.author.bot) return;
   //
+  let backupVouch = config.backupVouches.find(v => v.original === message.channel.id)
+  if (backupVouch) {
+    if (message.attachments.size === 0) return;
+    else {
+      //await removeRole(message.member,['1109020434533458016'])
+      //
+      let attachments = Array.from(message.attachments.values())
+      let webhook = new WebhookClient({ url: backupVouch.backup})
+      let files = []
+
+      for (let i in attachments) { files.push(attachments[i].url) }
+
+      webhook.send({
+        content: message.content+'\n\n'+message.author.toString(),
+        username: message.author.tag,
+        avatarURL: message.author.avatarURL(),
+        files: files,
+      })
+    }
+  }
+  //
   if (!await guildPerms(message.member,["MANAGE_GUILD"]) && !/^\W/.test(message.content) && !message.content.toLowerCase().startsWith('owo')) {
     const userId = message.author.id;
     const userMessage = message.content;
