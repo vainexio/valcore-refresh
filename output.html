@@ -5,120 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Server Backup</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 100vh;
-      background-color: #1b1b1b;
-      color: #fff;
-    }
-    .title-container {
-      text-align: center;
-      opacity: 0;
-      transform: scale(0.8);
-      animation: fadeInAndScale 0.5s ease-out forwards;
-      margin-bottom: 20px;
-      flex-grow: 1; /* Grow to take remaining space */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+   body {
+  margin: 0;
+  padding: 0;
+  background-color: #202225; /* Darker background */
+  color: #b9bbbe; /* Lighter text color */
+  font-family: Arial, sans-serif;
+  position: relative;
+  min-height: 100vh;
+}
 
-    @keyframes fadeInAndScale {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+.title-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 50px); /* Adjusted for footer height */
+}
 
-    .icon-and-title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('background-image.jpg'); /* Replace 'background-image.jpg' with your image path */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.5; /* Adjust opacity to make it faded */
+  z-index: -1;
+  animation: fadeIn 2s forwards; /* Animation for fade in */
+}
 
-    .icon {
-      width: 100px; /* Increased width */
-      height: 100px; /* Increased height */
-      margin-right: 10px;
-      border-radius: 50%;
-    }
+.icon-and-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .icon img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-    }
+.icon img {
+  width: 80px; /* Adjust size of icon */
+  height: 80px; /* Adjust size of icon */
+  margin-bottom: 15px; /* Space between icon and text */
+  animation: pulse 2s infinite alternate; /* Animation for icon */
+}
 
-    .text-container {
-      display: flex;
-      flex-direction: column;
-      align-items: left; /* Center text */
-    }
+.text-container {
+  text-align: center;
+}
 
-    .title {
-      font-size: 35px; /* Increased font size */
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    
-    .highlight {
-      color: #637cff; /* Change this to the desired color */
-    }
-    
-    .subtext {
-      font-size: 23px; /* Increased font size */
-      color: ${subtextColor};
-      margin-top: 5px;
-      margin-bottom: 2px;
-      animation: subtleLoop 3s infinite ease-in-out;
-    }
-    .subtext2 {
-      font-size: 19px; /* Increased font size */
-      margin-top: 3px;
-      margin-bottom: 10px;
-      font-weight: italic;
-      animation: subtleLoop 3s infinite ease-in-out;
-    }
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ffffff; /* White title color */
+  animation: slideIn 1s forwards; /* Animation for title */
+}
 
-    @keyframes subtleLoop {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-3px);
-      }
-    }
+.subtext {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #7289da; /* Discord accent color for subtext */
+}
 
-    .copyright-container {
+.subtext2 {
+  font-size: 16px;
+  color: #99aab5; /* Lighter color for subtext2 */
+}
+
+.copyright-container {
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 20px; /* Fixed margin at the bottom */
     }
-
-    .icon {
-      width: 30px; /* Fixed width for the additional icon */
-      height: 30px; /* Fixed height for the additional icon */
-      margin-right: 10px; /* Margin between additional icon and copyright */
-      border-radius: 50%;
-    }
-
-    .icon img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-    }
-
-    .copyright {
+      .footer {
       font-size: 12px; /* Fixed font size */
     }
+
+
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   </style>
 </head>
 <body>
@@ -139,7 +126,7 @@
     <div class="icon">
       <img src="https://logo.com/image-cdn/images/kts928pd/production/5b24e49fd89287ff1eb5bbc4cf93cb038c3384ef-512x512.png?w=1080&q=72" alt="Icon">
     </div>
-    <div class="copyright">
+    <div class="footer">
       &copy; Developer: vainexio
     </div>
   </div>
