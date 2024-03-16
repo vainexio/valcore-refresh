@@ -29,6 +29,7 @@ let emojis = {
 }
 module.exports = {
   config: {
+    customMessages: [],
     backupVouches: [
       {
         original: '1138567779407114312',
