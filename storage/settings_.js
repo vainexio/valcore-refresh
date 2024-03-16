@@ -35,20 +35,16 @@ module.exports = {
         msg: '!?@?!@?!?@',
       },
       {
-        id: '761368188419047434', //
-        msg: 'Halo nikowel',
-      },
-      {
         id: '748461950605852723', //
         msg: 'Welkam chasoer',
       },
       {
         id: '772339611523350568', //
-        msg: 'Bonjour chris',
+        msg: 'Bonjur chris',
       },
       {
         id: '1214504712829931550', //
-        msg: 'Bonjour nard',
+        msg: 'Bonjor nard',
       },
       {
         id: '1202864381537554495', //
@@ -63,12 +59,16 @@ module.exports = {
         msg: 'Welkam sir Mojica',
       },
       {
+        id: '711514337205944371', //
+        msg: 'Hola totoy na black',
+      },
+      {
         id: '1146368770084982847', //
         msg: 'Hai bea',
       },
       {
-        id: '711514337205944371', //
-        msg: 'Hola totoy na black',
+        id: '761368188419047434', //
+        msg: 'Halo nikowel',
       },
       {
         id: '786805099908825088', //
