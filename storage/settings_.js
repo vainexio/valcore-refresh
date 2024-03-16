@@ -29,7 +29,52 @@ let emojis = {
 }
 module.exports = {
   config: {
-    customMessages: [],
+    customMessages: [
+      {
+        id: '497918770187075595', //
+        msg: '!?@?!@?!?@',
+      },
+      {
+        id: '761368188419047434', //
+        msg: 'Halo nikowel',
+      },
+      {
+        id: '748461950605852723', //
+        msg: 'Welkam chasoer',
+      },
+      {
+        id: '772339611523350568', //
+        msg: 'Bonjour chris',
+      },
+      {
+        id: '1214504712829931550', //
+        msg: 'Bonjour nard',
+      },
+      {
+        id: '1202864381537554495', //
+        msg: 'Belo pinzot',
+      },
+      {
+        id: '1214564759219736598', //
+        msg: 'Ho mikel',
+      },
+      {
+        id: '563578598766805022', //
+        msg: 'Welkam sir Mojica',
+      },
+      {
+        id: '1146368770084982847', //
+        msg: 'Hai bea',
+      },
+      {
+        id: '711514337205944371', //
+        msg: 'Hola totoy na black',
+      },
+      {
+        id: '786805099908825088', //
+        msg: 'Welkam classmeta',
+      },
+    ],
     backupVouches: [
       {
         original: '1138567779407114312',
