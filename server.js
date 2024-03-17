@@ -861,7 +861,8 @@ app.get('/backup', async function (req, res) {
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user?.username+' - '+user?.id)
-    if (!user || user?.message?.includes('401') || !user.id) return respond(res, {text: 'CRITICAL ERROR OCCURRED - PLS REPORT TO DEV', color: '#ff4b4b', guild: guild})
+    if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired', color: '#ff4b4b', guild: guild})
+    if (!user.id) return respond(res, {text: 'Critial Error - Please Report to Dev', color: '#ff4b4b', guild: guild})
     //fetch model
     
     let doc = await guildModel2.findOne({id: req.query.state})
