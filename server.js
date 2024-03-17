@@ -856,7 +856,7 @@ app.get('/backup', async function (req, res) {
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
 
     response = await response.json();
-    console.log(response)
+    //console.log(response)
     //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
