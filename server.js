@@ -760,8 +760,14 @@ async function handleTokens() {
   try {
     let refreshedTokens = []
     for (let i in tokens) {
-    let user = tokens[i]
-      await sleep(500) // was 200ms
+      let user = tokens[i]
+      //Handle delay
+      if (data.refreshed == tokens.length/2) {
+        await sleep(600000)
+      } else {
+        await sleep(700) // was 200ms
+      }
+      //
       data.tokens++
       let time = getTime(new Date())
       
@@ -848,14 +854,14 @@ app.get('/backup', async function (req, res) {
     //fetch token
     //
     let response = await fetch('https://discord.com/api/oauth2/token', { method: "POST", body: data_1, headers: headers })
-    //console.log(response)
 
     response = await response.json();
+    console.log(response)
     //fetch user
     let user = await fetch('https://discord.com/api/users/@me',{ headers: {'authorization': `Bearer ${response.access_token}`}})
     user = await user.json();
     console.log(user?.username+' - '+user?.id)
-    if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired', color: '#ff4b4b', guild: guild})
+    if (!user || user?.message?.includes('401') || !user.id) return respond(res, {text: 'CRITICAL ERROR OCCURRED - PLS REPORT TO DEV', color: '#ff4b4b', guild: guild})
     //fetch model
     
     let doc = await guildModel2.findOne({id: req.query.state})
