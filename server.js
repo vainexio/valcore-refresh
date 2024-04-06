@@ -125,7 +125,7 @@ client.on("ready", async () => {
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   
-  handleTokens()
+  //handleTokens()
 })
 
 module.exports = {
@@ -598,7 +598,7 @@ client.on('interactionCreate', async inter => {
       let guild = newServer ? await getGuild(newServer.value) : inter.guild
       if (!doc || !guild) return inter.channel.send({content: emojis.warning+' Invalid guild/key'})
       let existingGuild = await guildModel2.findOne({id: guild.id})
-      if (existingGuild) return inter.channel.send({content: emojis.warning+' Cannot transfer to an already registered guild.'})
+      if (existingGuild && existingGuild.id !== doc.id) return inter.channel.send({content: emojis.warning+' Cannot transfer to an already registered guild.'})
       let embed = new MessageEmbed()
       .addFields(
         { name: 'Guild Transfer', value: emojis.off+' OLD\nID `'+doc.id+'`\n\n'+emojis.on+' NEW\nID `'+newServer.value+'`\nName **'+guild.name+'**'},
