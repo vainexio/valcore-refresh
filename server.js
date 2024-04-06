@@ -125,7 +125,7 @@ client.on("ready", async () => {
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   
-  //handleTokens()
+  handleTokens()
 })
 
 module.exports = {
