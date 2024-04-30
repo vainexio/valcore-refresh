@@ -557,11 +557,11 @@ client.on('interactionCreate', async inter => {
       let row = null
       if (unverify_button?.value === 'hide') {
         row = new MessageActionRow().addComponents(
-        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'-'+config.version).setStyle('LINK').setLabel("Verify"),
+        new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id='+client.user.id+'&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'-'+config.version).setStyle('LINK').setLabel("Verify"),
       );
       } else {
         row = new MessageActionRow().addComponents(
-          new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'-'+config.version).setStyle('LINK').setLabel("Verify"),
+          new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id='+client.user.id+'&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'-'+config.version).setStyle('LINK').setLabel("Verify"),
           new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('DANGER').setLabel("Unverify"),
         );
       }

@@ -2,7 +2,7 @@
 const Discord = require('discord.js');
 const {Client, Intents, MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} = Discord;
 let colors = {
-  red: "#ea3737",
+  red: "#ff5e5e",
   blue: "#6b8eff",
   green: "#00ff04",
   yellow: "#fff4a1",
