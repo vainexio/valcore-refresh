@@ -204,7 +204,7 @@ const spamThreshold = 8;
 const cooldown = 10000;
 
 client.on("messageCreate", async (message) => {
-  if (message.content.toLowerCase() === ';invite') {
+  if (message.content.toLowerCase() === '!invite') {
     console.log('received hehe')
     let row = new MessageActionRow().addComponents(
         new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id=1108412309308719197&permissions=8&scope=bot').setStyle('LINK').setLabel("Invite Bot"),
