@@ -13,8 +13,8 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: false,
-  deleteSlashes: ['1169812083995574394'],
+  register: true,
+  deleteSlashes: [ 1170002545335349308, 1169612098188349510, 1169578034328776724, 1169591423566368840, 1169591423566368840, 1170714395706392686, 1169829357171245127 ],
   slashes: [
     {
       "name": "joinall",
