@@ -13,8 +13,8 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: true,
-  deleteSlashes: [ 1170002545335349308, 1169612098188349510, 1169578034328776724, 1169591423566368840, 1169591423566368840, 1170714395706392686, 1169829357171245127 ],
+  register: false,
+  deleteSlashes: [ 1169829357171245127 ],
   slashes: [
     {
       "name": "joinall",
@@ -144,6 +144,32 @@ module.exports = {
           "required": true,
         },
       ],
-    }
+    },
+    {
+      "name": "register",
+      "type": 1,
+      "description": "Register your server",
+      "options": [
+        {
+          "name": 'guild_id',
+          "description": 'Your server ID',
+          "type": 3,
+          "required": true,
+        },
+      ],
+    },
+    {
+      "name": "unregister",
+      "type": 1,
+      "description": "Unregister your server",
+      "options": [
+        {
+          "name": 'key',
+          "description": 'Access Key',
+          "type": 3,
+          "required": true,
+        },
+      ],
+    },
   ],
 };

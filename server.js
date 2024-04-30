@@ -99,7 +99,7 @@ client.on("ready", async () => {
         method: 'delete',
         headers: headers
       })
-      console.log(deleteRes.status)
+      console.log(deleteRes)
     }
   }
   console.log('Successfully logged in to discord bot.')
