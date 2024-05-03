@@ -13,7 +13,7 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: true,
+  register: false,
   deleteSlashes: [ 1169829357171245127 ],
   slashes: [
     {

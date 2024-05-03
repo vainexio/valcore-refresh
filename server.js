@@ -395,6 +395,7 @@ client.on('interactionCreate', async inter => {
       newDoc.id = guild.id
       newDoc.key = makeCode(30)
       newDoc.author = inter.user.id
+      newDoc.maxTokens = config.guildMaxtokens
       await newDoc.save()
       
       await inter.reply({content: emojis.on+" Your guild was registered"})
@@ -632,9 +633,10 @@ client.on('interactionCreate', async inter => {
       if (!doc) doc = await guildModel.findOne({author: id.value})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid guild/author data'})
       
-      doc.maxTokens = limit
+      let oldLimit = doc.maxTokens
+      doc.maxTokens = limit.value
       await doc.save()
-      inter.reply({content: emojis.on+" Successfully changed max tokens from ", ephemeral: true})
+      inter.reply({content: emojis.on+" Successfully changed max tokens from **"+oldLimit+"** to **"+limit.value+"**"})
     }
     else if (cname === 'addroles') {
       let options = inter.options._hoistedOptions
