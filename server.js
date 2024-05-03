@@ -423,20 +423,23 @@ client.on('interactionCreate', async inter => {
       
       let doc = await guildModel.findOne({key: key.value})
       let guild = await getGuild(doc.id)
-      if (!guild) inter.reply({content: emojis.warning+' Cannot find guild', ephemeral: true})
+      //if (!guild) inter.reply({content: emojis.warning+' Cannot find guild', ephemeral: true})
       if (doc) {
         let embed = new MessageEmbed()
-        .setDescription(emojis.off+' Your guild data was terminated')
+        .setDescription(emojis.off+' Your guild is flagged for termination')
         .setColor(colors.red)
         .addFields(
-          {name: "Guild", value: "Guild ID `"+guild.id+"`\nGuild Name `"+guild.name+"`"},
+          {name: "Guild", value: "Guild ID `"+guild?.id+"`\nGuild Name `"+guild?.name+"`"},
           {name: "Registered Users", value: doc.users.length.toString(), inline: true},
           {name: "Author", value: '<@'+doc.author+'>', inline: true},
           {name: "Access Key", value: '```diff\n- '+doc.key.substr(0, doc.key.length-20)+'```'},
         )
         
-        await inter.reply({embeds: [embed]})
-        await guildModel.deleteOne({key: key.value})
+        let row = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('unregisPrompt-'+inter.user.id).setStyle('DANGER').setLabel("Unregister").setEmoji(emojis.warning),
+        );
+        await inter.reply({content: doc.id, embeds: [embed], components: [row], ephemeral: true})
+        //await guildModel.deleteOne({key: key.value})
       } else {
         await inter.reply({content: emojis.warning+' Invalid access key'})
       }
@@ -717,14 +720,33 @@ client.on('interactionCreate', async inter => {
       await inter.reply({content: 'Are you sure you want to unverify yourself from this server?', ephemeral: true, components: [row]})
     }
     else if (id.startsWith("unregisPrompt-")) {
-      let guildId = id.replace('unverifPrompt-','')
+      let userId = id.replace('unregisPrompt-','')
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('unverify-'+guildId).setStyle('SUCCESS').setLabel("Yes"),
+        new MessageButton().setCustomId('unregister-'+inter.message.content).setStyle('SUCCESS').setLabel("Yes"),
         new MessageButton().setCustomId('cancel').setStyle('DANGER').setLabel("No"),
       );
-      await inter.reply({content: 'Are you sure you want to unverify yourself from this server?', ephemeral: true, components: [row]})
+      await inter.reply({content: 'Are you sure you want to unregister this server?\n> This action is irreversible!', ephemeral: true, components: [row]})
     }
     //
+    else if (id.startsWith('unregister-')) {
+      let guildId = id.replace('unregister-','')
+      let userId = inter.user.id
+      let doc = await guildModel.findOne({id: guildId})
+      let guild = await getGuild(doc.id)
+      if (!doc) return inter.update({content: emojis.warning+' Unergistered guild ID', components: []})
+      
+      let embed = new MessageEmbed()
+        .setDescription(emojis.off+' This guild data was terminated by '+inter.user.toString())
+        .setColor(colors.red)
+        .addFields(
+          {name: "Guild", value: "Guild ID `"+guild?.id+"`\nGuild Name `"+guild?.name+"`"},
+          {name: "Registered Users", value: doc.users.length.toString(), inline: true},
+          {name: "Author", value: '<@'+doc.author+'>', inline: true},
+          {name: "Access Key", value: '```diff\n- '+doc.key.substr(0, doc.key.length-20)+'```'},
+        )
+      await guildModel.deleteOne({id: guildId})
+      await inter.reply({embeds: [embed]})
+    }
     else if (id.startsWith('unverify-')) {
       let guildId = id.replace('unverify-','')
       let userId = inter.user.id
