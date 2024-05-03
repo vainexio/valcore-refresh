@@ -13,7 +13,7 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: false,
+  register: true,
   deleteSlashes: [ 1169829357171245127 ],
   slashes: [
     {
@@ -123,6 +123,25 @@ module.exports = {
           "name": 'id',
           "description": 'Server/Author ID',
           "type": 3,
+          "required": true,
+        },
+      ],
+    },
+    {
+      "name": "setlimit",
+      "type": 1,
+      "description": "Update max tokens limit",
+      "options": [
+        {
+          "name": 'id',
+          "description": 'Server/Author ID',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'limit',
+          "description": 'New max tokens limit',
+          "type": 10,
           "required": true,
         },
       ],

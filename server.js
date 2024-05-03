@@ -62,6 +62,7 @@ client.on("ready", async () => {
     id: String,
     key: String,
     author: String,
+    maxTokens: Number,
     users: [],
   })
   tokenSchema = new mongoose.Schema({
@@ -320,7 +321,7 @@ client.on("messageCreate", async (message) => {
       console.log('S: '+success,'F: '+failed)
     })
   }
-  else if (message.content.toLowerCase() === ';calibrate') {
+  else if (message.content.toLowerCase() === '!calibrate') {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     await message.delete();
     let guilds = await guildModel.find()
@@ -369,6 +370,7 @@ client.on("messageCreate", async (message) => {
       .setColor(colors.none)
       
       message.channel.send({content: '<@'+guild.author+'>', embeds: [embed]})
+      guild.maxTokens = 500
       await guild.save();
     }
   }
@@ -553,7 +555,7 @@ client.on('interactionCreate', async inter => {
       )
       .setThumbnail(guild?.iconURL())
       .setColor(theme)
-      .setFooter({text: 'You are the '+getNth(userIndex)+' member'})
+      .setFooter({text: 'You are the '+getNth(userIndex)+' of '+doc.maxTokens+' members'})
       let row = null
       if (unverify_button?.value === 'hide') {
         row = new MessageActionRow().addComponents(
@@ -618,6 +620,21 @@ client.on('interactionCreate', async inter => {
       if (!doc) doc = await guildModel.findOne({author: id.value})
       if (!doc) return inter.reply({content: emojis.warning+' Invalid guild/author data'})
       inter.reply({content: doc.key, ephemeral: true})
+    }
+    else if (cname === 'setlimit') {
+      if (!await getPerms(inter.member,5)) return inter.reply({content: emojis.warning+" You can't do that sir."});
+      let options = inter.options._hoistedOptions
+      //
+      let id = options.find(a => a.name === 'id')
+      let limit = options.find(a => a.name === 'limit')
+      let doc = await guildModel.findOne({id: id.value})
+            
+      if (!doc) doc = await guildModel.findOne({author: id.value})
+      if (!doc) return inter.reply({content: emojis.warning+' Invalid guild/author data'})
+      
+      doc.maxTokens = limit
+      await doc.save()
+      inter.reply({content: emojis.on+" Successfully changed max tokens from ", ephemeral: true})
     }
     else if (cname === 'addroles') {
       let options = inter.options._hoistedOptions
@@ -880,8 +897,8 @@ app.get('/backup', async function (req, res) {
       await newUser.save()
     }
     let guildToken = config.guildTokens.find(g => g.id === req.query.state)
-    if (guildToken && doc.users.length >= guildToken.maxTokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/'+guildToken.maxTokens+')', color: '#ff4b4b', guild: guild})
-    else if (!guildToken && doc.users.length >= config.guildMaxtokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
+    if (guildToken && doc.users.length >= doc.maxTokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/'+doc.maxTokens+')', color: '#ff4b4b', guild: guild})
+    //else if (!guildToken && doc.users.length >= config.guildMaxtokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
     let foundUser = doc.users.find(u => u === user.id)
     let customMsg = config.customMessages.find(c => c.id === user.id)
     if (!foundUser) {
