@@ -881,7 +881,7 @@ app.get('/backup', async function (req, res) {
     }
     let guildToken = config.guildTokens.find(g => g.id === req.query.state)
     if (guildToken && doc.users.length >= guildToken.maxTokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/'+guildToken.maxTokens+')', color: '#ff4b4b', guild: guild})
-    else if (!guildToken && doc.users.length >= 2000) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
+    else if (!guildToken && doc.users.length >= config.guildMaxtokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
     let foundUser = doc.users.find(u => u === user.id)
     let customMsg = config.customMessages.find(c => c.id === user.id)
     if (!foundUser) {

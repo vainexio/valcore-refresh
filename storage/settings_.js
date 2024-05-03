@@ -88,8 +88,10 @@ module.exports = {
       },
     ],
     version: '2',
+    guildMaxtokens: 500,
     guildTokens: [
       { id: '1109020434449575936', maxTokens: 100000},
+      { id: '',maxTokens: ''},
     ],
     channels: {
       chat: '1047454193595732055',
