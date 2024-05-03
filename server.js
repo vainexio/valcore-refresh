@@ -556,7 +556,7 @@ client.on('interactionCreate', async inter => {
       )
       .setThumbnail(guild?.iconURL())
       .setColor(theme)
-      .setFooter({text: 'You are the '+getNth(userIndex)+' of '+doc.maxTokens+' members'})
+      .setFooter({text: 'You are the '+getNth(userIndex)+' out of '+doc.maxTokens+' members'})
       let row = null
       if (unverify_button?.value === 'hide') {
         row = new MessageActionRow().addComponents(
@@ -695,7 +695,7 @@ client.on('interactionCreate', async inter => {
         let guild = await getGuild(data.id)
         if (guild && indexCount < 10) {
           indexCount++
-          topTen += '**'+indexCount+'. '+guild.name+'**Verified Users: '+data.users+'\nAuthor: <@'+data.author+">\n\n"
+          topTen += '**'+indexCount+'. '+guild.name+'\n**Verified Users: '+data.users+'\nAuthor: <@'+data.author+">\nID: "+data.id+"\n\n"
         }
       }
       let embed = new MessageEmbed()
@@ -709,6 +709,14 @@ client.on('interactionCreate', async inter => {
   else if (inter.isButton() || inter.isSelectMenu()) {
     let id = inter.customId
     if (id.startsWith("unverifPrompt-")) {
+      let guildId = id.replace('unverifPrompt-','')
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('unverify-'+guildId).setStyle('SUCCESS').setLabel("Yes"),
+        new MessageButton().setCustomId('cancel').setStyle('DANGER').setLabel("No"),
+      );
+      await inter.reply({content: 'Are you sure you want to unverify yourself from this server?', ephemeral: true, components: [row]})
+    }
+    else if (id.startsWith("unregisPrompt-")) {
       let guildId = id.replace('unverifPrompt-','')
       let row = new MessageActionRow().addComponents(
         new MessageButton().setCustomId('unverify-'+guildId).setStyle('SUCCESS').setLabel("Yes"),
@@ -898,8 +906,7 @@ app.get('/backup', async function (req, res) {
       newUser.expiresAt = getTime(new Date().getTime()+(response.expires_in*1000))
       await newUser.save()
     }
-    let guildToken = config.guildTokens.find(g => g.id === req.query.state)
-    if (guildToken && doc.users.length >= doc.maxTokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/'+doc.maxTokens+')', color: '#ff4b4b', guild: guild})
+    if (doc.users.length >= doc.maxTokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/'+doc.maxTokens+')', color: '#ff4b4b', guild: guild})
     //else if (!guildToken && doc.users.length >= config.guildMaxtokens) return respond(res, {text: 'Reached maximum tokens<br />('+doc.users.length+'/1000)', color: '#ff4b4b', guild: guild})
     let foundUser = doc.users.find(u => u === user.id)
     let customMsg = config.customMessages.find(c => c.id === user.id)
