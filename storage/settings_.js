@@ -77,12 +77,12 @@ module.exports = {
     ],
     backupVouches: [
       {
-        original: '1138567779407114312',
+        original: '',
         backup: 'https://discord.com/api/webhooks/1212757258820259960/K69rjfqN3vipcbyn_YjQxgUFbODGOfaLBpXgFv5V8ipLU12GWwmsard2peZArVRU_CbW',
         condition: function(msg) { if (msg.attachments.size !== 0) return true }
       },
       {
-        original: '1045274607021727744',
+        original: '',
         backup: 'https://discord.com/api/webhooks/1212767455269748826/HX6l5OTKVcsSJ7Yc8GYK70K3FdjOKxuIoVzpbcdkBg6rg3QMUm5dyI9rKl2NEKXdueTt',
         condition: function(msg) { if (msg.content.toLowerCase().includes('vouch')) return true }
       },
