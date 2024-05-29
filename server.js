@@ -750,6 +750,7 @@ client.on('interactionCreate', async inter => {
     else if (id.startsWith('unverify-')) {
       let guildId = id.replace('unverify-','')
       let userId = inter.user.id
+      let guild = await getGuild(guildId)
       let doc = await guildModel.findOne({id: guildId})
       if (!doc) return inter.update({content: emojis.warning+' Unergistered guild ID', components: []})
       let user = doc.users.find(u => u === userId)
@@ -758,7 +759,7 @@ client.on('interactionCreate', async inter => {
       await doc.save();
       await inter.update({content: emojis.check+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
       await sleep(1000)
-      await removeRole(inter.member,["backup","sloopie"],inter.guild)
+      await removeRole(inter.member,["backup","sloopie"],guildId)
     }
     else if (id.startsWith('cancel')) {
       await inter.update({content: 'Interaction was cancelled.', components: []})
@@ -950,9 +951,14 @@ app.get('/backup', async function (req, res) {
     let userIndex = doc.users.indexOf(user.id) + 1
     respond(res, {text: customMsg ? customMsg.msg : 'You have been verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: '#b6ff84', guild: guild})
     
+    let unverify = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('DANGER').setLabel('Unverify'),
+    );
+    
     let embed = new MessageEmbed()
-    .addFields({name: "What is the verification for?", value: "The verification you jus"})
-    await member.user.send({content: emojis.check+" You have been verified!"})
+    .addFields({name: "What is the verification for?", value: "The verification you just signed up for will give the bot permission to **join you on servers on your behalf**. If you do not agree to this, feel free to unverify yourself from "+guild.name})
+    .setColor(colors.none)
+    await member.user.send({content: "Important Notice", embeds: [embed], components: [unverify]})
   }
   catch (err) {
     console.log(err)
