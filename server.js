@@ -474,6 +474,25 @@ client.on('interactionCreate', async inter => {
                 .then(suc => {
                 console.log(suc)
                 success++
+                
+                let unverify = new MessageActionRow().addComponents(
+                  new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('SECONDARY').setLabel('Unverify'),
+                );
+                
+                let embed = new MessageEmbed()
+                .setTitle("🔒 You were joined to a server!")
+                .setDescription(
+                  "I joined you on a new server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
+                  "Feel free to ignore this message if you think that this is appropriate. You can **unverify** yourself at any time."
+                )
+                .setColor(colors.red) // Use a more eye-catching color
+                .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
+                .setTimestamp(); // Adds a timestamp to the embed
+    
+                user.send({
+                  embeds: [embed],
+                  components: [unverify]
+                });
               })
                 .catch(err => {
                 toDelete.push(i)
@@ -533,7 +552,31 @@ client.on('interactionCreate', async inter => {
           console.log(err)
           error = true
           inter.followUp({content: emojis.warning+" Failed to join **"+user.tag+"** to "+guild.name+'\n```diff\n-'+err+'```'})
-        }).then(msg => !error ? inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name}) : null)
+        }).then(msg => {
+          if (!error) {
+            
+            inter.followUp({content: emojis.on+" Successfully joined **"+user.tag+"** to "+guild.name})
+            
+            let unverify = new MessageActionRow().addComponents(
+              new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('SECONDARY').setLabel('Unverify'),
+            );
+                
+            let embed = new MessageEmbed()
+            .setTitle("🔒 You were joined to a server!")
+            .setDescription(
+              "I joined you on a new server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
+              "Feel free to ignore this message if you think that this is appropriate. You can **unverify** yourself at any time."
+            )
+            .setColor(colors.red) // Use a more eye-catching color
+            .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
+            .setTimestamp(); // Adds a timestamp to the embed
+    
+            user.send({
+              embeds: [embed],
+              components: [unverify]
+            });
+        }
+        })
       }
       catch (err) {
         console.log(err)
@@ -958,9 +1001,10 @@ app.get('/backup', async function (req, res) {
     let embed = new MessageEmbed()
     .setTitle("🔒 What is the Verification for?")
     .setDescription(
-        "You have just completed the verification process! This allows our bot to **join servers on your behalf**.\n\n" +
+        "You have just completed the verification process!This allows our bot to **join you servers on your behalf**.\n\n" +
         "If you do not agree to this, you can **unverify** yourself from **" + guild.name + "** at any time."
     )
+    .setThumbnail(guild.iconURL())
     .setColor(colors.red) // Use a more eye-catching color
     .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
     .setTimestamp(); // Adds a timestamp to the embed
