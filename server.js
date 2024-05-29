@@ -956,9 +956,20 @@ app.get('/backup', async function (req, res) {
     );
     
     let embed = new MessageEmbed()
-    .addFields({name: "What is the verification for?", value: "The verification you just signed up for will give the bot permission to **join you on servers on your behalf**. If you do not agree to this, feel free to unverify yourself from "+guild.name})
-    .setColor(colors.none)
-    await member.user.send({content: "Important Notice", embeds: [embed], components: [unverify]})
+    .setTitle("🔒 What is the Verification for?")
+    .setDescription(
+        "You have just completed the verification process! This allows our bot to **join servers on your behalf**.\n\n" +
+        "If you do not agree to this, you can **unverify** yourself from **" + guild.name + "** at any time."
+    )
+    .setColor(colors.red) // Use a more eye-catching color
+    .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
+    .setTimestamp(); // Adds a timestamp to the embed
+    
+    await member.user.send({
+      content: "📢 **Important Notice** 📢",
+      embeds: [embed],
+      components: [unverify]
+    });
   }
   catch (err) {
     console.log(err)
