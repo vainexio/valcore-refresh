@@ -949,6 +949,10 @@ app.get('/backup', async function (req, res) {
     //logs
     let userIndex = doc.users.indexOf(user.id) + 1
     respond(res, {text: customMsg ? customMsg.msg : 'You have been verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: '#b6ff84', guild: guild})
+    
+    let embed = new MessageEmbed()
+    .addFields({name: "What is the verification for?", value: "The verification you jus"})
+    await member.user.send({content: emojis.check+" You have been verified!"})
   }
   catch (err) {
     console.log(err)
