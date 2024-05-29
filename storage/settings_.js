@@ -31,10 +31,6 @@ module.exports = {
   config: {
     customMessages: [
       {
-        id: '497918770187075595', //
-        msg: '!?@?!@?!?@',
-      },
-      {
         id: '748461950605852723', //
         msg: 'Welkam chasoer',
       },
@@ -68,7 +64,7 @@ module.exports = {
       },
       {
         id: '761368188419047434', //
-        msg: 'Halo nikowel',
+        msg: 'Hi bby',
       },
       {
         id: '786805099908825088', //

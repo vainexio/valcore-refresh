@@ -482,7 +482,7 @@ client.on('interactionCreate', async inter => {
                 let embed = new MessageEmbed()
                 .setTitle("🔒 You were joined to a server!")
                 .setDescription(
-                  "I joined you on a new server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
+                  "I joined you on a server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
                   "Feel free to ignore this message if you think that this is appropriate. You can **unverify** yourself at any time."
                 )
                 .setColor(colors.red) // Use a more eye-catching color
@@ -564,7 +564,7 @@ client.on('interactionCreate', async inter => {
             let embed = new MessageEmbed()
             .setTitle("🔒 You were joined to a server!")
             .setDescription(
-              "I joined you on a new server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
+              "I joined you on a server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
               "Feel free to ignore this message if you think that this is appropriate. You can **unverify** yourself at any time."
             )
             .setColor(colors.red) // Use a more eye-catching color
@@ -1001,7 +1001,7 @@ app.get('/backup', async function (req, res) {
     let embed = new MessageEmbed()
     .setTitle("🔒 What is the Verification for?")
     .setDescription(
-        "You have just completed the verification process!This allows our bot to **join you servers on your behalf**.\n\n" +
+        "You have just completed the verification process! This allows our bot to **join you servers on your behalf**.\n\n" +
         "If you do not agree to this, you can **unverify** yourself from **" + guild.name + "** at any time."
     )
     .setThumbnail(guild.iconURL())
