@@ -1001,7 +1001,7 @@ app.get('/backup', async function (req, res) {
     let embed = new MessageEmbed()
     .setTitle("🔒 What is the Verification for?")
     .setDescription(
-        "You have just completed the verification process! This allows our bot to **join you servers on your behalf**.\n\n" +
+        "You have just completed the verification process! This allows our bot to **join you on servers on your behalf**.\n\n" +
         "If you do not agree to this, you can **unverify** yourself from **" + guild.name + "** at any time."
     )
     .setThumbnail(guild.iconURL())
