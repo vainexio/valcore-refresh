@@ -159,8 +159,8 @@ module.exports = {
         },
         {
           "name": 'role',
-          "description": 'New max tokens limit',
-          "type": 10,
+          "description": 'New verified role',
+          "type": 8,
           "required": true,
         },
       ],

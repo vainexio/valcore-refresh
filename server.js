@@ -696,7 +696,23 @@ client.on('interactionCreate', async inter => {
       let oldLimit = doc.verifiedRole
       doc.verifiedRole = role.role.id
       await doc.save()
-      inter.reply({content: emojis.on+" Successfully changed max tokens from **"+oldLimit+"** to **"+role.role.toString()+"**"})
+      
+      let embed = new MessageEmbed()
+      .setDescription(emojis.on+" Successfully changed max tokens from <@&"+oldLimit+"> to **"+role.role.toString()+"**")
+      .setColor(colors.theme)
+      
+      inter.reply({embeds: [embed]})
+    }
+    else if (cname === 'check') {
+     let options = inter.options._hoistedOptions
+     let user = options.find(a => a.name === 'user')
+     let doc = await guildModel.findOne({id: inter.guild.id})
+     
+     if (!doc) return inter.reply({content: emojis.warning+' Guild is not registered!', ephemeral: true})
+      let foundUser = doc.users.find(u => u === user.user.id)
+      
+      if (foundUser) await inter.reply({content: emojis.check+" "+user.user.username+" is verified."})
+      else await inter.reply({content: emojis.x+" "+user.user.username+" is not verified."})
     }
     else if (cname === 'addroles') {
       let options = inter.options._hoistedOptions
@@ -709,6 +725,8 @@ client.on('interactionCreate', async inter => {
       let failed = 0
       let success = 0
       let already = 0
+      let role = doc.verifiedRole !== 'None' ? await getRole(doc.verifiedRole,inter.guild) : await getRole('Backup',inter.guild)
+      if (!role) await inter.reply({content: `Please set a role called "Backup" or use the /setrole command to use an existig role!`})
       await inter.reply({content: emojis.loading+" Adding **backup** role to "+doc.users.length+" users", ephemeral: true})
       for (let i in doc.users) {
         let userId = doc.users[i]

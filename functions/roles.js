@@ -13,7 +13,7 @@ function hasRole (member, roles) {
 }
 module.exports = {
   getRole: async function (role, guild) {
-    let foundRole = await guild.roles.cache.find(foundRole => foundRole.name.toLowerCase() === role.toLowerCase || foundRole.id === role);
+    let foundRole = await guild.roles.cache.find(foundRole => foundRole.name.toLowerCase() === role.toLowerCase() || foundRole.id === role);
     if (foundRole) {
       return foundRole;
     }
