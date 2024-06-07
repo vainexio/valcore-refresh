@@ -691,7 +691,7 @@ client.on('interactionCreate', async inter => {
      let role = options.find(a => a.name === 'role')
      let key = options.find(a => a.name === 'key')
      let doc = await guildModel.findOne({key: key.value})
-     
+     await inter.reply({content: emojis.loading+" Changing role"})
      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key', ephemeral: true})
       
       let oldLimit = doc.verifiedRole
@@ -699,10 +699,10 @@ client.on('interactionCreate', async inter => {
       await doc.save()
       
       let embed = new MessageEmbed()
-      .setDescription(emojis.on+" Successfully changed max tokens from "(oldLimit !== "Backup" ? "<@&"+oldLimit+">" : oldLimit)+" to **"+role.role.toString()+"**")
+      .setDescription(emojis.on+" Successfully changed verified role from "+(oldLimit !== "Backup" ? "<@&"+oldLimit+">" : oldLimit)+" to **"+role.role.toString()+"**")
       .setColor(theme)
       
-      inter.reply({embeds: [embed]})
+      await inter.followUp({embeds: [embed]})
     }
     else if (cname === 'check') {
      let options = inter.options._hoistedOptions
@@ -835,7 +835,7 @@ client.on('interactionCreate', async inter => {
       await doc.save();
       await inter.update({content: emojis.check+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
       await sleep(1000)
-      await removeRole(inter.member,["backup","sloopie"],guildId)
+      await removeRole(inter.member,[doc.verifiedRole,"sloopie"],guildId)
     }
     else if (id.startsWith('cancel')) {
       await inter.update({content: 'Interaction was cancelled.', components: []})
