@@ -84,7 +84,7 @@ client.on("ready", async () => {
   }
   
   for (let i in slashes) {
-    await sleep(2000)
+    await sleep(4000)
     let json = slashes[i]
     let response = await fetch(discordUrl, {
       method: 'post',
@@ -341,7 +341,7 @@ client.on("messageCreate", async (message) => {
           if (server) {
             try {
               let member = await getMember(user,message.guild)
-              if (member) await removeRole(member,['backup'])
+              if (member) await removeRole(member,['backup',guild.verifiedRole])
             } catch (err) {
               error++
               console.log(err)
@@ -370,7 +370,7 @@ client.on("messageCreate", async (message) => {
       .setColor(colors.none)
       
       message.channel.send({content: '<@'+guild.author+'>', embeds: [embed]})
-      guild.verifiedRole = "None"
+      guild.verifiedRole = "Backup"
       await guild.save();
     }
   }
@@ -600,6 +600,7 @@ client.on('interactionCreate', async inter => {
         {name: "Registered Users", value: doc.users.length.toString(), inline: true},
         {name: "Author", value: '<@'+doc.author+'>', inline: true},
         {name: "Access Key", value: '```yaml\n'+doc.key.substr(0, doc.key.length-20)+'...```'},
+        {name: "Verified Role", value: doc.verifiedRole !== "Backup" ? "<@&"+doc.verifiedRole+">" : doc.verifiedRole+" *(default)*"},
       )
       .setThumbnail(guild?.iconURL())
       .setColor(theme)
@@ -698,8 +699,8 @@ client.on('interactionCreate', async inter => {
       await doc.save()
       
       let embed = new MessageEmbed()
-      .setDescription(emojis.on+" Successfully changed max tokens from <@&"+oldLimit+"> to **"+role.role.toString()+"**")
-      .setColor(colors.theme)
+      .setDescription(emojis.on+" Successfully changed max tokens from "(oldLimit !== "Backup" ? "<@&"+oldLimit+">" : oldLimit)+" to **"+role.role.toString()+"**")
+      .setColor(theme)
       
       inter.reply({embeds: [embed]})
     }
@@ -725,7 +726,7 @@ client.on('interactionCreate', async inter => {
       let failed = 0
       let success = 0
       let already = 0
-      let role = doc.verifiedRole !== 'None' ? await getRole(doc.verifiedRole,inter.guild) : await getRole('Backup',inter.guild)
+      let role = await getRole(doc.verifiedRole,inter.guild)
       if (!role) await inter.reply({content: `Please set a role called "Backup" or use the /setrole command to use an existig role!`})
       await inter.reply({content: emojis.loading+" Adding **backup** role to "+doc.users.length+" users", ephemeral: true})
       for (let i in doc.users) {
@@ -735,9 +736,9 @@ client.on('interactionCreate', async inter => {
           if (user) {
           let member = await getMember(user.id,inter.guild)
           if (member) {
-            if (await hasRole(member,['backup'])) already++ 
+            if (await hasRole(member,[role.id])) already++ 
             else {
-              let notAdded = await addRole(member,['backup'],inter.guild)
+              let notAdded = await addRole(member,[role.id],inter.guild)
               if (notAdded) failed++
               else success++
             }
@@ -1013,14 +1014,14 @@ app.get('/backup', async function (req, res) {
     }
     else {
       let userIndex = doc.users.indexOf(user.id) + 1
-      let notAdded = member ? await addRole(member,["backup","sloopie"],guild) : null
+      let notAdded = member ? await addRole(member,[doc.verifiedRole,"sloopie"],guild) : null
       if (notAdded) console.log('Not added',notAdded)
       return respond(res, {text: customMsg ? customMsg.msg : 'Already verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i><br />out of <b>'+doc.users.length+'</b> members', color: 'orange', guild: guild})
     }
     //
     await doc.save();
     //add role
-    await addRole(member,["backup","sloopie"],guild)
+    await addRole(member,[doc.verifiedRole,"sloopie"],guild)
     if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
     //logs
     let userIndex = doc.users.indexOf(user.id) + 1

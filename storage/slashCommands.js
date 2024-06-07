@@ -14,7 +14,7 @@ ATTACHMENT - 11
 
 module.exports = {
   register: true,
-  deleteSlashes: [ 1169829357171245127 ],
+  deleteSlashes: ['1170002545335349308'],
   slashes: [
     {
       "name": "joinall",
@@ -161,6 +161,19 @@ module.exports = {
           "name": 'role',
           "description": 'New verified role',
           "type": 8,
+          "required": true,
+        },
+      ],
+    },
+    {
+      "name": "check",
+      "type": 1,
+      "description": "Check if user if verified",
+      "options": [
+        {
+          "name": 'user',
+          "description": 'Target user',
+          "type": 6,
           "required": true,
         },
       ],
