@@ -63,6 +63,7 @@ client.on("ready", async () => {
     key: String,
     author: String,
     maxTokens: Number,
+    verifiedRole: String,
     users: [],
   })
   tokenSchema = new mongoose.Schema({
@@ -71,7 +72,6 @@ client.on("ready", async () => {
     refresh_token: String,
     createdAt: String,
     expiresAt: String,
-      
   })
   guildModel = mongoose.model("ValcoreBackup_Model", guildSchema);
   tokenModel = mongoose.model("ValcoreBackup_Token", tokenSchema);
@@ -370,7 +370,7 @@ client.on("messageCreate", async (message) => {
       .setColor(colors.none)
       
       message.channel.send({content: '<@'+guild.author+'>', embeds: [embed]})
-      guild.maxTokens = 500
+      guild.verifiedRole = "None"
       await guild.save();
     }
   }
@@ -396,6 +396,7 @@ client.on('interactionCreate', async inter => {
       newDoc.key = makeCode(30)
       newDoc.author = inter.user.id
       newDoc.maxTokens = config.guildMaxtokens
+      newDoc.maxTokens = "None"
       await newDoc.save()
       
       await inter.reply({content: emojis.on+" Your guild was registered"})
@@ -683,6 +684,19 @@ client.on('interactionCreate', async inter => {
       doc.maxTokens = limit.value
       await doc.save()
       inter.reply({content: emojis.on+" Successfully changed max tokens from **"+oldLimit+"** to **"+limit.value+"**"})
+    }
+    else if (cname === 'setrole') {
+     let options = inter.options._hoistedOptions
+     let role = options.find(a => a.name === 'role')
+     let key = options.find(a => a.name === 'key')
+     let doc = await guildModel.findOne({key: key.value})
+     
+     if (!doc) return inter.reply({content: emojis.warning+' Invalid Key', ephemeral: true})
+      
+      let oldLimit = doc.verifiedRole
+      doc.verifiedRole = role.role.id
+      await doc.save()
+      inter.reply({content: emojis.on+" Successfully changed max tokens from **"+oldLimit+"** to **"+role.role.toString()+"**"})
     }
     else if (cname === 'addroles') {
       let options = inter.options._hoistedOptions

@@ -13,7 +13,7 @@ ATTACHMENT - 11
 */
 
 module.exports = {
-  register: false,
+  register: true,
   deleteSlashes: [ 1169829357171245127 ],
   slashes: [
     {
@@ -140,6 +140,25 @@ module.exports = {
         },
         {
           "name": 'limit',
+          "description": 'New max tokens limit',
+          "type": 10,
+          "required": true,
+        },
+      ],
+    },
+    {
+      "name": "setrole",
+      "type": 1,
+      "description": "Update verified role",
+      "options": [
+        {
+          "name": 'key',
+          "description": 'Access Key',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'role',
           "description": 'New max tokens limit',
           "type": 10,
           "required": true,
