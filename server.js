@@ -396,7 +396,7 @@ client.on('interactionCreate', async inter => {
       newDoc.key = makeCode(30)
       newDoc.author = inter.user.id
       newDoc.maxTokens = config.guildMaxtokens
-      newDoc.maxTokens = "None"
+      newDoc.verifiedRole = "Backup"
       await newDoc.save()
       
       await inter.reply({content: emojis.on+" Your guild was registered"})
@@ -691,7 +691,7 @@ client.on('interactionCreate', async inter => {
      let role = options.find(a => a.name === 'role')
      let key = options.find(a => a.name === 'key')
      let doc = await guildModel.findOne({key: key.value})
-     await inter.reply({content: emojis.loading+" Changing role"})
+     await inter.reply({content: emojis.loading+" Changing role", ephemeral: true})
      if (!doc) return inter.reply({content: emojis.warning+' Invalid Key', ephemeral: true})
       
       let oldLimit = doc.verifiedRole
