@@ -82,6 +82,11 @@ module.exports = {
         backup: 'https://discord.com/api/webhooks/1212767455269748826/HX6l5OTKVcsSJ7Yc8GYK70K3FdjOKxuIoVzpbcdkBg6rg3QMUm5dyI9rKl2NEKXdueTt',
         condition: function(msg) { if (msg.content.toLowerCase().includes('vouch')) return true }
       },
+      {
+        original: '1231186708922503200', //citadelle
+        backup: 'https://discord.com/api/webhooks/1255487271021314088/opq2IPF3dRe83XjHjWf4pgQBzXkoxgvMl_eug-EpihVfwUNkkb1y7tpykqx4-59MN2sB',
+        condition: function(msg) { return true }
+      },
     ],
     version: '2',
     guildMaxtokens: 500,
