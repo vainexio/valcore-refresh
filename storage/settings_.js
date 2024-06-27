@@ -73,8 +73,8 @@ module.exports = {
     ],
     backupVouches: [
       {
-        original: '',
-        backup: 'https://discord.com/api/webhooks/1212757258820259960/K69rjfqN3vipcbyn_YjQxgUFbODGOfaLBpXgFv5V8ipLU12GWwmsard2peZArVRU_CbW',
+        original: '1138567779407114312', //pucca
+        backup: 'https://discord.com/api/webhooks/1212757261819183147/xJznpS1MWL9_kn73SxHTbDorDYSd5cmXNNqQy85vP7izAEMzBFje5sxt7R_bSHto9i2C',
         condition: function(msg) { if (msg.attachments.size !== 0) return true }
       },
       {
