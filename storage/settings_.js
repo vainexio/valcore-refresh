@@ -78,9 +78,9 @@ module.exports = {
         condition: function(msg) { if (msg.attachments.size !== 0) return true }
       },
       {
-        original: '',
-        backup: 'https://discord.com/api/webhooks/1212767455269748826/HX6l5OTKVcsSJ7Yc8GYK70K3FdjOKxuIoVzpbcdkBg6rg3QMUm5dyI9rKl2NEKXdueTt',
-        condition: function(msg) { if (msg.content.toLowerCase().includes('vouch')) return true }
+        original: '1126087601774940170', //knifeluvz
+        backup: 'https://discord.com/api/webhooks/1256236434260627460/vCL8KYTCdMtXvuR9fRpFms4TAqddncD9Bo6U4wFMeFbLSpEG-O3GMKykOj0AhLdvMwwb',
+        condition: function(msg) { if (msg.attachments.size !== 0) return true }
       },
       {
         original: '1231186708922503200', //citadelle
