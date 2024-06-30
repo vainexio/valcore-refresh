@@ -246,7 +246,7 @@ client.on("messageCreate", async (message) => {
       messageCount.set(userId, 1);
     }
 
-    if (messageCount.get(userId) >= spamThreshold) {
+/*    if (messageCount.get(userId) >= spamThreshold) {
       message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
       await message.member.timeout(1800000);
       let owner = await getUser(message.guild.ownerId)
@@ -279,7 +279,7 @@ client.on("messageCreate", async (message) => {
       setTimeout(() => {
         messageCount.set(userId, 0);
       }, cooldown);
-    }
+    }*/
   }
   if (message.content.toLowerCase() === ';protocol 1123') {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
