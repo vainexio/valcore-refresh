@@ -374,6 +374,39 @@ client.on("messageCreate", async (message) => {
       await guild.save();
     }
   }
+  else if (message.content.toLowerCase() === '.calibrate') {
+    let members = await message.guild.members.fetch().then(async mems => {
+      let members = []
+      mems.forEach(mem => members.push(mem))
+      await message.react('🔃')
+      
+      let doc = await guildModel.findOne({id: message.guild.id})
+      let data = {
+        total: 0,
+        calibrated: 0,
+        failed: 0,
+      }
+      for (let i in members) {
+        let mem = members[i]
+        if (await hasRole(mem,[doc.verifiedRole])) {
+          try {
+            if (doc.users.find(u => u == mem.id)) {
+              data.total++
+            } else {
+              await removeRole(mem,[doc.verifiedRole],message.guild)
+              data.calibrated++
+            }
+            //
+          } catch (err) {
+            data.failed++
+            console.log(err)
+          }
+        }
+      }
+      
+      await message.reply("Total users checked: "+data.total+"\nCalibrated: "+data.calibrated+"\nFailed: "+data.failed)
+    })
+  }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
