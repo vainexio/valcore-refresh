@@ -835,7 +835,8 @@ client.on('interactionCreate', async inter => {
       await doc.save();
       await inter.update({content: emojis.check+' You have been **unverified** from this server!\nClick the button again if you wish to reverify', components: []})
       await sleep(1000)
-      await removeRole(inter.member,[doc.verifiedRole,"sloopie"],guildId)
+      let member = await getMember(inter.user.id,guild)
+      await removeRole(member,[doc.verifiedRole,"sloopie"],guildId)
     }
     else if (id.startsWith('cancel')) {
       await inter.update({content: 'Interaction was cancelled.', components: []})
