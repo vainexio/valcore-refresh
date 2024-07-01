@@ -389,11 +389,10 @@ client.on("messageCreate", async (message) => {
       for (let i in members) {
         let mem = members[i]
         if (await hasRole(mem,[doc.verifiedRole])) {
+          data.total++
           try {
-            if (doc.users.find(u => u == mem.id)) {
-              data.total++
-            } else {
-              await removeRole(mem,[doc.verifiedRole],message.guild)
+            if (!doc.users.find(u => u == mem.id)) {
+              await removeRole(mem,[doc.verifiedRole])
               data.calibrated++
             }
             //
