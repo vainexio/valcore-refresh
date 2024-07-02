@@ -28,6 +28,12 @@ module.exports = {
           "required": true,
         },
         {
+          "name": 'message',
+          "description": 'What to tell the members',
+          "type": 3,
+          "required": true,
+        },
+        {
           "name": 'key',
           "description": 'Access key',
           "type": 3,
@@ -43,6 +49,12 @@ module.exports = {
         {
           "name": 'target_server_id',
           "description": 'The server you want the user to join',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'message',
+          "description": 'What to tell the member',
           "type": 3,
           "required": true,
         },

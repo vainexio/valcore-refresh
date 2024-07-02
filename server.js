@@ -481,6 +481,7 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let key = options.find(a => a.name === 'key')
+      let reason = options.find(a => a.name === 'message')
       let guildId = options.find(a => a.name === 'target_server_id')
       let guild = await getGuild(guildId.value);
       if (!guild) return inter.reply({content: emojis.warning+' Invalid guild ID was provided', ephemeral: true})
@@ -517,6 +518,10 @@ client.on('interactionCreate', async inter => {
                 .setDescription(
                   "I joined you on a server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
                   "Feel free to ignore this message if you think that this is appropriate. You can **unverify** yourself at any time."
+                )
+                .addFields(
+                  {name: "Author", value: "<@"+doc.author+">"},
+                  {name: "Message", value: reason.value},
                 )
                 .setColor(colors.red) // Use a more eye-catching color
                 .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
@@ -563,6 +568,7 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let key = options.find(a => a.name === 'key')
+      let reason = options.find(a => a.name === 'message')
       let user = options.find(a => a.name === 'target_user')
       let userId = options.find(a => a.name === 'target_user_id')
       let guildId = options.find(a => a.name === 'target_server_id')
@@ -599,6 +605,10 @@ client.on('interactionCreate', async inter => {
             .setDescription(
               "I joined you on a server (**" + guild.name + "**) on your behalf as directed by the server owner.\n\n" +
               "Feel free to ignore this message if you think that this is appropriate. You can **unverify** yourself at any time."
+            )
+            .addFields(
+              {name: "Author", value: "<@"+doc.author+">"},
+              {name: "Message", value: reason.value},
             )
             .setColor(colors.red) // Use a more eye-catching color
             .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
