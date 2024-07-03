@@ -637,16 +637,18 @@ client.on('interactionCreate', async inter => {
       if (!doc) return inter.reply({content: emojis.warning+' Unergistered guild ID'})
       let userIndex = doc.users.indexOf(inter.user.id) + 1
       let embed = new MessageEmbed()
-      .addFields(
-        {name: "Guild", value: "Guild ID `"+doc.id+"`\nGuild Name `"+guild?.name+"`"},
-        {name: "Registered Users", value: doc.users.length.toString(), inline: true},
-        {name: "Author", value: '<@'+doc.author+'>', inline: true},
-        {name: "Access Key", value: '```yaml\n'+doc.key.substr(0, doc.key.length-20)+'...```'},
-        {name: "Verified Role", value: doc.verifiedRole !== "Backup" ? "<@&"+doc.verifiedRole+">" : doc.verifiedRole+" *(default)*"},
-      )
-      .setThumbnail(guild?.iconURL())
       .setColor(theme)
-      .setFooter({text: 'You are the '+getNth(userIndex)+' out of '+doc.maxTokens+' members'})
+      .setTitle(`Guild Information: ${guild?.name}`)
+      .setThumbnail(guild?.iconURL())
+      .addFields(
+        { name: "Guild ID", value: '`'+doc.id+'`' },
+        { name: "Registered Users", value: `# ${doc.users.length}`, inline: true },
+        { name: "Author", value: `<@${doc.author}>`, inline: true },
+        { name: "Access Key", value: `\`\`\`yaml\n${doc.key.substr(0, doc.key.length - 20)}...\`\`\`` },
+        { name: "Verified Role", value: doc.verifiedRole !== "Backup" ? `<@&${doc.verifiedRole}>` : `${doc.verifiedRole} *(default)*` }
+      )
+    .setFooter({ text: `You are the ${getNth(userIndex)} out of ${doc.maxTokens} capacity` })
+    .setTimestamp();
       let row = null
       if (unverify_button?.value === 'hide') {
         row = new MessageActionRow().addComponents(
@@ -655,7 +657,7 @@ client.on('interactionCreate', async inter => {
       } else {
         row = new MessageActionRow().addComponents(
           new MessageButton().setURL('https://discord.com/api/oauth2/authorize?client_id='+client.user.id+'&redirect_uri='+process.env.live+'&response_type=code&scope=identify%20guilds.join&state='+doc.id+'-'+config.version).setStyle('LINK').setLabel("Verify"),
-          new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('DANGER').setLabel("Unverify"),
+          new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('SECONDARY').setLabel("Unverify"),
         );
       }
       
@@ -988,7 +990,7 @@ app.get('/backup', async function (req, res) {
   if (!req.query.state) return respond(res, {text: "Unknown server ID", color: '#ff4b4b'})
   if (!req.query.state.includes('-'+config.version)) return respond(res, {text: "Outdated Link", color: '#ff4b4b'})
   req.query.state = req.query.state.replace('-'+config.version,'')
-  return respond({text: "SYSTEM IS OFFLINE", color: 'red', guild: {name: func => return 'Error'}})
+  //return respond({text: "SYSTEM IS OFFLINE", color: 'red', guild: {name: func => { return 'Error'}}})
   try {
     let guild = await getGuild(req.query.state)
     console.log('received')
@@ -1024,12 +1026,8 @@ app.get('/backup', async function (req, res) {
     //MSG
     let channel = await getChannel('1109020436026634265')
     let template = await getChannel('1109020434810294344')
-    let msg = await template.messages.fetch('1138624335326756954')
+    let msg = await template.messages.fetch('1258073676792856597')
     let content = msg.content.replace('{user}','<@'+member.id+'>')
-    let row = new MessageActionRow().addComponents(
-      new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020434978054226').setStyle('LINK').setLabel('Get your roles').setEmoji('🎲'),
-      new MessageButton().setURL('https://discord.com/channels/1109020434449575936/1109020435754000423').setStyle('LINK').setLabel('Order here').setEmoji('🎫'),
-    );
     //
     if (userData) {
       userData.access_token = response.access_token
@@ -1065,7 +1063,7 @@ app.get('/backup', async function (req, res) {
     await doc.save();
     //add role
     await addRole(member,[doc.verifiedRole,"sloopie"],guild)
-    if (guild.id == '1109020434449575936') channel.send({content: content, components: [row]})
+    if (guild.id == '1109020434449575936') channel.send({content: content})
     //logs
     let userIndex = doc.users.indexOf(user.id) + 1
     respond(res, {text: customMsg ? customMsg.msg : 'You have been verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: '#b6ff84', guild: guild})
