@@ -104,7 +104,7 @@ client.on("ready", async () => {
     }
   }
   console.log('Successfully logged in to discord bot.')
-  client.user.setPresence({ status: 'online', activities: [{ name: 'Users', type: "LISTENING" }] });
+  client.user.setPresence({ status: 'offline', activities: [{ name: 'Users', type: "LISTENING" }] });
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   
@@ -988,7 +988,7 @@ app.get('/backup', async function (req, res) {
   if (!req.query.state) return respond(res, {text: "Unknown server ID", color: '#ff4b4b'})
   if (!req.query.state.includes('-'+config.version)) return respond(res, {text: "Outdated Link", color: '#ff4b4b'})
   req.query.state = req.query.state.replace('-'+config.version,'')
-  //return respond({text: "SYSTEM IS OFFLINE", color: 'red', guild: {name: func => return 'Error'}})
+  return respond({text: "SYSTEM IS OFFLINE", color: 'red', guild: {name: func => return 'Error'}})
   try {
     let guild = await getGuild(req.query.state)
     console.log('received')
