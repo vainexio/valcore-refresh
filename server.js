@@ -406,6 +406,34 @@ client.on("messageCreate", async (message) => {
       await message.reply("Total users checked: "+data.total+"\nCalibrated: "+data.calibrated+"\nFailed: "+data.failed)
     })
   }
+  else if (message.content.toLowerCase() === '.check') {
+    if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
+    let guilds = await guildModel.find()
+      let list = []
+      let topTen = ""
+      let count = 0
+      for (let i in guilds) {
+        count++
+        let guild = guilds[i]
+        list.push({id: guild.id, users: guild.users.length, author: guild.author})
+      }
+    let content = ''
+    for (let i in list) {
+      let data = list[i]
+      let guild = await getGuild(data.id)
+      let counter = 0
+      if (guild) {
+        counter++
+        let author = await getUser(data.author)
+        let emoji = ''
+        if (author) emoji = emojis.check
+        else emoji = emojis.x
+        
+        content += counter+'. <@'+data.author+'> '+emoji+'\n'
+      }
+    }
+    await message.reply(content)
+  }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
@@ -414,7 +442,7 @@ client.on('interactionCreate', async inter => {
     if (cname === 'help') {
       let botMsg = null
       let row = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId('desc').setStyle('PRIMARY').setLabel('Description'),
+        new MessageButton().setCustomId('desc').setStyle('DANGER').setLabel('Description'),
         new MessageButton().setCustomId('template').setStyle('SECONDARY').setLabel('Template'),
       );
       await inter.reply({content: emojis.loading, ephemeral: true});
@@ -425,7 +453,7 @@ client.on('interactionCreate', async inter => {
       
         embed = new MessageEmbed()
           .setAuthor({name: "Valcore Commands", iconURL: client.user.avatarURL()})
-          .setDescription("```js\n[] - Required Argument | () - Optional Argument```\n> Use `:help [Command]` to know more about a command.")
+          .setDescription("```js\n[] - Required Argument | () - Optional Argument```")
           .setColor(theme)
           .setTimestamp()
         
@@ -471,7 +499,7 @@ client.on('interactionCreate', async inter => {
           let lb = await displayHelp(i.customId)
           for (let inter in row.components) {
             let comp = row.components[inter]
-            comp.customId && comp.customId === i.customId ? comp.setStyle('PRIMARY') : comp.setStyle('SECONDARY')
+            comp.customId && comp.customId === i.customId ? comp.setStyle('DANGER') : comp.setStyle('SECONDARY')
           }
           i.update({embeds: [lb], components: [row]});
           current = i.customId
