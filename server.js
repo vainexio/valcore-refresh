@@ -430,6 +430,7 @@ client.on("messageCreate", async (message) => {
           emoji = '📄'
           if (await hasRole(author,['1258092843516563521'],message.guild)) {
             emoji += '✅'
+            await addRole(author,['1259460543157112832'],message.guild)
           } else {
             emoji += '❌'
           }
