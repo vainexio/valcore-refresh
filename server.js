@@ -424,15 +424,22 @@ client.on("messageCreate", async (message) => {
       let counter = 0
       if (guild) {
         counter++
-        let author = await getUser(data.author)
+        let author = await getMember(data.author,message.guild)
         let emoji = ''
-        if (author) emoji = emojis.check
-        else emoji = emojis.x
+        if (author) {
+          emoji = '📄'
+          if (await hasRole(author,['1258092843516563521'],message.guild)) {
+            emoji += '✅'
+          } else {
+            emoji += '❌'
+          }
+        }
+        else emoji = '❌'
         
-        content += counter+'. <@'+data.author+'> '+emoji+'\n'
+        content += counter+'. '+emoji+' <@'+data.author+'>\n'
       }
     }
-    await message.reply(content)
+    await message.reply(content+'\n\n📄 = in server\n✅ = has @comms role\n❌ = neither')
   }
 });//END MESSAGE CREATE
 client.on('interactionCreate', async inter => {
