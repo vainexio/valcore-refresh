@@ -411,7 +411,82 @@ client.on('interactionCreate', async inter => {
   if (inter.isCommand()) {
     let cname = inter.commandName
     //Back up
-    if (cname === 'register') {
+    if (cname === 'help') {
+      let botMsg = null
+      let row = new MessageActionRow().addComponents(
+        new MessageButton().setCustomId('desc').setStyle('PRIMARY').setLabel('Description'),
+        new MessageButton().setCustomId('template').setStyle('SECONDARY').setLabel('Template'),
+      );
+      await inter.reply({content: emojis.loading, ephemeral: true});
+      let current = 'desc'
+      async function displayHelp(type) {
+        let known = []
+        let embed = null
+      
+        embed = new MessageEmbed()
+          .setAuthor({name: "Valcore Commands", iconURL: client.user.avatarURL()})
+          .setDescription("```js\n[] - Required Argument | () - Optional Argument```\n> Use `:help [Command]` to know more about a command.")
+          .setColor(theme)
+          .setTimestamp()
+        
+        for (let i in commands) {
+          if (await getPerms(inter.member, commands[i].level) || commands[i].level === 0) {
+      
+            let foundCmd = await known.find(a => a === commands[i].Category)
+            if (!foundCmd) {
+              known.push(commands[i].Category)
+              embed = new MessageEmbed(embed)
+                .addField(commands[i].Category,'[_]')
+            }
+          }
+        }
+        
+        for (let i in commands) {
+          if (await getPerms(inter.member, commands[i].level) || commands[i].level === 0) {
+            let field = embed.fields.find(field => field.name === commands[i].Category)
+    
+            if (field) {
+              let template = commands[i].Template.length > 0 ? ' '+commands[i].Template : ''
+              let desc = commands[i].Desc.length > 0 ? ' — *'+commands[i].Desc+'*' : ''
+              let fieldValue = field.value.replace('[_]','')
+              if (commands[i].slash) {
+                embed.fields[embed.fields.indexOf(field)] = {name: commands[i].Category, value: fieldValue+(type === 'desc' ? '</'+commands[i].Command+':'+commands[i].id+'>'+desc : '</'+commands[i].Command+':'+commands[i].id+'>'+template)+'\n'}
+              } else {
+                embed.fields[embed.fields.indexOf(field)] = {name: commands[i].Category, value: fieldValue+(type === 'desc' ? '`'+prefix+commands[i].Command+'`'+desc : '`'+prefix+commands[i].Command+'`'+template)+'\n'}
+              }
+            } else {
+              console.log("Invalid Category: "+commands[i].Category)
+            }
+          }
+        }
+        if (botMsg) return embed;
+        !botMsg ? await inter.channel.send({ embeds: [embed], components: [row]}).then(msg => botMsg = msg) : null
+      }
+      await displayHelp('desc')
+      let filter = i => i.user.id === inter.user.id && i.message.id === botMsg.id;
+      let collector = botMsg.channel.createMessageComponentCollector({ filter, time: 300000 });
+    
+      collector.on('collect', async i => {
+        if (current !== i.customId) {
+          let lb = await displayHelp(i.customId)
+          for (let inter in row.components) {
+            let comp = row.components[inter]
+            comp.customId && comp.customId === i.customId ? comp.setStyle('PRIMARY') : comp.setStyle('SECONDARY')
+          }
+          i.update({embeds: [lb], components: [row]});
+          current = i.customId
+        } else {
+          i.deferUpdate();
+        }
+      });
+      collector.on('end', collected => {
+        for (let i in row.components) {
+          row.components[i].setDisabled(true);
+        }
+        botMsg.edit({ components: [row] });
+      })
+    }
+    else if (cname === 'register') {
       if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+" You are not on the whitelist"});
       let options = inter.options._hoistedOptions
       //

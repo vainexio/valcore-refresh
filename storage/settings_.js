@@ -105,6 +105,18 @@ module.exports = {
       'Content-Type': 'application/json'
     }
   },
+  commands: [
+    {
+      Command: "register",
+      Template: "",
+      Alias: [],
+      Category: "Main",
+      Desc: 'Register your server',
+      ex: [''],
+      level: 0,
+      slash: true,
+    },
+  ],
   permissions: [
     {
       id: '1066284097879670824', //vai
