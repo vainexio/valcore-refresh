@@ -705,6 +705,7 @@ client.on('interactionCreate', async inter => {
       }
     }
     else if (cname === 'status') {
+      if (!await guildPerms(await getMember(inter.user.id,guild),["MANAGE_GUILD"])) return inter.reply({content: emojis.warning+' You must have the **MANAGE SERVER** permission in the server that you want to register'})
       let options = inter.options._hoistedOptions
       //
       let unverify_button = options.find(a => a.name === 'unverify_button')
@@ -880,6 +881,7 @@ client.on('interactionCreate', async inter => {
       await inter.channel.send({content: emojis.check+' Added: '+success+'\n'+emojis.x+' Failed: '+failed+'\n'+emojis.on+' Already Added: '+already})
     }
     else if (cname === 'leaderboard') {
+      if (!await getPerms(inter.member,2)) return inter.reply({content: emojis.warning+" You are not on the whitelist"});
       await inter.deferReply();
       let guilds = await guildModel.find()
       let list = []
