@@ -88,7 +88,7 @@ module.exports = {
         condition: function(msg) { return true }
       },
     ],
-    version: '3',
+    version: '2',
     guildMaxtokens: 500,
     guildTokens: [
       { id: '1109020434449575936', maxTokens: 100000},

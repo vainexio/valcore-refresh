@@ -761,7 +761,7 @@ client.on('interactionCreate', async inter => {
     .setFooter({ text: `You are the ${getNth(userIndex)} out of ${doc.maxTokens} capacity` })
     .setTimestamp();
       let row = null
-      let url = encodeURI('https://discord.com/oauth2/authorize?client_id='+client.user.id+'&response_type=code&redirect_uri='+process.env.live+'&scope=guilds.join+identify+dm_channels.messages.write&state='+doc.id+'-'+config.version)
+      let url = encodeURI('https://discord.com/oauth2/authorize?client_id='+client.user.id+'&response_type=code&redirect_uri='+process.env.live+'&scope=guilds.join+identify&state='+doc.id+'-'+config.version)
       if (unverify_button?.value === 'hide') {
         row = new MessageActionRow().addComponents(
         new MessageButton().setURL(url).setStyle('LINK').setLabel("Verify"),
