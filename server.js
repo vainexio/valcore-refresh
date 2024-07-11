@@ -245,43 +245,8 @@ client.on("messageCreate", async (message) => {
       lastMessages.set(userId, userMessage);
       messageCount.set(userId, 1);
     }
-
-/*    if (messageCount.get(userId) >= spamThreshold) {
-      message.channel.send(` ${emojis.warning} ${message.author} Unusual behavior detected`);
-      await message.member.timeout(1800000);
-      let owner = await getUser(message.guild.ownerId)
-      try {
-      if (owner) {
-        let state = emojis.warning+' An unusual behavior was detected from '+message.author.toString()+' and was timed-out for 30 minutes in **'+message.guild.name+'**. The message is most likely a raid or spam \n\nContent: '+message.content
-        await owner.send({content: state})
-        let doc = await guildModel.findOne({id: message.guild.id})
-        if (doc) {
-          let user = await getUser(doc.author)
-          if (user.id !== owner.id) await user.send({content: state})
-        }
-        let logs = await getChannel('1109020437096181831')
-        await logs.send({content: state})
-      }
-      } catch (err) {
-        console.log(err)
-      }
-
-      // Delete the suspected messages
-      let messages = await message.channel.messages.fetch({limit: 100}).then(async messages => {
-        let msgCount = 0
-        await messages.forEach(async (gotMsg) => {
-          if (gotMsg.author.id === message.author.id && msgCount < 5) {
-            msgCount++
-            await gotMsg.delete()
-          }
-        })
-      })
-      setTimeout(() => {
-        messageCount.set(userId, 0);
-      }, cooldown);
-    }*/
   }
-  if (message.content.toLowerCase() === ';protocol 1123') {
+  else if (isCommand('protocol')) {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
@@ -374,7 +339,7 @@ client.on("messageCreate", async (message) => {
       await guild.save();
     }
   }
-  else if (message.content.toLowerCase() === '.calibrate') {
+  else if (isCommand('calibrate')) {
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
       mems.forEach(mem => members.push(mem))
@@ -406,7 +371,7 @@ client.on("messageCreate", async (message) => {
       await message.reply("Total users checked: "+data.total+"\nCalibrated: "+data.calibrated+"\nFailed: "+data.failed)
     })
   }
-  else if (message.content.toLowerCase() === '.check') {
+  else if (isCommand('check')) {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let guilds = await guildModel.find()
       let list = []
@@ -938,6 +903,13 @@ client.on('interactionCreate', async inter => {
       .setDescription(topTen)
       .setColor(colors.blue)
       await inter.editReply({embeds: [embed]})
+  }
+    else if (cname === 'dupvouches') {
+      if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+" You can't do that sir."});
+      await inter.deferReply();
+      let options = inter.options._hoistedOptions
+      //
+      let oldVouch = options.find(a => a.name === 'old_vouch_id')
   }
   }
   //BUTTONS
