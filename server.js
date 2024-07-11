@@ -926,6 +926,7 @@ client.on('interactionCreate', async inter => {
       let templates = await getChannel(config.channels.templates)
       let tempMsg = await templates.messages.fetch('1260909239455711375')
       let data = {
+        completed: 0,
         f: {
           last_id: null,
           msgSize: 0,
@@ -955,16 +956,15 @@ client.on('interactionCreate', async inter => {
             let gotMsg = more[i]
             await sleep(1000)
             if (gotMsg.author.bot) return;
-            console.log(data.completed)
-            let embed = new MessageEmbed()
+            /*let embed = new MessageEmbed()
             .setDescription(tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content))
             .setColor(colors.none)
-            
+            */
             let attachments = Array.from(gotMsg.attachments.values())
             let files = []
             for (let i in attachments) { files.push(attachments[i].url) }
             
-            await newVouch.send({embeds: [embed], files: files})
+            await newVouch.send({content: tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content), files: files})
             data.completed++
           }
         });
