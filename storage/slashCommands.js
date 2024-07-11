@@ -17,6 +17,31 @@ module.exports = {
   deleteSlashes: ['1170002545335349308'],
   slashes: [
     {
+      "name": "dupvouches",
+      "type": 1,
+      "description": "Duplicate server vouches",
+      "options": [
+        {
+          "name": 'target_server_id',
+          "description": 'The server you want your verified users to join',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'message',
+          "description": 'What to tell the members',
+          "type": 3,
+          "required": true,
+        },
+        {
+          "name": 'key',
+          "description": 'Access key',
+          "type": 3,
+          "required": false,
+        },
+      ]
+    },
+    {
       "name": "joinall",
       "type": 1,
       "description": "Join all your verified users to your backup server",

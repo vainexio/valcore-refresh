@@ -910,6 +910,58 @@ client.on('interactionCreate', async inter => {
       let options = inter.options._hoistedOptions
       //
       let oldVouch = options.find(a => a.name === 'old_vouch_id')
+      let newVouch = options.find(a => a.name === 'new_vouch_id')
+      
+      oldVouch = await getChannel(oldVouch.value)
+      newVouch = await getChannel(newVouch.value)
+      
+      if (!oldVouch) return inter.editReply({content: emojis.warning+" Invalid old vouch ID", ephemeral: true})
+      else if (!newVouch) return inter.editReply({content: emojis.warning+" Invalid new vouch ID", ephemeral: true})
+      
+      let templates = await getChannel(config.channels.templates)
+      let tempMsg = await templates.messages.fetch('1260909239455711375')
+      let data = {
+        f: {
+          last_id: null,
+          msgSize: 0,
+          totalMsg: 0,
+        }
+      }
+      
+      let msgSize = 0
+      let totalMsg = 0
+      
+      while (true) {
+        const options = { limit: 100 };
+        if (data.f.last_id) options.before = data.f.last_id;
+        
+        //
+        //Put to storage
+        await oldVouch.messages.fetch(options).then(async messages => {
+          data.f.last_id = messages.last()?.id;
+          totalMsg += messages.size
+          msgSize = messages.size
+          await messages.forEach(async (gotMsg) => {
+            if (gotMsg.author.bot) return;
+            console.log(data.completed)
+            let embed = new MessageEmbed()
+            .setDescription(tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content))
+            .setColor(colors.none)
+            
+            let attachments = Array.from(gotMsg.attachments.values())
+            let files = []
+            for (let i in attachments) { files.push(attachments[i].url) }
+            
+            await newVouch.send({embeds: [embed], files: files})
+            data.completed++
+          })
+        });
+        
+        if (msgSize != 100) {
+          await inter.channel.send("Successfully duplicated "+data.completed+" vouches")
+          break;
+        }
+      }
   }
   }
   //BUTTONS

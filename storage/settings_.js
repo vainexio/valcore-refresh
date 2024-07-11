@@ -95,7 +95,7 @@ module.exports = {
     ],
     channels: {
       chat: '1047454193595732055',
-      templates: '1079712339122720768',
+      templates: '1109020434810294344',
     },
   },
   auth: {
