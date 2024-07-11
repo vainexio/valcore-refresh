@@ -705,7 +705,7 @@ client.on('interactionCreate', async inter => {
       }
     }
     else if (cname === 'status') {
-      if (!await guildPerms(await getMember(inter.user.id,guild),["MANAGE_GUILD"])) return inter.reply({content: emojis.warning+' You must have the **MANAGE SERVER** permission in the server that you want to register'})
+      if (!await guildPerms(await getMember(inter.user.id,guild),["MANAGE_GUILD"])) return inter.reply({content: emojis.warning+' You must have the **MANAGE SERVER** permission to use this command.'})
       let options = inter.options._hoistedOptions
       //
       let unverify_button = options.find(a => a.name === 'unverify_button')
