@@ -248,7 +248,7 @@ client.on("messageCreate", async (message) => {
       messageCount.set(userId, 1);
     }
   }
-  else if (isCommand('protocol')) {
+  if (isCommand('protocol',message)) {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
@@ -341,7 +341,7 @@ client.on("messageCreate", async (message) => {
       await guild.save();
     }
   }
-  else if (isCommand('calibrate')) {
+  else if (isCommand('calibrate',message)) {
     let members = await message.guild.members.fetch().then(async mems => {
       let members = []
       mems.forEach(mem => members.push(mem))
@@ -373,7 +373,7 @@ client.on("messageCreate", async (message) => {
       await message.reply("Total users checked: "+data.total+"\nCalibrated: "+data.calibrated+"\nFailed: "+data.failed)
     })
   }
-  else if (isCommand('check')) {
+  else if (isCommand('check',message)) {
     if (!await getPerms(message.member,4)) return message.reply({content: emojis.warning+" You can't do that sir"});
     let guilds = await guildModel.find()
       let list = []
@@ -917,6 +917,7 @@ client.on('interactionCreate', async inter => {
       oldVouch = await getChannel(oldVouch.value)
       newVouch = await getChannel(newVouch.value)
       
+      
       if (!oldVouch) return inter.editReply({content: emojis.warning+" Invalid old vouch ID", ephemeral: true})
       else if (!newVouch) return inter.editReply({content: emojis.warning+" Invalid new vouch ID", ephemeral: true})
       
@@ -943,7 +944,14 @@ client.on('interactionCreate', async inter => {
           data.f.last_id = messages.last()?.id;
           totalMsg += messages.size
           msgSize = messages.size
+          let more = []
           await messages.forEach(async (gotMsg) => {
+            more.push(gotMsg)
+          })
+          
+          for (let i in more) {
+            let gotMsg = more[i]
+            await sleep(1000)
             if (gotMsg.author.bot) return;
             console.log(data.completed)
             let embed = new MessageEmbed()
@@ -956,7 +964,7 @@ client.on('interactionCreate', async inter => {
             
             await newVouch.send({embeds: [embed], files: files})
             data.completed++
-          })
+          }
         });
         
         if (msgSize != 100) {
@@ -1176,6 +1184,7 @@ app.get('/backup', async function (req, res) {
     }
     //
     else {
+      //
       let newUser = new tokenModel(tokenSchema)
       newUser.id = user.id
       newUser.access_token = response.access_token
