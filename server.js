@@ -51,6 +51,7 @@ let tokenModel
 //When bot is ready
 client.on("ready", async () => {
   console.log('hi')
+  
   await mongoose.connect(mongooseToken,{keepAlive: true});
   let channel = await getChannel('1109020434810294345')
   const connection = joinVoiceChannel({
@@ -91,7 +92,7 @@ client.on("ready", async () => {
       body: JSON.stringify(json),
       headers: headers
     });
-    console.log(response.status)
+    console.log(response.status+' '+json.name)
     response = await response.json();
   }
     for (let i in slashCmd.deleteSlashes) {
@@ -100,7 +101,8 @@ client.on("ready", async () => {
         method: 'delete',
         headers: headers
       })
-      console.log(deleteRes)
+      deleteRes = await deleteRes.json();
+      console.log(deleteRes.status)
     }
   }
   console.log('Successfully logged in to discord bot.')
