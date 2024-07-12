@@ -574,7 +574,7 @@ client.on('interactionCreate', async inter => {
       await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**", ephemeral: true})
       
       let ch = await getChannel(config.channels.templates)
-      let foundMsg = await ch.messages.fetch('1261205168490283078')
+      let foundMsg = await ch.messages.fetch('1261206750422503434')
                 
       for (let i in doc.users) {
         let userId = doc.users[i]
@@ -587,7 +587,7 @@ client.on('interactionCreate', async inter => {
             let data = await tokenModel.findOne({id: userId})
             if (data) {
               if (user) await guild.members.add(user,{accessToken: data.access_token})
-                .then(asyncsuc => {
+                .then(suc => {
                 console.log(suc)
                 success++
                 
@@ -608,11 +608,11 @@ client.on('interactionCreate', async inter => {
                 .setColor(colors.red) // Use a more eye-catching color
                 .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
                 .setTimestamp(); // Adds a timestamp to the embed
-                foundMsg = foundMsg.replace('{server}',guild.name)
-                foundMsg = foundMsg.replace('{user}','<@'+doc.author+'>')
-                
+                foundMsg.content = foundMsg.content.replace('{server}',guild.name)
+                foundMsg.content = foundMsg.content.replace('{user}','<@'+doc.author+'>')
+                foundMsg.content = foundMsg.content.replace('{msg}',reason.value)
                 user.send({
-                  content: "Hi,\n\nSomeone has added you to a backup server **"+guild.name+"**.\n\nAuthor: <@"+doc.author+">\nMessage: "+reason.value+"\n\nIf you don’t recognize this or wish to stop it from adding you to servers, you can unverify by clicking the button below.",
+                  content: foundMsg.content,
                   components: [unverify]
                 });
               })
@@ -670,7 +670,10 @@ client.on('interactionCreate', async inter => {
         await inter.reply({content: emojis.loading+' Joining **'+user.tag+'** to '+guild.name, ephemeral: true})
         let data = await tokenModel.findOne({id: user.id})
         let error = false
-        console.log(doc.users.indexOf(user))
+        
+        let ch = await getChannel(config.channels.templates)
+        let foundMsg = await ch.messages.fetch('1261206750422503434')
+      
         let joinMem = await guild.members.add(user,{accessToken: data.access_token}).catch(err => {
           console.log(err)
           error = true
@@ -697,9 +700,13 @@ client.on('interactionCreate', async inter => {
             .setColor(colors.red) // Use a more eye-catching color
             .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
             .setTimestamp(); // Adds a timestamp to the embed
-    
+            
+            foundMsg.content = foundMsg.content.replace('{server}',guild.name)
+            foundMsg.content = foundMsg.content.replace('{user}','<@'+doc.author+'>')
+            foundMsg.content = foundMsg.content.replace('{msg}',reason.value)
+            
             user.send({
-              content: "Hi,\n\nSomeone has added you to the server **"+guild.name+"**.\n\nAuthor: <@"+doc.author+">\nMessage: "+reason.value+"\n\nIf you don’t recognize this or wish to stop it from adding you to servers, you can unverify by clicking the button below.",
+              content: foundMsg.content,
               components: [unverify]
             });
         }
@@ -1239,12 +1246,12 @@ app.get('/backup', async function (req, res) {
     .setTimestamp(); // Adds a timestamp to the embed
     
     let ch = await getChannel(config.channels.templates)
-    let foundMsg = await ch.messages.fetch('1261205168490283078')
-    foundMsg = foundMsg.replace('{server}',guild.name)
-    foundMsg = foundMsg.replace('{user}','<@'+doc.author+'>')
+    let foundMsg = await ch.messages.fetch('1261206731313385494')
+    foundMsg.content = foundMsg.content.replace('{server}',guild.name)
+    foundMsg.content = foundMsg.content.replace('{user}','<@'+doc.author+'>')
     
     await member.user.send({
-      content: foundMsg,
+      content: foundMsg.content,
       components: [unverify]
     });
   }
