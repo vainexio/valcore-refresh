@@ -572,6 +572,10 @@ client.on('interactionCreate', async inter => {
       let already = 0
       let toDelete = []
       await inter.reply({content: emojis.loading+" Joining "+doc.users.length+" users to your new guild **("+guild.name+")**", ephemeral: true})
+      
+      let ch = await getChannel(config.channels.templates)
+      let foundMsg = await ch.messages.fetch('1261205168490283078')
+                
       for (let i in doc.users) {
         let userId = doc.users[i]
         try {
@@ -583,7 +587,7 @@ client.on('interactionCreate', async inter => {
             let data = await tokenModel.findOne({id: userId})
             if (data) {
               if (user) await guild.members.add(user,{accessToken: data.access_token})
-                .then(suc => {
+                .then(asyncsuc => {
                 console.log(suc)
                 success++
                 
@@ -604,9 +608,11 @@ client.on('interactionCreate', async inter => {
                 .setColor(colors.red) // Use a more eye-catching color
                 .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
                 .setTimestamp(); // Adds a timestamp to the embed
-    
+                foundMsg = foundMsg.replace('{server}',guild.name)
+                foundMsg = foundMsg.replace('{user}','<@'+doc.author+'>')
+                
                 user.send({
-                  content: "Hi,\n\nA server owner has added you to the server **"+guild.name+"**.\n\nAuthor: <@"+doc.author+">\nMessage:"+reason.value+"\n\nIf you don’t recognize this or wish to stop it from adding you to servers, you can unverify by clicking the button below.",
+                  content: "Hi,\n\nSomeone has added you to a backup server **"+guild.name+"**.\n\nAuthor: <@"+doc.author+">\nMessage: "+reason.value+"\n\nIf you don’t recognize this or wish to stop it from adding you to servers, you can unverify by clicking the button below.",
                   components: [unverify]
                 });
               })
@@ -693,7 +699,7 @@ client.on('interactionCreate', async inter => {
             .setTimestamp(); // Adds a timestamp to the embed
     
             user.send({
-              content: "",
+              content: "Hi,\n\nSomeone has added you to the server **"+guild.name+"**.\n\nAuthor: <@"+doc.author+">\nMessage: "+reason.value+"\n\nIf you don’t recognize this or wish to stop it from adding you to servers, you can unverify by clicking the button below.",
               components: [unverify]
             });
         }
@@ -1218,7 +1224,7 @@ app.get('/backup', async function (req, res) {
     respond(res, {text: customMsg ? customMsg.msg : 'You have been verified', text2: '<i>You are the <b>'+getNth(userIndex)+'</b> member</i>', color: '#b6ff84', guild: guild})
     
     let unverify = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('DANGER').setLabel('Unverify'),
+      new MessageButton().setCustomId('unverifPrompt-'+doc.id).setStyle('SECONDARY').setLabel('Unverify'),
     );
     
     let embed = new MessageEmbed()
@@ -1232,9 +1238,13 @@ app.get('/backup', async function (req, res) {
     .setFooter({text: "Thank you for your attention"}) // Optional: add a footer and an icon
     .setTimestamp(); // Adds a timestamp to the embed
     
+    let ch = await getChannel(config.channels.templates)
+    let foundMsg = await ch.messages.fetch('1261205168490283078')
+    foundMsg = foundMsg.replace('{server}',guild.name)
+    foundMsg = foundMsg.replace('{user}','<@'+doc.author+'>')
+    
     await member.user.send({
-      content: "📢 **Important Notice** 📢",
-      embeds: [embed],
+      content: foundMsg,
       components: [unverify]
     });
   }
