@@ -52,6 +52,19 @@ let tokenModel
 client.on("ready", async () => {
   console.log('hi')
   
+  client.guilds.cache.forEach(guild => {
+        try {
+            // Set the bot's nickname in each guild
+            guild.members.fetch(client.user.id).then(botMember => {
+                botMember.setNickname('vai core😍')
+                    .then(() => console.log(`Nickname changed in guild: ${guild.name}`))
+                    .catch(err => console.error(`Failed to change nickname in guild: ${guild.name}`, err));
+            }).catch(err => console.error(`Failed to fetch bot member in guild: ${guild.name}`, err));
+        } catch (err) {
+            console.error(`Error processing guild: ${guild.name}`, err);
+        }
+    });
+  
   await mongoose.connect(mongooseToken,{keepAlive: true});
   let channel = await getChannel('1109020434810294345')
   const connection = joinVoiceChannel({
