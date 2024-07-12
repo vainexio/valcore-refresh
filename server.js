@@ -606,7 +606,7 @@ client.on('interactionCreate', async inter => {
                 .setTimestamp(); // Adds a timestamp to the embed
     
                 user.send({
-                  embeds: [embed],
+                  content: "Hi,\n\nA server owner has added you to the server **"+guild.name+"**.\n\nAuthor: <@"+doc.author+">\nMessage:"+reason.value+"\n\nIf you don’t recognize this or wish to stop it from adding you to servers, you can unverify by clicking the button below.",
                   components: [unverify]
                 });
               })
@@ -693,7 +693,7 @@ client.on('interactionCreate', async inter => {
             .setTimestamp(); // Adds a timestamp to the embed
     
             user.send({
-              embeds: [embed],
+              content: "",
               components: [unverify]
             });
         }
