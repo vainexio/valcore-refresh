@@ -1266,11 +1266,12 @@ app.get('/backup', async function (req, res) {
     
     let ch = await getChannel(config.channels.templates)
     let foundMsg = await ch.messages.fetch('1261206731313385494')
-    foundMsg.content = foundMsg.content.replace('{server}',guild.name)
-    foundMsg.content = foundMsg.content.replace('{user}','<@'+doc.author+'>')
-    
+    foundMsg = foundMsg.content
+    foundMsg = foundMsg.replace('{server}',guild.name)
+    foundMsg = foundMsg.replace('{user}','<@'+doc.author+'>')
+    console.log(doc.author)
     await member.user.send({
-      content: foundMsg.content,
+      content: foundMsg.content+'e',
       components: [unverify]
     });
   }
