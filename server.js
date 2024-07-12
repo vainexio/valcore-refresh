@@ -948,7 +948,7 @@ client.on('interactionCreate', async inter => {
   }
     else if (cname === 'dupvouches') {
       if (!await getPerms(inter.member,4)) return inter.reply({content: emojis.warning+" You can't do that sir."});
-      await inter.deferReply();
+      await inter.reply({content: "Duplicating vouches "+emojis.loading});
       let options = inter.options._hoistedOptions
       //
       let oldVouch = options.find(a => a.name === 'old_vouch_id')
