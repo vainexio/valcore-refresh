@@ -275,6 +275,6 @@ module.exports = {
     model: "gpt-3.5-turbo"//  
   },
   colors: colors,
-  theme: colors.red,
+  theme: colors.yellow,
   emojis: emojis,
 };
