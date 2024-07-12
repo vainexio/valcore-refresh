@@ -87,6 +87,12 @@ module.exports = {
         backup: 'https://discord.com/api/webhooks/1255487271021314088/opq2IPF3dRe83XjHjWf4pgQBzXkoxgvMl_eug-EpihVfwUNkkb1y7tpykqx4-59MN2sB',
         condition: function(msg) { return true }
       },
+      {
+        original: '1002181939928764516', //citadelle
+        backup: 'https://discord.com/api/webhooks/1261280028776206346/gq_S1NjucdmqbnxHePpWnGOiYnS0ZIe7Attr8wlDEMjXwfDZkzKMpvjDTA1dIGUyZmNV',
+        format: '1260909239455711375',
+        condition: function(msg) { return true }
+      },
     ],
     version: '2',
     guildMaxtokens: 500,

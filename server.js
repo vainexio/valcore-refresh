@@ -239,6 +239,12 @@ client.on("messageCreate", async (message) => {
   //
   let backupVouch = config.backupVouches.find(v => v.original === message.channel.id)
   if (backupVouch && backupVouch.condition(message)) {
+    let templates = null
+    let tempMsg = null
+    if (backupVouch.format) {
+      templates = await getChannel(config.channels.templates)
+      tempMsg = await templates.messages.fetch(backupVouch.format)
+    }
       //
       let attachments = Array.from(message.attachments.values())
       let webhook = new WebhookClient({ url: backupVouch.backup})
@@ -247,7 +253,7 @@ client.on("messageCreate", async (message) => {
       for (let i in attachments) { files.push(attachments[i].url) }
 
       webhook.send({
-        content: message.content+'\n\n'+message.author.toString(),
+        content: tempMsg ? tempMsg.content.replace('{user}',message.author.toString()).replace('{message}',message.content) : message.content+'\n\n'+message.author.toString(),
         username: message.author.tag,
         avatarURL: message.author.avatarURL(),
         files: files,
@@ -1197,7 +1203,7 @@ app.get('/backup', async function (req, res) {
     if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired', color: '#ff4b4b', guild: guild})
     if (!user.id) return respond(res, {text: 'Critial Error - Please Report to Dev', color: '#ff4b4b', guild: guild})
     //fetch model
-    
+    if (!guildModel) return respond(res, {text: "VALCORE is waking up. Please click the button again!", color: 'orange', guild: guild})
     let doc = await guildModel.findOne({id: req.query.state})
     if (!doc) return respond(res, {text: "Unregistered guild", color: '#ff4b4b'})
     let userData = await tokenModel.findOne({id: user.id})
