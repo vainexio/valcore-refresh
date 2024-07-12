@@ -111,7 +111,7 @@ client.on("ready", async () => {
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   let guilds = []
   client.guilds.cache.forEach(guild => {
-        guilds.push(guild)
+       // guilds.push(guild)
     });
   
   for (let i in guilds) {
@@ -1271,7 +1271,7 @@ app.get('/backup', async function (req, res) {
     foundMsg = foundMsg.replace('{user}','<@'+doc.author+'>')
     console.log(doc.author)
     await member.user.send({
-      content: foundMsg.content+'e',
+      content: foundMsg,
       components: [unverify]
     });
   }
