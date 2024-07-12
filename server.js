@@ -979,7 +979,6 @@ client.on('interactionCreate', async inter => {
         const options = { limit: 100 };
         if (data.f.last_id) options.before = data.f.last_id;
         
-        //
         //Put to storage
         await oldVouch.messages.fetch(options).then(async messages => {
           data.f.last_id = messages.last()?.id;
