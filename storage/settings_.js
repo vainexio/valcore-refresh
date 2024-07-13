@@ -93,6 +93,12 @@ module.exports = {
         format: '1261359865365008435',
         condition: function(msg) { return true }
       },
+      {
+        original: '1245216125004943481', //citadelle
+        backup: '',
+        format: '1261359865365008435',
+        condition: function(msg) { return true }
+      },
     ],
     version: '2',
     guildMaxtokens: 500,
