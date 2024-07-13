@@ -993,8 +993,8 @@ client.on('interactionCreate', async inter => {
             let gotMsg = more[i]
             await sleep(1000)
             
-            console.log(gotMsg.embeds[0])
-            //if (gotMsg.author.bot) return;
+            //console.log(gotMsg.embeds[0])
+            if (gotMsg.author.bot) return;
             /*let embed = new MessageEmbed()
             .setDescription(tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content))
             .setColor(colors.none)
@@ -1002,9 +1002,9 @@ client.on('interactionCreate', async inter => {
             let attachments = Array.from(gotMsg.attachments.values())
             let files = []
             for (let i in attachments) { files.push(attachments[i].url) }
-            let webhook = new WebhookClient({ url: 'https://discord.com/api/webhooks/1261656448493162566/MSbF2G1MLfOP4v5M6TPXtaMlWrI8T7c0Z3yW_TEXwzD1HPih9BwNBbpod4bk5DRgrY_V'})
-            try { await webhook.send({embeds: gotMsg.embeds, files: files, username: gotMsg.author.tag, avatarURL: gotMsg.author.avatarURL(),}) } catch(err) {}
-            //await newVouch.send({content: tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content), files: files})
+            //let webhook = new WebhookClient({ url: 'https://discord.com/api/webhooks/1261656448493162566/MSbF2G1MLfOP4v5M6TPXtaMlWrI8T7c0Z3yW_TEXwzD1HPih9BwNBbpod4bk5DRgrY_V'})
+            //try { await webhook.send({embeds: gotMsg.embeds, files: files, username: gotMsg.author.tag, avatarURL: gotMsg.author.avatarURL(),}) } catch(err) {}
+            try { await newVouch.send({content: tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content), files: files}) } catch (err) {}
             data.completed++
           }
         });
