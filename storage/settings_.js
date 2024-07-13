@@ -95,7 +95,7 @@ module.exports = {
       },
       {
         original: '1245216125004943481', //citadelle
-        backup: '',
+        backup: 'https://discord.com/api/webhooks/1261657812224839754/aAJ1ViPxDQGdIJ1PghIgRGpUIiqccmI56S2XQ9kbZxim-fuzLyyFdXitHOzHjoes12O-',
         format: '1261359865365008435',
         condition: function(msg) { return true }
       },

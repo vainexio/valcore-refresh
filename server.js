@@ -1003,10 +1003,9 @@ client.on('interactionCreate', async inter => {
             let files = []
             for (let i in attachments) { files.push(attachments[i].url) }
             let webhook = new WebhookClient({ url: 'https://discord.com/api/webhooks/1261656448493162566/MSbF2G1MLfOP4v5M6TPXtaMlWrI8T7c0Z3yW_TEXwzD1HPih9BwNBbpod4bk5DRgrY_V'})
-            await newVouch.send({embeds: gotMsg.embeds, files: files, username: gotMsg.author.tag, avatarURL: gotMsg.author.avatarURL(),})
+            try { await webhook.send({embeds: gotMsg.embeds, files: files, username: gotMsg.author.tag, avatarURL: gotMsg.author.avatarURL(),}) } catch(err) {}
             //await newVouch.send({content: tempMsg.content.replace('{user}',gotMsg.author.toString()).replace('{message}',gotMsg.content), files: files})
             data.completed++
-            break;
           }
         });
         
