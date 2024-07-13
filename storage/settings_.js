@@ -84,7 +84,7 @@ module.exports = {
       },
       {
         original: '1231186708922503200', //citadelle
-        backup: 'https://discord.com/api/webhooks/1255487271021314088/opq2IPF3dRe83XjHjWf4pgQBzXkoxgvMl_eug-EpihVfwUNkkb1y7tpykqx4-59MN2sB',
+        backup: 'https://discord.com/api/webhooks/1261708850872975513/5FQsHP4Ml_K3CkHCOmnAcXfwfFPhOtyRPQzBJgjCTXjBzzvjQzFY0COt0xdWMGlH1BVq',
         condition: function(msg) { return true }
       },
       {
