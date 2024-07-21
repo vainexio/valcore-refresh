@@ -83,19 +83,25 @@ module.exports = {
         condition: function(msg) { if (msg.attachments.size !== 0) return true }
       },
       {
-        original: '1231186708922503200', //citadelle
+        original: '1231186708922503200', //
         backup: 'https://discord.com/api/webhooks/1261708850872975513/5FQsHP4Ml_K3CkHCOmnAcXfwfFPhOtyRPQzBJgjCTXjBzzvjQzFY0COt0xdWMGlH1BVq',
         condition: function(msg) { return true }
       },
       {
-        original: '1002181939928764516', //citadelle
+        original: '1002181939928764516', //
         backup: 'https://discord.com/api/webhooks/1261280028776206346/gq_S1NjucdmqbnxHePpWnGOiYnS0ZIe7Attr8wlDEMjXwfDZkzKMpvjDTA1dIGUyZmNV',
         format: '1261359865365008435',
         condition: function(msg) { return true }
       },
       {
-        original: '1245216125004943481', //citadelle
+        original: '1245216125004943481', //
         backup: 'https://discord.com/api/webhooks/1261657812224839754/aAJ1ViPxDQGdIJ1PghIgRGpUIiqccmI56S2XQ9kbZxim-fuzLyyFdXitHOzHjoes12O-',
+        format: '1261359865365008435',
+        condition: function(msg) { return true }
+      },
+      {
+        original: '1160528180839460965', //luvaye
+        backup: 'https://discord.com/api/webhooks/1264439480958455810/BSU2xIGj0TurYqY-eE_Ro91d5RDXvrKX-Hk4zHmHaxy-wzELamyD44c59QPTBgMNakUj',
         format: '1261359865365008435',
         condition: function(msg) { return true }
       },
