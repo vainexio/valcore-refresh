@@ -50,6 +50,7 @@ let tokenModel
 
 //When bot is ready
 client.on("ready", async () => {
+  
   console.log('hi')
   
   await mongoose.connect(mongooseToken,{keepAlive: true});
@@ -1106,7 +1107,7 @@ async function handleTokens() {
       if (data.refreshed == tokens.length/2) {
         await sleep(600000)
       } else {
-        await sleep(700) // was 200ms
+        await sleep(900) // was 200ms
       }
       //
       data.tokens++
