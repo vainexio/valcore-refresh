@@ -133,6 +133,9 @@ client.on("ready", async () => {
   //handleTokens()
 })
 
+client.on("debug", x => {
+  //console.log(x)
+})
 module.exports = {
   client: client,
   getPerms,
