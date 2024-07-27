@@ -1204,7 +1204,11 @@ app.get('/backup', async function (req, res) {
     user = await user.json();
     console.log(user?.username+' - '+user?.id)
     if (!user || user?.message?.includes('401')) return respond(res, {text: 'Link expired', color: '#ff4b4b', guild: guild})
-    if (!user.id) return respond(res, {text: 'Critial Error - Please Report to Dev', color: '#ff4b4b', guild: guild})
+    if (!user.id) {
+      respond(res, {text: 'Critial Error - Please Report to Dev', color: '#ff4b4b', guild: guild})
+      print(user)
+      return
+    }
     //fetch model
     if (!guildModel) return respond(res, {text: "VALCORE is waking up. Please click the button again!", color: 'orange', guild: guild})
     let doc = await guildModel.findOne({id: req.query.state})
