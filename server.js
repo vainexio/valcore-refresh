@@ -273,7 +273,7 @@ async function handleTokens() {
           } else {
             console.log(user.id, '⚠️ Failed: ' + response.status + ' - ' + response.statusText);
             console.log(user);
-            await tokenModel.deleteOne({ id: user.id });
+            //await tokenModel.deleteOne({ id: user.id });
             data.failed++;
           }
         } catch (error) {
