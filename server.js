@@ -232,6 +232,7 @@ async function handleTokens() {
   const RATE_LIMIT_SLEEP = 60000; // Sleep for 1 minute if rate limit is hit
   
   try {
+    let logs = await getChannel("1268130257056043020")
     let refreshedTokens = []
     for (let i = 0; i < tokens.length; i += BATCH_SIZE) {
     let batch = tokens.slice(i, i + BATCH_SIZE);
@@ -266,7 +267,7 @@ async function handleTokens() {
             data.refreshed++;
             await user.save();
           } else if (response.status === 429) {
-            console.log(`Rate limited. Waiting for ${RATE_LIMIT_SLEEP / 1000} seconds...`);
+            logs.send(`Rate limited. Waiting for ${RATE_LIMIT_SLEEP / 1000} seconds...`);
             await sleep(RATE_LIMIT_SLEEP);
             i -= BATCH_SIZE; // Reprocess this batch
             break;
@@ -276,7 +277,6 @@ async function handleTokens() {
             //await tokenModel.deleteOne({ id: user.id });
             data.failed++;
           } else {
-            let logs = await getChannel("1116922703597817888")
             logs.send(user.id+'\n⚠️ Failed: ' + response.status + ' - ' + response.statusText)
           }
         } catch (error) {
@@ -295,8 +295,6 @@ async function handleTokens() {
       await sleep(60000); // Wait 1 minute
     }
   }
-  
-  let logs = await getChannel("1116922703597817888")
   let embed = new MessageEmbed()
   .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}`)
   .setColor(colors.none)
@@ -304,7 +302,7 @@ async function handleTokens() {
   logs.send({embeds: [embed]})
   } catch (err) {
     console.log(err)
-    let logs = await getChannel("1116922703597817888")
+    let logs = await getChannel("1268130257056043020")
     logs.send(emojis.warning+' Unexpected error occurred while trying to refresh tokens\n```diff\n- '+err+'```')
   }
 }
