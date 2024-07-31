@@ -270,11 +270,14 @@ async function handleTokens() {
             await sleep(RATE_LIMIT_SLEEP);
             i -= BATCH_SIZE; // Reprocess this batch
             break;
-          } else {
+          } else if (response.status == 400) {
             console.log(user.id, '⚠️ Failed: ' + response.status + ' - ' + response.statusText);
             console.log(user);
             //await tokenModel.deleteOne({ id: user.id });
             data.failed++;
+          } else {
+            let logs = await getChannel("1116922703597817888")
+            logs.send(user.id+'\n⚠️ Failed: ' + response.status + ' - ' + response.statusText)
           }
         } catch (error) {
           console.error('Fetch error:', error);
