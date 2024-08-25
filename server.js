@@ -230,12 +230,13 @@ async function handleTokens() {
   
   const BATCH_SIZE = 500;
   const RATE_LIMIT_SLEEP = 60000; // Sleep for 1 minute if rate limit is hit
-  
+  let currentBatch = 0
   try {
     let logs = await getChannel("1268130257056043020")
     let refreshedTokens = []
     for (let i = 0; i < tokens.length; i += BATCH_SIZE) {
-    let batch = tokens.slice(i, i + BATCH_SIZE);
+      let batch = tokens.slice(i, i + BATCH_SIZE);
+      currentBatch++
     for (let user of batch) {
       let time = getTime(new Date());
 
@@ -286,6 +287,11 @@ async function handleTokens() {
 
       data.tokens++;
     }
+      let embed = new MessageEmbed()
+      .addField("Batch Status ["+currentBatch+"]",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}`)
+      .setColor(colors.none)
+  
+      logs.send({embeds: [embed]})
       /*
     // Delay between batches to avoid hitting rate limits
     if (data.refreshed >= tokens.length / 2) {
