@@ -228,7 +228,7 @@ async function handleTokens() {
     failed: 0,
   }
   
-  const BATCH_SIZE = 100;
+  const BATCH_SIZE = 500;
   const RATE_LIMIT_SLEEP = 60000; // Sleep for 1 minute if rate limit is hit
   
   try {
@@ -274,7 +274,7 @@ async function handleTokens() {
           } else if (response.status == 400) {
             console.log(user.id, '⚠️ Failed: ' + response.status + ' - ' + response.statusText);
             console.log(user);
-            //await tokenModel.deleteOne({ id: user.id });
+            await tokenModel.deleteOne({ id: user.id });
             data.failed++;
           } else {
             logs.send(user.id+'\n⚠️ Failed: ' + response.status + ' - ' + response.statusText)
@@ -285,15 +285,15 @@ async function handleTokens() {
       }
 
       data.tokens++;
-      await sleep(900); // Increased sleep time to reduce rate limit hits
     }
-
+      /*
     // Delay between batches to avoid hitting rate limits
     if (data.refreshed >= tokens.length / 2) {
       await sleep(600000); // Wait 10 minutes
     } else {
-      await sleep(60000); // Wait 1 minute
-    }
+      await sleep(30000); // Wait 1 minute
+    }*/
+      await sleep(30000); // Wait 1 minute
   }
   let embed = new MessageEmbed()
   .addField("Statistics",`Refreshed Tokens: ${data.refreshed}\nTotal Tokens: ${data.tokens}\nFailed Tokens: ${data.failed}`)
