@@ -39,7 +39,7 @@ async function startApp() {
     });
 }
 
-startApp();
+//startApp();
 let cmd = true
 
 let guildSchema
