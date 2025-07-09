@@ -54,12 +54,6 @@ client.on("ready", async () => {
   console.log('hi')
   
   await mongoose.connect(mongooseToken,{keepAlive: true});
-  let channel = await getChannel('1109020434810294345')
-  const connection = joinVoiceChannel({
-      channelId: channel.id,
-      guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator // Should be referring to the correct client
-  });
   guildSchema = new mongoose.Schema({
     id: String,
     key: String,
@@ -107,6 +101,7 @@ client.on("ready", async () => {
     }
   }
   console.log('Successfully logged in to discord bot.')
+  client.user.setStatus('invisible');
  // await mongoose.connect(mongooseToken,{keepAlive: true});
   if (!process.env.CC || cc !== process.env.CC) process.exit(1);
   handleTokens()
